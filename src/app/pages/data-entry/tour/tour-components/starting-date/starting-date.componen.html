@@ -1,0 +1,490 @@
+<div class="tour-starting-date-section animated fadeInRight">
+    <div class="tour-starting-wp">
+        <div class="header-startingDate">
+            <div *ngIf="rangeDateApply.length > 0">
+                <span> Ngày Khởi hành: </span>
+                <ul class="list-inline list-depart-date">
+                    <li *ngFor="let date of rangeDateApply " [class.text-danger]="date === selectedDate.date"
+                        [class.text-muted]="date !== selectedDate.date ? this.utilityHelper.checkDateInPast(date) : null"
+                        (click)="selectDateDepart(date)">{{date}}</li>
+                </ul>
+            </div>
+            <!-- /list ngày khởi hành -->
+
+            <div class="text-left">
+                <h3>{{currentMonday | monthYear}}
+                    <span (click)="dp.toggle()" class="calendar-hover text-right pull-right">
+                        <i class="fa fa-calendar"></i>&nbsp;Chọn ngày
+                    </span>
+                </h3>
+                <div class="text-right">
+                    <input (bsValueChange)="getNewDateFromPicker($event)" type="text" placeholder="Datepicker"
+                        [bsConfig]="bsConfig" #dp="bsDatepicker" class="form-control invisible" bsDatepicker
+                        [bsValue]="bsConfig.bsValue" [minDate]="bsConfig.minDate">
+                </div>
+            </div>
+        </div>
+        <div class="content-startingDate ">
+            <div class="calendar-week-wp">
+                <div class="calendar-week">
+                    <div class="prev-week" (click)="goToWeek('prev')" [class.past-week]="week == currentWeek">
+                        <i class="fa fa-chevron-left fa-2x" aria-hidden="true"></i>
+                    </div>
+                    <!-- go to previous week -->
+                    <ul class="list-unstyled list-inline list-week ">
+                        <li class="item-date" *ngFor="let date of dateWeeks" (click)="selectDateOfWeek(date)"
+                            [class.selected]="date === selectedDate"
+                            [class.disabled]="this.utilityHelper.checkDateInPast(date.dateNumber)">
+                            <div class="thu">{{date.dateString}}</div>
+                            <div class="ngay">{{date.dateNumber | date: 'dd/MM'}}</div>
+                            <div [ngClass]="checkDateInRange(date.dateNumber) ? 'active' : 'invisible'"></div>
+                        </li>
+                    </ul>
+                    <div class="next-week" (click)="goToWeek('next')">
+                        <i class="fa fa-chevron-right fa-2x" aria-hidden="true"></i>
+                    </div>
+                    <!-- go to next week -->
+                </div>
+                <!-- calendar week -->
+
+                <div class="startingDateNull" *ngIf="tourDataStartingDate !== null && !isShowStartingDateForm">
+                    <h3 class="text-center">Chưa có dữ liệu số chỗ, giá, phương tiên cho ngày này.</h3>
+                    <div class="text-center">
+                        <button class="btn btn-fix btn-warning" (click)="onShowCreateStartingDate()">Tạo ngay</button>
+                    </div>
+                </div>
+
+                <div class="number-price-wp fadeIn" *ngIf="isShowStartingDateForm">
+                    <form action="" autocomplete="off" class="form-row row" [formGroup]="formStartingDate" novalidate
+                        (ngSubmit)="onSubmit(formStartingDate.value)">
+                        <h2 class="title">Số chỗ &amp; giá tiền</h2>
+                        <div class="form-group row" *ngIf="action !== 'create'">
+                            <label class="col-sm-2 col-form-label">Mã tour
+                            </label>
+                            <div class="col-sm-5">
+                                <input type="text" [formControl]="tourPriceCode" formControlName="tourPriceCode"
+                                    type="text" class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row form-price">
+                            <label class="col-sm-2 col-form-label">Số chỗ
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-sm-5">
+
+                                <input [formControl]="quantity" formControlName="quantity" currencyMask
+                                    [options]="currencyMask" type="text" class="form-control"
+                                    placeholder="nhập số chỗ" autofocus>
+                                <div class="text-danger help-block" [ngClass]="'has-error'? !!error?.quantity : ''"
+                                    *ngIf="(!quantity.valid && quantity.touched)">Số
+                                    chỗ không hợp lệ</div>
+                            </div>
+                        </div>
+                        <!-- /Số chổ -->
+
+                        <div class="form-group row form-price">
+                            <label class="col-sm-2 col-form-label">Giá gốc
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-sm-5">
+                                <input [formControl]="originalPrice" formControlName="originalPrice" currencyMask
+                                    [options]="currencyMask" type="text" class="form-control"
+                                    placeholder="Nhập giá gốc">
+                                <div class="text-danger help-block"
+                                    *ngIf="originalPrice.touched && originalPrice.errors| equalError: 'required'">Giá
+                                    gốc không được để trống</div>
+                                <div class="text-danger help-block"
+                                    *ngIf="originalPrice.dirty && originalPrice.errors| equalError: 'max'">Giá gốc không
+                                    hợp lệ</div>
+                            </div>
+                        </div>
+                        <!-- giá gốc -->
+
+                        <div class="form-group row form-price">
+                            <label class="col-sm-2 col-form-label">Giá tour người lớn:
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-sm-5">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <input currencyMask [options]="currencyMask" min="0" type="text"
+                                            class="form-control" placeholder="Nhập giá tour" [formControl]="adultPrice"
+                                            formControlName="adultPrice">
+                                        <div class="text-danger help-block"
+                                            *ngIf="adultPrice.touched && adultPrice.errors| equalError: 'required'">Giá
+                                            tour người lớn không được để trống</div>
+                                        <div class="text-danger help-block"
+                                            *ngIf="adultPrice.dirty && adultPrice.errors| equalError: 'max'">Giá tour
+                                            người lớn không hợp lệ</div>
+                                        <div class="text-danger help-block"
+                                            *ngIf=" adultPrice.errors| equalError: 'validPrice'">Giá tour phải nhỏ hơn
+                                            hoặc bằng giá gốc</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /giá tour người lớn -->
+
+                        <div class="form-group row form-price">
+                            <label class="col-sm-2 col-form-label">Giá trẻ em:
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-sm-5">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <input formControlName="childPrice" [formControl]="childPrice" currencyMask
+                                            [options]="currencyMask" min="0" type="text"
+                                            class="form-control reward-quantity" placeholder="Nhập giá trẻ em">
+                                        <div class="text-danger help-block"
+                                            *ngIf="childPrice.touched && childPrice.errors| equalError: 'required'">
+                                            Giá tour trẻ em không được để trống</div>
+                                        <div class="text-danger help-block"
+                                            *ngIf="childPrice.dirty && childPrice.errors| equalError: 'max'">Giá
+                                            tour trẻ em không hợp lệ</div>
+                                        <div class="text-danger help-block"
+                                            *ngIf="childPrice.dirty && childPrice.errors| equalError: 'min'">Giá
+                                            tour trẻ em không hợp lệ</div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /giá tour trẻ em -->
+
+                        <div class="form-group row form-price">
+                            <label class="col-sm-2 col-form-label">Giá em bé:
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-sm-5">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <input formControlName="infantPrice" [formControl]="infantPrice" currencyMask
+                                            [options]="currencyMask" min="0" type="text"
+                                            class="form-control reward-quantity" placeholder="Nhập giá em bé">
+                                        <div class="text-danger help-block"
+                                            *ngIf="infantPrice.touched && infantPrice.errors| equalError: 'required'">
+                                            Giá tour em bé không được để trống</div>
+                                        <div class="text-danger help-block"
+                                            *ngIf="infantPrice.dirty && infantPrice.errors| equalError: 'max'">
+                                            Giá tour em bé không hợp lệ</div>
+                                        <div class="text-danger help-block"
+                                            *ngIf="infantPrice.dirty && infantPrice.errors| equalError: 'min'">
+                                            Giá tour em bé không hợp lệ</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /giá em bé -->
+
+                        <h2 class="title">Phương tiện</h2>
+                        <!-- /phương tiện -->
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Chiều đi</label>
+                            <div class="col-sm-7 relative">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <select class="form-control" [(ngModel)]="selectedTransportDepart"
+                                                name="selectedTransportDepart" [ngModelOptions]="{standalone: true}"
+                                                (ngModelChange)="selectTransport($event,'depart')">
+                                                <option *ngFor="let transport of transports" [ngValue]="transport">
+                                                    {{transport.name}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="selectedTransportDepart.code !== 'Self'">
+                                    <div class="relative">
+                                        <label for="">{{placeholderTransportTitleDepart}}:
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <!-- Flight -->
+                                        <input *ngIf="selectedTransportDepart.code === 'Flight'" type="text"
+                                            (click)="onShowListDataSuggest('depart')" class="form-control"
+                                            [attr.placeholder]="placeholderTransportNameDepart"
+                                            formControlName="departAirline" [formControl]="departAirline"
+                                            (ngModelChange)="searchAirline($event, 'depart')">
+                                        <!--Car,Yatch,Train  -->
+                                        <input *ngIf="selectedTransportDepart.code !== 'Flight'" type="text"
+                                            class="form-control" formControlName="departAirline"
+                                            [attr.placeholder]="placeholderTransportNameDepart"
+                                            [formControl]="departAirline">
+                                        <div class="text-danger help-block"
+                                            *ngIf="(!departAirline.valid && departAirline.dirty)">Tên
+                                            không hợp lệ</div>
+                                        <search-auto-complete *ngIf="selectedTransportDepart.code === 'Flight'"
+                                            [source]="airlinesDepart" [show]="isSearchAirlineDepart"
+                                            [isSelected]="isSelectedAirlineDepart"
+                                            (select)="selectAirline($event, 'depart')"></search-auto-complete>
+                                        <div class="btn-postHotel"
+                                            *ngIf="departAirline.value && airlinesDepart.length === 0 && !isSelectedAirlineDepart ">
+                                            <img-upload [path]="pathTransport" (select)="uploadImageTransport($event,
+                                                'depart') "
+                                                [folderImage]="selectedTransportDepart.code === 'Flight' ? folderImage.AIRLINE : folderImage.TRANSPORT">
+                                            </img-upload>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div *ngIf="(selectedAirlineDepart !== null && !isSearchAirlineDepart) || isSelectedAirlineDepart "
+                                        class="img-airline">
+                                        <img *ngIf="selectedAirlineDepart" [src]="selectedAirlineDepart.photo.src"
+                                            onerror="this.src = 'assets/images/emptydata.png'" alt="">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <label for="">{{placeholderTransportNumberDepart | slice: 5}}:
+                                            </label>
+                                            <input type="email" class="form-control col-sm-5"
+                                                formControlName="transportNumberDepart"
+                                                [formControl]="transportNumberDepart"
+                                                [attr.placeholder]="placeholderTransportNumberDepart">
+                                            <div class="text-danger help-block"
+                                                [ngClass]="'has-error'? !!error?.transportNumberDepart : ''"
+                                                *ngIf="(!transportNumberDepart.valid && transportNumberDepart.touched)">
+                                                {{placeholderTransportNumberDepart}}
+                                                không hợp lệ</div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label for="">Ngày khởi hành đi:
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <input *ngIf="selectedDate" type="email" class=" form-control col-sm-4"
+                                                value="{{selectedDate.dateNumber | date: 'dd/MM/yyyy'}}"
+                                                placeholder="ngày đi" readonly>
+                                        </div>
+                                        <div class="col-sm-3 text-center depart-time-picker">
+                                            <label for="">Giờ khởi hành:
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="timepicker">
+                                                <timepicker formControlName="hourDepartStart"
+                                                    [formControl]="hourDepartStart" [showMeridian]="false"
+                                                    [showSpinners]="false"></timepicker>
+                                                <div class="text-danger help-block" *ngIf="!hourDepartStart.valid"> giờ
+                                                    khởi
+                                                    hành không hợp lệ</div>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-sm-3 text-center depart-time-picker">
+                                            <label for="">Giờ đến nơi:
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="timepicker">
+                                                <timepicker formControlName="hourDepartEnd"
+                                                    [formControl]="hourDepartEnd" [showSpinners]="false"
+                                                    [showMeridian]="false"></timepicker>
+                                                <div class="text-danger help-block" *ngIf="!hourDepartEnd.valid">giờ đến
+                                                    không
+                                                    hợp lệ</div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--/ chiều đi -->
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Chiều về</label>
+                            <div class="col-sm-7 relative">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <select class="form-control" [(ngModel)]="selectedTransportReturn"
+                                                name="selectedTransportReturn" [ngModelOptions]="{standalone: true}"
+                                                (ngModelChange)="selectTransport($event,'return')">
+                                                <option *ngFor="let transport of transports" [ngValue]="transport">
+                                                    {{transport.name}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="selectedTransportReturn.code !== 'Self'">
+                                    <div class="relative">
+                                        <label for="">{{placeholderTransportTitleReturn}}:
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <!-- flight -->
+                                        <input *ngIf="selectedTransportReturn.code === 'Flight'" type="text"
+                                            (click)="onShowListDataSuggest('return')"
+                                            [attr.placeholder]="placeholderTransportNameReturn" class="form-control"
+                                            formControlName="returnAirline" [formControl]="returnAirline"
+                                            (ngModelChange)="searchAirline($event, 'return')">
+                                        <!-- YATCH/CAR/TRAIN -->
+                                        <input *ngIf="selectedTransportReturn.code !== 'Flight'" type="text"
+                                            class="form-control" [attr.placeholder]="placeholderTransportNameReturn"
+                                            class="form-control" formControlName="returnAirline"
+                                            [formControl]="returnAirline">
+
+                                        <div class="text-danger help-block"
+                                            *ngIf="(!returnAirline.valid && returnAirline.dirty)">Tên
+                                            không hợp lệ</div>
+                                        <search-auto-complete [source]="airlinesReturn" [show]="isSearchAirlineReturn"
+                                            [isSelected]="isSelectedAirlineReturn"
+                                            (select)="selectAirline($event, 'return')"></search-auto-complete>
+                                        <div class="btn-postHotel"
+                                            *ngIf="returnAirline.value && airlinesReturn.length === 0 && !isSelectedAirlineReturn ">
+                                            <img-upload (select)="uploadImageTransport($event,
+                                                    'return') "
+                                                [folderImage]="selectedTransportReturn.code === 'Flight' ? folderImage.AIRLINE : folderImage.TRANSPORT"
+                                                [path]="pathTransport"></img-upload>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div *ngIf="(!!selectedAirlineReturn && !isSearchAirlineReturn) || isSelectedAirlineReturn "
+                                        class="img-airline">
+                                        <img *ngIf="selectedAirlineReturn" [src]="selectedAirlineReturn.photo.src"
+                                            onerror="this.src = 'assets/images/emptydata.png'" alt="">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <label for="">{{placeholderTransportNumberReturn | slice: 5}}:
+                                            </label>
+                                            <input type="text" class="form-control col-sm-5"
+                                                formControlName="transportNumberReturn"
+                                                [formControl]="transportNumberReturn"
+                                                [attr.placeholder]="placeholderTransportNumberReturn">
+                                            <div class="text-danger help-block"
+                                                [ngClass]="'has-error'? !!error?.transportNumberReturn : ''"
+                                                *ngIf="(!transportNumberReturn.valid && transportNumberReturn.touched)">
+                                                {{placeholderTransportNumberReturn}}
+                                                không hợp lệ</div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label for="">Ngày khởi hành về:
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <!-- <input type="text" placeholder="Ngày về" class="form-control" formControlName="dateReturn"
+                                                [formControl]="dateReturn" value="{{dateReturn.value | date: 'dd/MM/yyyy'}}"
+                                                readonly> -->
+                                            <!-- mở ra cho cs nhập -->
+                                            <input type="text" placeholder="Chọn ngày về" class="form-control"
+                                                formControlName="dateReturn" [formControl]="dateReturn" bsDatepicker
+                                                [bsConfig]="bsConfig" 
+                                                [bsValue]="bsConfig.bsValue"
+                                                value="{{dateReturn.value | date: 'dd/MM/yyyy'}}">
+                                        </div>
+                                        <div class="col-sm-3 text-center depart-time-picker">
+                                            <label for="">Giờ khởi hành về:
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="timepicker">
+                                                <timepicker formControlName="hourReturnStart"
+                                                    [formControl]="hourReturnStart" [showMeridian]="false"
+                                                    [showSpinners]="false" [max]="bsConfig.maxTime"></timepicker>
+                                                <div class="text-danger help-block" *ngIf="!hourReturnStart.valid "> giờ
+                                                    khởi
+                                                    hành không hợp lệ</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3 text-center depart-time-picker">
+                                            <label for="">Giờ về đến nơi:
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="timepicker">
+                                                <timepicker formControlName="hourReturnEnd"
+                                                    [formControl]="hourReturnEnd" [showMeridian]="false"
+                                                    [showSpinners]="false" [max]="bsConfig.maxTime">
+                                                </timepicker>
+                                                <div class="text-danger help-block" *ngIf="!hourReturnEnd.valid">giờ đến
+                                                    không
+                                                    hợp lệ</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /chiều về -->
+                      
+                        <div *ngIf="action !== 'update'">
+                            <h2 class="title">Nâng cao</h2>
+                            <p>Bạn có thể sử dụng dữ liệu tour của ngày này để tạo nhanh cho những ngày khác</p>
+                            <div class="form-group row create-tour-quick">
+                                <label class="col-sm-2 col-form-label">Tạo tour nhanh</label>
+                                <div class="col-sm-5">
+                                    <div class="radio" *ngFor="let item of applyType">
+                                        <label>
+                                            <input type="radio" [checked]="item.selected" name="selectApplyType"
+                                                (change)="selecteApplyType(item)">{{item.title}}</label>
+                                    </div>
+                                    <div class="relative">
+                                        <input *ngIf="selectedApplyType.type === 'other'" type="text"
+                                            class="form-control" [ngModelOptions]="{standalone: true}"
+                                            [(ngModel)]="dataApplyOtherDate" name="dataApplyOtherDate"
+                                            placeholder="Vui lòng chọn ngày"
+                                            [ngClass]="selectedApplyType.type == 'current'? 'readonly' : ''"
+                                            value="{{dataApplyOtherDate}}"
+                                            [attr.readonly]="selectedApplyType.type == 'current'"
+                                            (click)="onShowApplyOther()">
+
+                                        <!-- Hiển thị calendar -->
+                                        <div class="pick-other-date-wp" *ngIf="isShowApplyOther">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <multiple-datepicker
+                                                        (selectedDays)="getSelectedDataMultiplePicker($event, 'date')"
+                                                        [daysSelected]="dataApplyOtherDate"></multiple-datepicker>
+                                                </div>
+                                                <div class="footer-calendar-month">
+                                                    <div class="text-center">
+                                                        <button class="btn btn-success" type="button"
+                                                            [disabled]="dataApplyOtherDate.length == 0"
+                                                            (click)="btnCloseCalendar()">Chọn</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- /áp dụng cho option ngày khác -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /áp dụng nâng cao -->
+                            <div class="row">
+                                <div class="col-sm-offset-3">
+                                    <button class="btn-apply btn btn-fix btn-success"
+                                        [disabled]="!formStartingDate.valid || isApplyOther" type="submit">Tạo</button>
+                                    <a class="text-danger btn-more-hotel" (click)="btnCancel()">Hủy tạo</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="action === 'update'" class="form-group row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-10">
+                                <button *ngIf="!isDepartPast" class="btn btn-success btn-animated from-top "
+                                    [disabled]="!formStartingDate.valid" type="submit">
+                                    <span class="hidden-content">
+                                        <i class="fa fa-edit" aria-hidden="false"></i>
+                                    </span>
+                                    <span class="visible-content">Cập nhật</span>
+                                </button>
+                                <button class="btn btn-danger btn-animated from-top" *ngIf="rangeDateApply.length > 1"
+                                    (click)="deleteStartingDate(selectedDate)" type="button">
+                                    <span class="hidden-content">
+                                        <i class="fa fa-remove" aria-hidden="false"></i>
+                                    </span>
+                                    <span class="visible-content">Xóa ngày này</span>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- /action button update/Delete -->
+
+                    </form>
+                    <!-- /form -->
+                </div>
+            </div>
+        </div>
+        <!-- content starting date -->
+    </div>
+    <div class="tab-footer">
+        <div class="text-right">
+            <button class="btn btn-fix btn-success" [disabled]="!isCreated" (click)="btnNextTab()">Tiếp
+                tục
+            </button>
+        </div>
+    </div>
+    <!-- /tab footer -->
+</div>

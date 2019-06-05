@@ -1,0 +1,13 @@
+<div class="booking-tab-tour fade-in-up bg-white">
+    <tabset [justified]="true" type="tabs">
+        <tab heading="Thông tin đặt tour" [active]="tab === 'general'"  (select)="selectTab($event,'general')"
+            [disabled]="params.action !== 'book'">
+            <booking-tour-general (changeTab)="changeTab($event)"></booking-tour-general>
+        </tab>
+        <tab heading="Thông tin hành khách" [active]="tab === 'passenger'" [disabled]="tab !== 'passenger'">
+            <booking-tour-passenger *ngIf="tab === 'passenger'" (changeTab)="changeTab($event)"></booking-tour-passenger>
+        </tab>
+        <!-- <tab heading="Thanh toán" [active]="tab === 'payment'" [disabled]="tab !== 'payment'">
+        </tab> -->
+    </tabset>
+</div>

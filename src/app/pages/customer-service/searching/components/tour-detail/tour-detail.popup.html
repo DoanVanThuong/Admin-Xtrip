@@ -1,0 +1,148 @@
+<div class="detail-tour-popup">
+  <div bsModal #popup="bs-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header" *ngIf="!!tourInfo">
+          <h5 class="info-user">{{tourInfo.code}}</h5>
+          <h3>{{tourInfo.name}} </h3>
+          <div>Nơi Khởi hành: {{tourInfo.departPlace}}</div>
+          <div>Ngày khởi hành: {{tourInfo.departDate | moment: 'DD/MM/YYYY'}}</div>
+        </div>
+        <div class="modal-body" *ngIf="!!tourInfo && !!journey">
+          <tabset [justified]="true" type="tabs">
+            <tab heading="Lịch trình">
+              <!-- <div *ngIf="journey" class="text-justify">
+                <span class="font-bold">
+                  <i class="fa fa-book fa-lg text-success" aria-hidden="true"></i> Lịch trình
+                  <p>
+                    {{journey.summary}}
+                  </p>
+                </span>
+                <div *ngFor="let detail of journey.details ">
+                  <div class="title-schedule font-bold font-16">
+                    {{detail.name}}
+                  </div>
+                  <div *ngFor="let item of detail.items ">
+                    <div class="img-journey">
+                      <img *ngIf="!!item.image.src" src="{{item.image.src}} " alt="image" class="img-responsive">
+                    </div>
+                    <p class="font-15" [innerHTML]="item.text"></p>
+                  </div>
+                </div>
+              </div> -->
+              <div class="tour-journey-desktop-page" *ngIf="!!tourInfo && !!journey">
+                <div class="tour-journey-group" *ngFor="let item of journey.details; trackBy: trackByFn; let i = index">
+                  <div class="row position-relative">
+                    <div class="col-md-12">
+                      <div class="tour-dot">
+                        <div class="text-in-dot"><span>{{item.title}}</span>
+                        </div>
+                      </div>
+                      <div class="title-journey text-truncate">
+                        {{ item.name }}
+                      </div>
+                    </div>
+                    <div class="content">
+                      <div class="col-md-12 m-t-16">
+                        <ul class="sub-item">
+                          <li *ngFor="let ops of item.options">{{ops.title}}: {{ops.value}}</li>
+                        </ul>
+                      </div>
+                      <div class="col-md-12 m-t-10" *ngIf="!item.isShow">
+                        <span class="text-main btn-showmore pointer" (click)="item.isShow = !item.isShow">Chi tiết hành
+                          trình
+                          <span>
+                            <i class="fa fa-angle-down"></i>
+                          </span>
+                        </span>
+                      </div>
+                      <div class="col-md-12 m-t-20" *ngIf="item.isShow">
+                        <div class="detail-journey" *ngFor="let detail of item.items">
+                          <img class="w-full h-424 img-fix" *ngIf="!!detail.image.src"
+                            src="{{detail.image.src | resizeImage: 600}} " [alt]="detail.image.name" />
+                          <div class="detail-text m-t-20" [innerHTML]="detail.text"></div>
+                        </div>
+                        <div class="col-md-12 m-t-20 m-l-n-15">
+                          <span class="text-main btn-showmore pointer" (click)="item.isShow = !item.isShow">Thu gọn hành
+                            trình
+                            <span>
+                              <i class="fa fa-angle-up"></i>
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </tab>
+            <tab heading="Chính sách">
+              <div class="text-justify p-10" *ngIf="!!tourInfo">
+                <div class="policy-policy" class="text-justify">
+                  <span class="font-bold">
+                    <i class="fa fa-sticky-note fa-lg text-success" aria-hidden="true"></i>Chính sách</span>
+                    <p *ngIf="!tourInfo.policyContent else policy" [innerHTML]="tourInfo.policy"></p>
+                </div>
+              </div>
+            </tab>
+            <tab heading="Điều khoản">
+              <div class="text-justify p-10" *ngIf="!!tourInfo">
+                <div class="terms-tour">
+                  <span class="font-bold">
+                    <i class="fa fa-book fa-lg text-success" aria-hidden="true"></i> Điều khoản</span>
+                    <p *ngIf="!tourInfo.termsContent else term" [innerHTML]="tourInfo.terms"></p>
+                </div>
+              </div>
+            </tab>
+          </tabset>
+        </div>
+        <div class="modal-footer ">
+          <div class="text-center">
+            <button class="btn btn-fix " (click)="popup.hide()">Đóng</button>
+            <button class="btn btn-info btn-fix" (click)="onBookTour()">
+              <span class="btn-icon"><i class="fa fa-shopping-cart"></i>Đặt</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<ng-template #policy>
+  <div class="incluce">
+    <div class="font-bold">Giá bao gồm:</div>
+    <p [innerHTML]="tourInfo.policyContent.include"></p>
+  </div>
+  <div class="excluce">
+    <div class="font-bold">Giá không bao gồm:</div>
+    <p [innerHTML]="tourInfo.policyContent.exclude"></p>
+  </div>
+  <div class="surcharges" *ngIf="!!tourInfo.policyContent.surcharges.length">
+    <div class="font-bold">Phụ Thu</div>
+    <ul class="list-unstyled">
+      <li *ngFor="let item of tourInfo.policyContent.surcharge; let i = index" class="d-flex justify-content-between">
+        <div>{{item.title}}</div>
+        <div>{{item.value}}</div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+
+<ng-template #term>
+  <div class="refund">
+    <div class="font-bold">Hoàn hủy tour:</div>
+    <p [innerHTML]="tourInfo.termsContent.refund"></p>
+  </div>
+  <div class="visa">
+    <div class="font-bold">Visa:</div>
+    <p [innerHTML]="tourInfo.termsContent.visa"></p>
+  </div>
+  <div class="notes">
+    <div class="font-bold">Ghi chú</div>
+    <p [innerHTML]="tourInfo.termsContent.notes"></p>
+  </div>
+</ng-template>

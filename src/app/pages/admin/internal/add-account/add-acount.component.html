@@ -1,0 +1,86 @@
+<div class="create-account-page container-fluid fade-in-right">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-heading">
+
+            </div>
+            <!-- end Page heading -->
+            <div class="page-content">
+                <div class="ibox">
+                    <div class="ibox-head row">
+                        <div class="col-md-6">
+                            <a (click)="back()">
+                                <span>
+                                    <i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i>
+                                </span>
+                            </a>
+                            Thêm tài khoản
+                        </div>
+                        <div class="col-md-6">
+
+                        </div>
+                    </div>
+                    <div class="ibox-body">
+                        <div class="form-create">
+                            <form (ngSubmit)="onSubmit(formCreate.value)" [formGroup]="formCreate" novalidate>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Tên:
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-sm-5" [ngClass]="{'has-error has-feedback': !name.valid && name.dirty}">
+                                        <input type="text" class="form-control" autofocus [formControl]="name" formControlName="name" placeholder="ví dụ: Nguyễn Văn A">
+                                    </div>
+                                    <div class="text-danger help-block" [ngClass]="'has-error'? !!error?.name : ''" *ngIf="!name.valid && name.dirty">Tên
+                                        không hợp lệ</div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Username:
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-sm-5" [ngClass]="{'has-error has-feedback': !userName.valid && userName.dirty}">
+                                        <input type="email" class="form-control" [formControl]="userName" formControlName="userName" placeholder="ví dụ: nguyenvana@xtravel.vn">
+                                    </div>
+                                    <div class="text-danger help-block" [ngClass]="'has-error'? !!error?.userName : ''" *ngIf="!userName.valid && userName.dirty">Username
+                                        không hợp lệ</div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Mật khẩu:
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-sm-5" [ngClass]="{'has-error has-feedback': !password.valid && password.dirty}">
+                                        <input type="password" class="form-control" [formControl]="password" formControlName="password">
+                                    </div>
+                                    <div class="text-danger help-block" [ngClass]="'has-error'? !!error?.password : ''" *ngIf="!password.valid && password.dirty">Mật
+                                        khẩu không hợp lệ</div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="" class="col-sm-2 col-form-label">Chức vụ:</label>
+                                    <div class="col-sm-10">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <label class="checkbox-inline" *ngFor="let role of roles; let i = index">
+                                                    <input type="checkbox" value="{{role}}" (change)="onHandleCheckBox(role,$event)">{{role}}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 ">
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <button class="btn btn-fix btn-success" type="submit" [disabled]="!formCreate.valid">Thêm
+                                            tài khoản</button>
+                                        <button class="btn btn-fix " type="reset">Làm lại</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end page Content -->
+        </div>
+    </div>
+</div>
+<!-- End Page -->

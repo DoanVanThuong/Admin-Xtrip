@@ -1,0 +1,14 @@
+<div class="extra-activity-page  bg-white">
+  <div class="page-content">
+    <div class="tab-content tab-customer-admin">
+      <tabset>
+        <tab heading="Free and Easy" (select)="onSelect($event,'daytour')" [active]="selectedTab === 'daytour'">
+          <popular-daytour *ngIf="selectedTab === 'daytour'"></popular-daytour>
+        </tab>
+        <tab heading="Vé vui chơi" (select)="onSelect($event,'activities')" [active]="selectedTab === 'activities'">
+          <popular-activities *ngIf="selectedTab === 'activities'"></popular-activities>
+        </tab>
+      </tabset>
+    </div>
+  </div>
+</div>

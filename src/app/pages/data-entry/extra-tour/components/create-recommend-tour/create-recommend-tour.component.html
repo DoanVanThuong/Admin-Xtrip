@@ -1,0 +1,113 @@
+<div class="create-recommend-tour-page">
+    <div class="ibox">
+        <div class="ibox-body">
+            <h3 class="text-center text-primary">
+                {{action === 'create' ? 'Thêm tour đề xuất' : 'Sửa Category '}}</h3>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="image-upload-wp">
+                        <img-upload class="image-upload-item" *ngIf="selectedTypePhoto.type === 'desktop'"
+                            [src]="photoDesktop.src" [path]="path" (select)="upLoadImage($event,'desktop') "
+                            [folderImage]="'Tour'"></img-upload>
+                        <img-upload *ngIf="selectedTypePhoto.type === 'mobile'" [src]="photoMobile.src" [path]="path"
+                            (select)="upLoadImage($event,'mobile') " [folderImage]="'Tour'"></img-upload>
+                        <div class="image-description">
+                            <a class="pointer" title="Ảnh cho {{type.type}}"
+                                *ngFor="let type of typePhotos; let i = index; trackBy: trackByFn"
+                                [class.active]="selectedTypePhoto === type" (click)="selectTypePhoto(type)">
+                                <i class="{{type.icon}}" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <form [formGroup]="formRecommedTour">
+                        <div class="row">
+                            <div class="col-sm-6 form-group mb-4" *ngIf="!!categories">
+                                <label>Category <span class="text-danger">*</span></label>
+                                <div>
+                                    <select class=" show-tick form-control" title="Chọn category"
+                                        [(ngModel)]="selectedCategory" name="selectedCategory"
+                                        [ngModelOptions]="{standalone: true}"
+                                        (ngModelChange)="onChangeCategory($event)">
+                                        <optgroup label="Quốc tế">
+                                            <option *ngFor="let category of categories.international"
+                                                [ngValue]="category">{{category.name}}
+                                            </option>
+                                        </optgroup>
+                                        <optgroup label="Trong nước">
+                                            <option *ngFor="let category of categories.domestic" [ngValue]="category">
+                                                {{category.name}}
+                                            </option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>Tên <span class="text-danger">*</span></label>
+                            <input class="form-control form-control-solid" type="text"
+                                placeholder="vd: Thái Lan Lễ hội Songkran" [formControl]="name" formControlName="name">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>Vị trí <span class="text-danger">*</span></label>
+                            <input class="form-control form-control-solid" type="number" placeholder="Nhập vị trí"
+                                [formControl]="weight" formControlName="weight">
+                        </div>
+                        <div class="text-right">
+                            <button [disabled]="!formRecommedTour.valid" *ngIf="action === 'create'"
+                                class="btn btn-primary btn-air mr-2"
+                                (click)="submit(formRecommedTour.value)">Thêm</button>
+                            <button [disabled]="!formRecommedTour.valid" *ngIf="action === 'update'"
+                                class="btn btn-primary btn-air mr-2" (click)="submit(formRecommedTour.value)">Cập
+                                nhật</button>
+                            <button class="btn btn-secondary" (click)="back()">Hủy</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row m-t-20">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" placeholder="Nhập mã công trình" [(ngModel)]="code">
+                        </div>
+                        <div class="col-md-6">
+                            <button [disabled]="!code"
+                                class="btn btn-success btn-icon-only btn-circle btn-sm btn-air"><i class="fa fa-plus"
+                                    (click)="onAddtourCode(code)" title="Thêm mã công trình"></i></button>
+                        </div>
+                    </div>
+                    <div class="table-responsive table-hover m-t-20">
+                        <table class="table">
+                            <thead class="thead-default thead-lg">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã công trình <span>({{tourList.length}})</span></th>
+                                    <th>Chức năng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="text-center pointer"
+                                    *ngFor="let code of tourList; let i = index; trackBy: index">
+                                    <td>{{i+1}}</td>
+                                    <td>{{code}}</td>
+                                    <td>
+                                        <ul class="list-inline btn-action d-flex justify-content-center">
+                                            <li>
+                                                <button class="btn btn-outline-danger btn-fix"
+                                                    (click)="deleteTourItemCode(i)" title="Xóa">
+                                                    <span class="btn-icon"><i class="fa fa-trash"></i>Xóa</span>
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

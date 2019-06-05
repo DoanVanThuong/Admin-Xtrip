@@ -1,0 +1,31 @@
+.filter-icon {
+    li {
+        padding: 8px 10px;
+        border: 1px solid @black;
+        &:hover {
+            cursor: pointer;
+            background: @main;
+            color: @white;
+            border-color:transparent;
+
+            a {
+                color: @white;
+            }
+        }
+    }
+}
+
+.sort-icon {
+    &:hover {
+        a {
+            color: @white;
+        }
+        cursor: pointer;
+    }
+    .fa-sort-asc {
+        vertical-align: sub;
+    }
+    .fa-sort-desc {
+        vertical-align: top;
+    }
+}

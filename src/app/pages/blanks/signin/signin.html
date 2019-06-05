@@ -1,0 +1,24 @@
+<div class="login-page-wrapper">
+	<div class="overlay"></div>
+	<div class="cover"></div>
+	<div class="login-form">
+		<div class="text-center mb-5"><span class="auth-head-icon"><i class="fa fa-user"></i></span></div>
+		<div class="ibox">
+			<form class="ibox-body form-horizontal " [formGroup]="form" novalidate (ngSubmit)="onSubmit(form.value)">
+				<h4 class="font-strong text-center mb-5">Đăng nhập</h4>
+				<div class="form-group mb-4"><input class="form-control form-control-line" type="email" name="email" placeholder="Email"
+					 [formControl]="email" formControlName="email"><div class="text-danger help-block" [ngClass]="'has-error'? !!error?.email : ''"
+					 *ngIf="(!email.valid && email.dirty )">Email không hợp lệ</div>
+				</div>
+				<div class="form-group mb-4"><input class="form-control form-control-line" type="password" name="password" formControlName="email"
+					 [formControl]="password" placeholder="Mật khẩu"><div class="text-danger help-block" [ngClass]="'has-error'? !!error?.password : ''"
+					 *ngIf="(!password.valid && password.dirty)">mật khẩu không hợp lệ</div>
+				</div>
+				<div class="flexbox mb-5"><span><label class="ui-switch  mr-2 mb-0"><input type="checkbox" name="Remember" [checked]="remember"
+							 (change)="checkRemember()"><span></span></label><span class="remember-login">Ghi nhớ</span></span></div>
+				<div class="text-center mb-4" style="margin-top: 20px;"><button class="btn btn-primary btn-rounded btn-block" [disabled]="!form.valid"
+					 type="submit">Đăng nhập</button></div>
+			</form>
+		</div>
+	</div>
+</div>

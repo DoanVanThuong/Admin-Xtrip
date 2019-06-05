@@ -1,0 +1,61 @@
+<!-- End Page -->
+<form action="">
+	<div class="form-group col-md-6 input-search">
+		<input type="text" class="form-control   pull-right" placeholder="Nhập từ khóa để tìm..." [(ngModel)]="keyword" name="keyword">
+	</div>
+	<div class="col-md-1">
+		<button class="btn btn-success btn-search" type="submit" (click)="onSearch()">Tìm</button>
+	</div>
+	<div class="pull-right">Tổng số vé đã xuất:
+		<strong class="font-bold">{{total}}</strong>
+
+		<!-- select limiut page size list -->
+		<select-limit [numbers]="pageSizeList" (onChange)="onChangeLimitSize($event)"></select-limit>
+	</div>
+</form>
+<table class="table table-hover table-head-success  table-striped">
+	<thead>
+		<tr>
+			<th class="stt">#</th>
+			<th>Mã đặt chỗ</th>
+			<th>Khách hàng</th>
+			<th>PNR</th>
+			<th>Nhân viên xuất vé</th>
+			<th>Ngày xuất vé</th>
+			<th>Đại lý xuất vé</th>
+			<th>Giá vé</th>
+			<th>Tax</th>
+			<th>Charge</th>
+			<th>Cost</th>
+			<th>Comiss</th>
+			<th>Penalty</th>
+			<th>Phí dịch vụ</th>
+			<th>VAT 10%</th>
+			<th>Tổng cộng</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let item of tickets; let i = index" class="text-center">
+			<td>{{item.no}}</td>
+			<td>{{item.code}}</td>
+			<td>{{item.customerName}}</td>
+			<td>{{item.pnrCode}}</td>
+			<td>{{item.employeeExport}}</td>
+			<td>{{item.exportDate | date: 'dd/MM/yyyy HH:mm'}}</td>
+			<td>{{item.agency}}</td>
+			<td>{{item.totalPrice | number: 0-0}}</td>
+			<td>{{item.tax}}</td>
+			<td>{{item.charge}}</td>
+			<td>{{item.cost}}</td>
+			<td>{{item.comiss}}</td>
+			<td>{{item.charge}}</td>
+			<td>{{item.serviceFee}}</td>
+			<td>{{item.vat}}</td>
+			<td>{{item.total | number: 0-0}}</td>
+		</tr>
+	</tbody>
+</table>
+<div class="text-center">
+	<pagination *ngIf="total > limit" [totalItems]="total" [itemsPerPage]="limit" [maxSize]="5" previousText="&lsaquo;"
+	 nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" (pageChanged)="pageChanged($event)"></pagination>
+</div>

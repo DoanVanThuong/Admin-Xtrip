@@ -1,0 +1,222 @@
+<div class="create-receipt-page container-fluid animated slideInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-content">
+                <div class="ibox clearfix">
+                    <div class="ibox-body">
+                        <a (click)="back()">
+                            <i class="fa fa-chevron-left fa-lg"></i>
+                        </a>
+                        <h3 class="text-info" *ngIf="action !== 'update'">
+                            Tạo phiếu hàng bán trả lại
+                        </h3>
+                        <form action="" [formGroup]="form" class="form row form-receipt">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <div class="col-md-2">
+                                        <label for="">Loại dịch vụ
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <select class="form-control" [(ngModel)]="typeServicesSelected"
+                                            name="typeServicesSelected" [ngModelOptions]="{standalone: true}"
+                                            (ngModelChange)="onChangeService($event)" [disabled]="action === 'update'">
+                                            <option *ngFor="let type of typeServices" [ngValue]="type">
+                                                {{type.title}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- /services -->
+
+                                <div class="form-group row">
+                                    <div class="col-md-2">
+                                        <label for="">Mã đơn hàng
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input formControlName="orderCode" [formControl]="orderCode" type="text"
+                                            class="form-control" placeholder="Nhập mã đơn hàng..."
+                                            (blur)="onGetDetailOrder(orderCode.value)"
+                                            (ngModelChange)="onChangeOrderCode($event)" 
+                                            [attr.readonly]="action === 'update' ? true : null">
+                                    </div>
+                                </div>
+                                <!-- /code -->
+
+                                <div class="form-group row">
+                                    <div class="col-md-2">
+                                        <label for="">Mã công trình
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input formControlName="serialCode" [formControl]="serialCode" type="text"
+                                            class="form-control" readonly placeholder="...">
+                                    </div>
+                                </div>
+                                <!-- /MCT -->
+
+                                <div class="form-group row">
+                                    <div class="col-md-2">
+                                        <label for="">Tên khách hàng
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input formControlName="customerName" [formControl]="customerName" type="text"
+                                            class="form-control" readonly placeholder="...">
+                                    </div>
+                                </div>
+                                <!-- /customer -->
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row" *ngIf="action === 'update'">
+                                    <div class="col-md-2">
+                                        <label for="">Số chứng từ:
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span class="text-success font-18">{{code}}</span>
+                                    </div>
+                                </div>
+                                <!-- /số chứng từ -->
+
+                                <div class="form-group row">
+                                    <div class="col-md-2">
+                                        <label for="">Lý do hoàn trả
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!-- <select class="form-control" [(ngModel)]="reasonSelected" name="reasonSelected"
+                                            [ngModelOptions]="{standalone: true}" [disabled]="action === 'update'"
+                                            (ngModelChange)="onChangeReason($event)">
+                                            <option *ngFor="let reason of reasons" [ngValue]="reason">
+                                                {{reason.title}}</option>
+                                        </select> -->
+                                        <textarea class="form-control form-control-air" rows="3" [formControl]="remark"
+                                            formControlName="remark" (ngModelChange)="onChangeReason($event)" (blur)="onBlurRemark(remark.value)"
+                                            [attr.readonly]="action === 'update' ? true : null"
+                                            [disabled]="action === 'update'"></textarea>
+                                    </div>
+                                </div>
+                                <!-- /lý do thu -->
+
+                                <div class="form-group row">
+                                    <div class="col-md-2">
+                                        <label for="">Ngày chứng từ / Hoạch toán
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" bsDatepicker readonly
+                                            [bsConfig]="bsConfig" [formControl]="refundDate"
+                                            [isDisabled]="action === 'update'"
+                                            [class.user-select-none]="action === 'update'" formControlName="refundDate"
+                                            placeholder="Chọn ngày..."
+                                            [value]="refundDate.value | moment: 'DD/MM/YYYY'">
+                                    </div>
+                                </div>
+                                <!-- /hoạch toán -->
+
+                                <div class="form-group row" *ngIf="action === 'update'">
+                                    <div class="col-md-2">
+                                        <label for="">Ngày ghi sổ
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input formControlName="createdDate" [formControl]="createdDate" type="text"
+                                            class="form-control" readonly
+                                            [value]="createdDate.value | moment: 'DD/MM/YYYY'">
+                                    </div>
+                                </div>
+                                <!-- /ngày ghi sổ -->
+
+                            </div>
+                        </form>
+
+                        <table class="table table-head-success table-bordered table-detail-receipt">
+                            <thead>
+                                <tr>
+                                    <th>Diễn giải</th>
+                                    <th>Số lượng</th>
+                                    <th>Đơn giá</th>
+                                    <th>tổng tiền</th>
+                                    <th *ngIf="action !== 'update'">Chức năng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let content of contentReceipts; let i = index; trackBy: trackByFn">
+                                    <td class="form-group border-none">
+                                        <input type="text" placeholder="Nhập nội dung..." class="form-control"
+                                            [(ngModel)]="content.description" name="content.description"
+                                            [attr.readonly]="action === 'update' ? true : null">
+
+                                    </td>
+                                    <td class="form-group border-none">
+                                        <input type="text" placeholder="Nhập số lượng..." class="form-control"
+                                            [(ngModel)]="content.quantity" name="content.quantity" currencyMask
+                                            [options]="currencyMask"
+                                            [attr.readonly]="action === 'update' ? true : null">
+                                    </td>
+                                    <td class="form-group border-none">
+                                        <input type="text" placeholder="Nhập đơn giá..." class="form-control"
+                                            [(ngModel)]="content.price" name="content.price" currencyMask
+                                            [options]="currencyMask" min=0
+                                            [attr.readonly]="action === 'update' ? true : null">
+                                    </td>
+                                    <td class="form-group border-none">
+                                        <input type="text" placeholder="Nhập tổng tiền..." class="form-control"
+                                            [(ngModel)]="content.quantity * content.price" name="total" currencyMask
+                                            [options]="currencyMask"
+                                            readonly>
+                                    </td>
+                                    <td *ngIf="action !== 'update'">
+                                        <a (click)="deleteConent(i)" *ngIf="contentReceipts.length > 1">
+                                            <span class="btn-icon"><i class="fa fa-trash"></i>Xóa</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!-- /table refund -->
+                        <div *ngIf="action !== 'update'">
+                            <a class="text-success" (click)="addNewContent()">
+                                <span>
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                </span>
+                                thêm dòng
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="ibox-footer text-center">
+                        <button class="btn btn-success btn-fix" (click)="onSubmit(2)" [disabled]="detectDisabled()"
+                            *ngIf="action !== 'update'">
+                            <span class="btn-icon"><i class="fa fa-download"></i>Tạo phiếu thu</span>
+                        </button>
+                        <button class="btn btn-success btn-fix" (click)="onSubmit(2)" *ngIf="action === 'update' && status === 1">
+                            <span class="btn-icon"><i class="fa fa-download"></i>Gửi lại</span>
+                        </button>
+                        <button class="btn btn-success btn-fix" (click)="onSubmit(2)" *ngIf="action === 'update' && status === 0">
+                            <span class="btn-icon"><i class="fa fa-download"></i>Ghi sổ</span>
+                        </button>
+                        
+
+                        <button class="btn btn-secondary btn-fix" (click)="onSubmit(0)" *ngIf="action !== 'update'">
+                            <span class="btn-icon"><i class="fa fa-floppy-o"></i>Ghi nháp</span>
+                        </button>
+                        <button class="btn btn-fix" (click)="back()" *ngIf="action === 'update'">
+                            <span class="btn-icon"><i class="fa fa-backward"></i>Thoát</span>
+                        </button>
+                    </div>
+                    <div class="pull-right" *ngIf="action === 'update'">
+                        <button class="btn btn-fix  btn-success" (click)="onPrint()">
+                            <span class="btn-icon"><i class="fa fa-print"></i>In phiếu</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<preview-refund  [data]="receipt"></preview-refund>

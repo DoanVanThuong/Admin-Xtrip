@@ -1,0 +1,144 @@
+.btn {
+    cursor: pointer;
+    &.btn-primary {
+        background-color: @main;
+        border-color: @main;
+        color: @white;
+        padding: 10px 15px;
+        font-weight: 600;
+        .font-quick;
+        &:active,
+        &:hover,
+        &:focus {
+            outline: none;
+        }
+        &.btn-change-pass {
+            @media screen and (min-width: 768px) {
+                padding: 13px 15px;
+                margin-top: 21px;
+                font-size: @font-size-base;
+                font-weight: bold;
+            }
+            padding: 9px 12px;
+            margin-top: 12px;
+            font-size: 9px;
+        }
+        &.btn-submit {
+            @media screen and (min-width: 768px) {
+                float: right;
+                height: 60px;
+                width: 176px;
+                margin-top: -12px;
+            }
+            .font-quick;
+            font-size: @font-size-base;
+            margin-top: -20px;
+            margin-bottom: 30px;
+            height: 49px;
+            width: 120px;
+            .border-radius(45px);
+        }
+    }
+    &.btn-default {
+        .font-quick();
+        &.btn-collapse {
+            background: @white;
+            border: 0;
+            box-shadow: none;
+            width: 15px;
+            height: 15px;
+            position: relative;
+            margin-top: 10px;
+            float: right;
+            img {
+                @media screen and (min-width: 768px) {
+                    max-width: 20px;
+                    max-height: 17px;
+                }
+                max-width: 13px;
+                max-height: 11px;
+                position: absolute;
+                top: -3px;
+                left: -3px;
+            }
+            &:focus,
+            &:hover {
+                outline: none;
+            }
+        }
+        &.btn-primary-outline,
+        &.btn-line {
+            min-width: 105px;
+            height: 50px;
+            background: @white;
+            color: @main-3;
+            font-size: @font-size-base;
+            border-color: @main-3;
+            border: 1px solid @main-3;
+            &:focus,
+            &:hover {
+                &:active,
+                &:hover,
+                &:focus {
+                    box-shadow: 0 3px 8px @main;
+                    outline: none;
+                }
+            }
+        }
+    }
+    &.btn-block {
+        @media screen and (min-width: 768px) {
+            height: 50px;
+        }
+        font-size: @font-size-base;
+        color: @white;
+        &.btn-next {
+            margin: 70px 0;
+            position: relative;
+            img {
+                display: block;
+                position: absolute;
+                top: 15px;
+                right: 81px;
+                width: 18px;
+                height: 15px;
+            }
+        }
+    }
+}
+
+.btn-search {
+    padding: 6px 12px;
+}
+
+.icon-crud {
+    color: #fff;
+    transition: all .2s;
+    .icon-cre {
+        border-radius: 30%;
+        background: #009900;
+        &:hover {
+            background: #fff;
+            color: #009900;
+        }
+    }
+    .icon-edi {
+        border-radius: 30%;
+        background: #ff9900;
+        &:hover {
+            background: #fff;
+            color: #ff9900;
+        }
+    }
+    .icon-del {
+        border-radius: 30%;
+        background: #ff0000;
+        &:hover {
+            background: #fff;
+            color: #ff0000;
+        }
+    }
+    &:hover {
+        cursor: pointer;
+    }
+}

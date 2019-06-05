@@ -1,0 +1,67 @@
+<form action="">
+    <div class="form-group col-md-6 input-search">
+        <input type="text" class="form-control   pull-right" placeholder="Nhập từ khóa để tìm..." [(ngModel)]="keyword"
+            name="keyword">
+    </div>
+    <div class="col-md-1">
+        <button class="btn btn-success btn-search" type="submit" (click)="onSearch()">Tìm</button>
+    </div>
+    <div class="pull-right">Tổng số booking:
+        <strong class="font-bold">{{total}}</strong>
+
+        <!-- select limiut page size list -->
+        <select-limit [numbers]="pageSizeList" (onChange)="onChangeLimitSize($event)"></select-limit>
+    </div>
+</form>
+<div class="table-ticket-flight">
+    <table class="table table-head-success table-striped">
+        <thead>
+            <tr class="text-center">
+                <th *ngFor="let header of headers; let i = index" [class]="sortClass(header.sortable ? header.field : '')"
+                    (click)="sortBy(header.sortable ? header.field : '')">
+                    {{ header.title }}
+                    <span class="sort-indicator"></span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of tickets" class="text-center">
+                <td>{{item.no}}</td>
+                <td>{{item.code}}</td>
+                <td>{{!item.bookingCode ? '-' : item.bookingCode}}</td>
+                <td class="lead info-user" (click)=showDetailTicket(item)>{{item.customerName}}</td>
+                <td>{{item.productName}}</td>
+                <td>{{item.totalPrice | number:'.0-0'}} đ</td>
+                <td>{{item.bookingDate | moment: 'HH:mm DD/MM/YYYY'}}</td>
+                <td [ngSwitch]="item.isIssued">
+                    <div *ngSwitchCase="true">-</div>
+                    <div *ngSwitchDefault>
+                        <countdown [time]="item.holdExpiry | date: 'dd/MM/yyyy HH:mm:ss'"></countdown>
+                    </div>
+                </td>
+                <td [ngClass]="item.actualStatus ? 'text-success' : 'text-danger'">{{item.actualStatus ? 'Thành công' :
+                    'Thất
+                    bại'}}</td>
+                <td [ngSwitch]="item.isIssued">
+                    <div *ngSwitchCase="true" class="text-success">Đã xuất vé</div>
+                    <div *ngSwitchCase="false" class="text-muted">Chưa xuất vé
+                    </div>
+                </td>
+                <td>
+                    <button class="btn btn-fix" [class.btn-success]="!item.isIssued" [disabled]="item.isIssued" (click)="onComfirmTicket(item)">
+                        {{item.isIssued ? 'Đã xuất vé': item.holdExpiry | issueNow}}
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<div class="text-center">
+    <pagination *ngIf="total > limit" [totalItems]="total" [itemsPerPage]="limit" [maxSize]="10" previousText="&lsaquo;"
+        nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" (pageChanged)="pageChanged($event)"></pagination>
+</div>
+
+<!-- detail -->
+<sidebar-detail [open]="isOpenSideBar" [type]="type" [data]="ticketDetail"></sidebar-detail>

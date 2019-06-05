@@ -1,0 +1,53 @@
+@import '_variables.less';
+
+.popular-daytour-wp {
+    .list-destination {
+        li {
+            color: @gray;
+            -webkit-transition: all .2s;
+            transition: all .2s;
+
+            &.active {
+                color: @main-4;
+                font-weight: 600;
+            }
+
+            &:hover {
+                color: @main-4;
+            }
+        }
+    }
+
+    .list-content {
+        max-width: 1000px;
+
+        li {
+            &.active {
+                background: @color-eee;
+            }
+
+            &:hover {
+                background: @color-eee;
+            }
+
+            &.media {
+                padding: 1.2rem 5px;
+            }
+
+            .media-body {
+                width: 100%;
+            }
+
+            .media-img {
+                width: 130px;
+                height: 64px;
+
+                img {
+                    width: 100%;
+                    height: auto;
+                    overflow: hidden;
+                }
+            }
+        }
+    }
+}

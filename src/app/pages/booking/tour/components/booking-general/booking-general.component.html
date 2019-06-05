@@ -1,0 +1,184 @@
+<div class="booking-tourDetail-general container p-relative">
+    <div class="row">
+        <div class="col-sm-12">
+            <form autocomplete="on" novalidate [formGroup]="formGeneral">
+                <div class="form-group row">
+                    <label for="" class="col-sm-2 col-form-label">Mã công trình</label>
+                    <div class="col-sm-6">
+                        <input type="text" placeholder="Nhập mã công trình..." class="form-control"
+                            [formControl]="serialCode" formControlName="serialCode"
+                            (blur)="onBlurSerialCode(serialCode.value)">
+                        <div class="tour-detail-info-wp m-t-10 animated fadeIn" *ngIf="!!tourDetail">
+                            <ul>
+                                <li>
+                                    <label for="">Tên tour: </label>
+                                    <span>{{tourDetail.name | uppercase}}</span>
+                                </li>
+                                <li>
+                                    <label for="">Nơi đến: </label>
+                                    <span>{{tourDetail.arrivalName}}</span>
+                                </li>
+                                <li *ngIf="!!tourDetail.departName">
+                                    <label for="">Nơi khởi hành: </label>
+                                    <span>{{tourDetail.departName}}</span>
+                                </li>
+                                <li *ngIf="!!tourDetail.days && tourDetail.nights">
+                                    <label for="">Thời gian tour: </label>
+                                    <span>{{tourDetail.days + 'N' + tourDetail.nights +'D'}}</span>
+                                </li>
+                                <li>
+                                    <label for="">Ngày khởi hành: </label>
+                                    <span>{{tourDetail.departDate | moment: 'DD/MM/YYYY'}}</span>
+                                </li>
+                                <li *ngIf="tourDetail.available > 0">
+                                    <label for="">Số chỗ còn: </label>
+                                    <span class="text-success">{{tourDetail.available}} chỗ</span>
+                                </li>
+
+                                <li *ngIf="tourDetail.available === 0">
+                                    <label for="">Số chỗ còn: </label>
+                                    <span class="text-danger"> hết chỗ</span>
+                                </li>
+
+                                <li *ngIf="!!tourDetail.adultPrice">
+                                    <label for="">Giá người lớn: </label>
+                                    <span>{{tourDetail.adultPrice | number :'.0-2'}} đ</span>
+                                </li>
+                                <li *ngIf="!!tourDetail.childPrice">
+                                    <label for="">Giá trẻ em: </label>
+                                    <span>{{tourDetail.childPrice | number :'.0-2'}} đ</span>
+                                </li>
+                                <li *ngIf="!!tourDetail.infantPrice">
+                                    <label for="">Giá em bé: </label>
+                                    <span>{{tourDetail.infantPrice | number : '.0-2'}} đ</span>
+                                </li>
+                                <li *ngIf="!!tourDetail.highlights">
+                                    <label for="">Nổi bật: </label>
+                                    <span>{{tourDetail.highlights}}</span>
+                                </li>
+                            </ul>
+                            <!-- <div class="text-warning" *ngIf="!tourDetail.isSystemCode">Mã công trình được sinh ra từ trang mã công trình, Vui lòng nhập thêm dữ liệu</div> -->
+                        </div>
+                    </div>
+                    <div class="col-sm-4" *ngIf="!!tourDetail">
+                        <img *ngIf="!!tourDetail.photo.src" [src]="tourDetail.photo.src" alt="" class="img-responsive"
+                            onerror="this.src = 'assets/images/emptydata.png'">
+                    </div>
+                </div>
+
+                <div *ngIf="isSearch && tourDetail.available != 0" class="animated fadeIn">
+                    <div class="form-group row">
+                        <label for="" class="col-sm-2 col-form-label">Giá bán</label>
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="">Người lớn</label>
+                                    <input type="text" placeholder="Nhập giá người lớn" class="form-control"
+                                        [formControl]="adultPrice" formControlName="adultPrice" currencyMask
+                                        [options]="currencyMask">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="">Trẻ em</label>
+                                    <input type="text" placeholder="Nhập giá trẻ em" class="form-control"
+                                        [formControl]="childPrice" formControlName="childPrice" currencyMask
+                                        [options]="currencyMask">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="">Em bé</label>
+                                    <input type="text" placeholder="Nhập giá em bé" class="form-control"
+                                        [formControl]="infantPrice" formControlName="infantPrice" currencyMask
+                                        [options]="currencyMask">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" *ngIf="tourDetail.isSystemCode ">
+                        <label for="" class="col-sm-2 col-form-label">Số người</label>
+                        <div class="col-sm-6">
+                            <div class="form-group row ">
+                                <div class="col-sm-4">
+                                    <div>
+                                        <span class="font-bold">Người lớn</span>
+                                        ( trên 11 tuổi )
+                                    </div>
+                                    <app-counter [min]="(!!tourDetail.available && tourDetail.available > 0) ? 1 : 0"
+                                        [max]="tourDetail.available"
+                                        [value]="!!tourDetail.available ? bookingTour.adults : 0"
+                                        (change)="onPeopleChanges($event, 'adult')"></app-counter>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div>
+                                        <span class="font-bold">Trẻ em </span>
+                                        ( 2 - 11 tuổi )
+                                    </div>
+                                    <app-counter [min]="0" [max]="tourDetail.available" [value]="bookingTour.children"
+                                        (change)="onPeopleChanges($event, 'children')"></app-counter>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div>
+                                        <span class="font-bold"> Em bé</span>
+                                        ( dưới 2 tuổi )
+                                    </div>
+                                    <app-counter [min]="0" [max]="!!tourDetail.available ? bookingTour.adults : 0"
+                                        [value]="bookingTour.infants" (change)="onPeopleChanges($event, 'infant')">
+                                    </app-counter>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" *ngIf="!tourDetail.isSystemCode">
+                        <label for="" class="col-sm-2 col-form-label">Số người</label>
+                        <div class="col-sm-6">
+                            <div class="form-group row ">
+                                <div class="col-sm-4">
+                                    <div>
+                                        <span class="font-bold">Người lớn</span>
+                                        (11 tuổi trở lên)
+                                    </div>
+                                    <input type="number" class="form-control" placeholder="Nhập số người lớn" min="0"
+                                        [(ngModel)]="adult" name="adult" [ngModelOptions]="{standalone: true}">
+                                </div>
+                                <div class="col-sm-4">
+                                    <div>
+                                        <span class="font-bold">Trẻ em </span>
+                                        (2 - dưới 11 tuổi)
+                                    </div>
+                                    <input type="number" class="form-control" placeholder="Nhập số trẻ em" min="0"
+                                        [(ngModel)]="child" name="child" [ngModelOptions]="{standalone: true}">
+                                </div>
+                                <div class="col-sm-4">
+                                    <div>
+                                        <span class="font-bold"> Em bé</span>
+                                        (dưới 2 tuổi)
+                                    </div>
+                                    <input type="number" class="form-control" placeholder="Nhập số em bé" min="0"
+                                        [(ngModel)]="infant" name="infant" [ngModelOptions]="{standalone: true}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="" class="col-sm-2 col-form-label">Tổng tiền</label>
+                        <div class="col-sm-6">
+                            <input type="text" placeholder="Nhập tổng tiền" class="form-control"
+                                [formControl]="totalPrice" formControlName="totalPrice" currencyMask
+                                [options]="currencyMask">
+                        </div>
+                    </div>
+
+                    <div class="tab-footer">
+                        <div class="text-right">
+                            <button class="btn btn-fix btn-success" [disabled]="detectDisabled()" type="submit"
+                                (click)="goNext()">Tiếp tục</button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>

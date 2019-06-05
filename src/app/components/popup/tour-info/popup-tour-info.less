@@ -1,0 +1,77 @@
+@import '_variables.less';
+
+.tour-info-popup {
+    .modal-tour-info {
+        min-width: 50%;
+        .img-journey{
+            max-width: 60%;
+            height: auto;
+            overflow: hidden;
+            margin: 0px auto;
+            margin-bottom: 10px;
+        }
+        .tour-journey-desktop-page {
+            margin-top: 20px;
+            .tour-journey-group {
+                border-left: 1px dashed @c-bdbdbd;
+                margin: 0px 12px;
+                .tour-dot {
+                    width: 52px;
+                    height: 52px;
+                    background-color: @main;
+                    color: @white;
+                    border-radius: 50%;
+                    left: -10px;
+                    position: absolute;
+                    overflow: hidden;
+                    display: -webkit-box;
+                    display: -ms-flexbox;
+                    display: flex;
+                    -webkit-box-pack: center;
+                        -ms-flex-pack: center;
+                            justify-content: center;
+                    -ms-flex-line-pack: center;
+                        align-content: center;
+                    .text-in-dot {
+                        padding: 5px;
+                        text-align: center;
+                        font-size: 15px;
+                    }
+                }
+                .title-journey {
+                    font-size: 16px;
+                    font-weight: bold;
+                    color: @black;
+                    padding: 0 40px;
+                    margin-top: 14px;
+                }
+                .btn-showmore {
+                    border: 1px solid @main-3;
+                    border-radius: 5px;
+                    padding: 6px 12px;
+                    font-weight: 500;
+                }
+                .content {
+                    padding: 0 18px;
+                    .sub-item {
+                        font-size: 14px;
+                        color: @gray-2;
+                        line-height: 1.8;
+                    }
+                    .detail-journey {
+                        text-align: justify;
+                        .detail-text {
+                            p {
+                                font-size: 15px;
+                            }
+                        }
+                    }
+                    .rotate-180 {
+                        -webkit-transform: rotate(180deg);
+                        transform: rotate(180deg);
+                    }
+                }
+            }
+        }
+    }
+}

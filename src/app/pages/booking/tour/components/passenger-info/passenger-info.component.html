@@ -1,0 +1,82 @@
+<div class="passenger-info">
+  <div class="panel" [class.panel-success]="data.type === 'ADT' || !data.type" [class.panel-info]="data.type === 'CHD'"
+    [class.panel-warning]="data.type === 'INF'">
+    <div class="panel-heading">Hành khách {{data.type == 'INF' ? 'em bé' : (data.type == 'CHD' ? 'trẻ em' : 'người lớn')}} 
+      <span [ngSwitch]="data.type" class="pull-right">
+        <span *ngSwitchCase="'ADT'">
+          <i class="fa fa-male" aria-hidden="true"></i>
+        </span>
+        <span *ngSwitchDefault>
+          <i class="fa fa-child" aria-hidden="true"></i>
+        </span>
+      </span>
+    </div>
+    <div class="panel-body">
+      <form autocomplete="on" novalidate [formGroup]="formPassenger" class="form-passenger">
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Danh xưng</label>
+          <div class="col-sm-6">
+            <select class="form-control" [(ngModel)]="selectedTitle" name="selectedTitle"
+              [ngModelOptions]="{standalone: true}" (ngModelChange)="onChangeTitle($event)">
+              <option *ngFor="let title of titles; let i = index" [ngValue]="title">{{title.name}}</option>
+            </select>
+          </div>
+        </div>
+        <!-- /danh xưng -->
+
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Họ & Tên</label>
+          <div class="col-sm-4 p-r-0" [ngClass]="{'has-error  has-feedback': lastName.touched && lastName.errors}">
+            <input type="text" autofocus class="form-control" placeholder="Nhập họ..." [formControl]="lastName"
+              formControlName="lastName">
+          </div>
+          <div class="col-sm-6" [ngClass]="{'has-error  has-feedback': firstName.touched && lastName.errors}">
+            <input type="text" class="form-control" placeholder="Nhập tên..." [formControl]="firstName"
+              formControlName="firstName">
+          </div>
+        </div>
+        <!-- /họ tên -->
+
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Ngày tháng năm sinh</label>
+          <div class="col-sm-10">
+            <input type="text" placeholder="DD/MM/YYYY" class="form-control" bsDatepicker [bsConfig]="bsConfig" readonly
+              [formControl]="dateOfBirth" formControlName="dateOfBirth"  [value]="dateOfBirth.value | moment: 'DD/MM/YYYY'">
+          </div>
+        </div>
+
+        <div class="form-group row" *ngIf="isInternational">
+          <label class="col-sm-2 col-form-label">Số hộ chiếu</label>
+          <div class="col-sm-4 p-r-0"
+            [ngClass]="{'has-error  has-feedback': passportNumber.touched && passportNumber.errors}">
+            <input type="text" autofocus class="form-control" placeholder="Nhập hộ chiếu..."
+              [formControl]="passportNumber" formControlName="passportNumber">
+          </div>
+          <div class="col-sm-6">
+            <input type="text" placeholder="Ngày hết hạn" class="form-control" bsDatepicker [bsConfig]="bsConfig"
+              [minDate]="bsConfig.minDate" readonly [formControl]="passportExpiry" formControlName="passportExpiry" [value]="passportExpiry.value | moment: 'DD/MM/YYYY'">
+          </div>
+        </div>
+        <!-- /hộ chiếu -->
+
+        <div class="form-group row" *ngIf="isInternational">
+          <label class="col-sm-2 col-form-label">Quốc gia & quốc tịch</label>
+          <div class="col-sm-4 p-r-0">
+            <select class="form-control" [(ngModel)]="selectedCountry" name="selectedCountry"
+              [ngModelOptions]="{standalone: true}" (ngModelChange)="onChangeNation($event,'country')">
+              <option *ngFor="let country of countries; let i = index" [ngValue]="country">{{country.name}}</option>
+            </select>
+          </div>
+          <div class="col-sm-6">
+            <select class="form-control" [(ngModel)]="selectedNationality" name="selectedNationality"
+              [ngModelOptions]="{standalone: true}" (ngModelChange)="onChangeNation($event,'nation')">
+              <option *ngFor="let nation of countries; let i = index" [ngValue]="nation">{{nation.name}}</option>
+            </select>
+          </div>
+        </div>
+        <!-- /ngày hết hạn -->
+
+      </form>
+    </div>
+  </div>
+</div>

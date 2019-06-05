@@ -1,0 +1,89 @@
+<div class="flash-tour-page animated fadeIn">
+  <div class="ibox">
+    <div class="ibox-head">
+      <div class="ibox-title">
+        <h3>Danh sách {{total}} tour giờ chót
+        </h3>
+        <button class="btn btn-fix btn-outline-blue" (click)="addTourFlashDeal()">
+          <span class="btn-icon"><i class="fa fa-plus"></i>Tour giờ chót</span>
+        </button>
+      </div>
+      <select-limit [numbers]="pageSizeList" (onChange)="onChangeLimitSize($event)" [selectedNumber]="limit"
+        class="pull-right"></select-limit>
+    </div>
+    <div class="ibox-body">
+      <div class="table-responsive table-hover">
+        <table class="table">
+          <thead class="thead-default thead-lg">
+            <tr>
+              <!-- <th></th> -->
+              <th>STT</th>
+              <th>Mã tour</th>
+              <th>Tên tour</th>
+              <th>Giá bán </th>
+              <th>Thời hạn</th>
+              <!-- <th>Thứ tự hiển thị</th> -->
+              <th>Chức năng</th>
+            </tr>
+          </thead>
+          <!-- <tbody ngxDroppable (drop)="dropTour($event)" [model]="tours"> -->
+          <tbody>
+
+            <!-- <tr class="text-center pointer" ngxDraggable *ngFor="let tour of tours; let i = index; trackBy: trackByFn"
+                (drop)="dropTour($evet)" [model]="tour" (drag)="dragTour($event)"> -->
+            <tr class="text-center pointer" *ngFor="let tour of tours; let i = index; trackBy: trackByFn">
+              <!-- <td>
+                  <i class="fa fa-bars fa-2x" aria-hidden="true" ngxDragHandle title="Kéo/Thả để xếp thứ tự"></i>
+                </td> -->
+              <td>{{i+1}}</td>
+              <td class="font-bold font-12">{{tour.code}}
+                <span>
+                  <a ngxClipboard [cbContent]="tour.code" (cbOnSuccess)="onClipboardSuccess($event)">
+                    <i class="fa fa-clipboard text-success" aria-hidden="true"></i>
+                  </a>
+                </span>
+              </td>
+              <td>
+                <div class="img-tour">
+                  <img [src]="tour.photo.src | resizeImage: 200" onerror="this.src = 'assets/images/emptydata.png'" alt="" class="">
+                  <span>{{tour.name}}</span>
+                  <div class="tour-day">{{tour.days + 'N' + tour.night+ 'Đ'}}</div>
+                </div>
+              </td>
+              <td class="">{{tour.adultPrice | number: '.0-2'}}</td>
+              <td class="">
+                <div class="expiry-date">
+                  <countdown [time]="tour.to | date: 'dd/MM/yyyy HH:mm:ss'" [showDay]="true"></countdown>
+                </div>
+                {{(tour.from | moment:'HH:mm DD/MM/YYYY') +' - ' + (tour.to | moment:'HH:mm DD/MM/YYYY')}}
+              </td>
+              <!-- <td class="text-success">{{tour.weight || 1}}</td> -->
+              <td>
+                <ul class="list-inline btn-action d-flex">
+                  <li>
+                    <button title="Sửa tour {{tour.name}}" class="btn btn-outline-success btn-fix "
+                      (click)="onEdit(tour)">
+                      <span class="btn-icon"><i class="fa fa-edit"></i>Sửa</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button class="btn btn-outline-danger btn-fix" (click)="onDeleteTour(tour)"
+                      title="Xóa tour {{tour.name}}">
+                      <span class="btn-icon"><i class="fa fa-trash"></i>Xóa</span>
+                    </button>
+                  </li>
+                </ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="text-center">
+        <pagination *ngIf="total > limit" [totalItems]="total" [itemsPerPage]="limit" [maxSize]="maxSize"
+          previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+          (pageChanged)="pageChanged($event)"></pagination>
+      </div>
+    </div>
+  </div>
+
+  <!-- <ngx-dnd-container [model]="['']" class="hidden"></ngx-dnd-container> -->

@@ -1,0 +1,36 @@
+@import '_variables.less';
+
+.form-select-flight {
+    .data-flight {
+        border-left: 1px solid @c-dfdfdf;
+        border-right: 1px solid @c-dfdfdf;
+        border-bottom: 1px solid  @c-dfdfdf;
+        ul{
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+                flex-wrap: wrap;
+        }
+        padding: 10px;
+        .item-selected {
+            background: @green-2;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -ms-flex-line-pack: center;
+            align-content: center;
+            color: @white;
+            font-size:13px;
+            max-width: 128px;
+            border-radius:20px;
+            margin: 5px 10px 0px 0px;
+            span{
+                padding-left:10px;
+            }
+        }
+    }
+}

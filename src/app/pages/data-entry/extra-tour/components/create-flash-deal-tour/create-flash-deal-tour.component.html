@@ -1,0 +1,140 @@
+<div class="create-flash-deal-wp m-t-20">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="ibox">
+        <div class="ibox-body">
+          <h3 class="text-center text-primary">
+            {{action === 'create' ? 'Thêm tour giờ chót' : 'Sửa tour ' + params.code}}</h3>
+          <div class="row">
+            <div class="col-lg-8">
+              <form [formGroup]="formGroup">
+                <div class="form-group mb-4">
+                  <label>Mã công trình <span class="text-danger">*</span></label>
+                  <input (blur)="onBlurSerialCode(code.value)" type="text" class="form-control form-control-solid"
+                    placeholder="Nhập mã công trình tour" [formControl]="code" formControlName="code"
+                    [attr.readonly]="action === 'update' ? true : null" [class.bg-disabled]="action === 'update'">
+                </div>
+                <div class="content" *ngIf="isSearch && !!tourDetail">
+                  <div class="form-group mb-4">
+                    <label>Tên tour</label>
+                    <input class="form-control form-control-solid bg-disabled" type="text" [value]="tourDetail.name"
+                      readonly>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <div class="form-group mb-4">
+                        <label>Ngày khởi hành</label>
+                        <input class="form-control form-control-solid bg-disabled" type="text"
+                          [value]="tourDetail.departDate | moment: 'DD/MM/YYYY'" readonly>
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="form-group mb-4">
+                        <label>Nơi khởi hành</label>
+                        <input class="form-control form-control-solid bg-disabled" type="text"
+                          [value]="tourDetail.departName" readonly>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                      <div class="form-group mb-4">
+                        <label>Nơi đến</label>
+                        <input class="form-control form-control-solid bg-disabled" type="text"
+                          [value]="tourDetail.arrivalName" readonly>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-4 form-group mb-4">
+                      <label>Số ngày: </label>
+                      <input class="form-control form-control-solid bg-disabled" type="text" [value]="tourDetail.days"
+                        readonly>
+                    </div>
+                    <div class="col-sm-4 form-group mb-4">
+                      <label>Số Đêm: </label>
+                      <input class="form-control form-control-solid bg-disabled" type="text" [value]="tourDetail.nights"
+                        readonly>
+                    </div>
+                    <div class="col-sm-4 form-group mb-4">
+                      <label>Số chỗ</label>
+                      <input class="form-control form-control-solid bg-disabled" type="text"
+                        [value]="tourDetail.available" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group mb-4">
+                    <label>Điểm nổi bật</label>
+                    <input class="tagsinput form-control form-control-solid bg-disabled" type="text" placeholder="Tags"
+                      [value]="tourDetail.highlights" readonly>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-4 form-group mb-4">
+                      <label>Giá người lớn: <span class="text-danger">*</span> </label>
+                      <input class="form-control form-control-solid" type="text" placeholder="Nhập giá người lớn"
+                        [formControl]="adultPrice" formControlName="adultPrice" currencyMask [options]="currencyMask">
+                    </div>
+                    <div class="col-sm-4 form-group mb-4">
+                      <label>Giá trẻ em:<span class="text-danger">*</span> </label>
+                      <input class="form-control form-control-solid" type="text" placeholder="Nhập giá trẻ em"
+                        [formControl]="childPrice" formControlName="childPrice" currencyMask [options]="currencyMask">
+                    </div>
+                    <div class="col-sm-4 form-group mb-4">
+                      <label>Giá em bé:<span class="text-danger">*</span> </label>
+                      <input class="form-control form-control-solid" type="text" placeholder="Nhập giá em bé"
+                        [formControl]="infantPrice" formControlName="infantPrice" currencyMask [options]="currencyMask">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <label>Thời gian bắt đầu: <span class="text-danger">*</span> </label>
+                      <div class="row">
+                        <div class="col-sm-4">
+                          <timepicker [showMeridian]="false" [showSpinners]="false" [formControl]="startTime"
+                            formControlName="startTime"></timepicker>
+                        </div>
+                        <div class="col-sm-8">
+                          <input type="text" class="form-control form-control-solid bg-white"
+                            placeholder="Chọn ngày bắt đầu" formControlName="startDate" bsDatepicker readonly
+                            [bsConfig]="bsConfig" [formControl]="startDate"
+                            [value]="startDate.value | moment: 'DD/MM/YYYY'">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <label>Thời gian kết thúc: <span class="text-danger">*</span> </label>
+                      <div class="row">
+                        <div class="col-sm-4">
+                          <timepicker [showMeridian]="false" [showSpinners]="false" [formControl]="endTime"
+                            formControlName="endTime"></timepicker>
+                        </div>
+                        <div class="col-sm-8">
+                          <input type="text" class="form-control form-control-solid bg-white"
+                            placeholder="Chọn ngày kết thúc" formControlName="endDate" bsDatepicker
+                            [bsConfig]="bsConfig" [formControl]="endDate"
+                            [value]="endDate.value | moment: 'DD/MM/YYYY'">
+                        </div>
+                      </div>
+
+
+                    </div>
+                  </div>
+                  <div class="text-left m-t-20">
+                    <button *ngIf="action === 'create'" [disabled]="!formGroup.valid" class="btn btn-fix btn-success"
+                      type="button" (click)="onSubmit(formGroup.value)">Hoàn
+                      thành</button>
+                    <button *ngIf="action === 'update'" [disabled]="!formGroup.valid" class="btn btn-fix btn-success"
+                      type="button" (click)="onSubmit(formGroup.value)">Cập nhật</button>
+                    <button class="btn btn-secondary btn-fix " (click)="back()">Hủy</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="col-lg-4" *ngIf="!!tourDetail && tourDetail.photo">
+              <img [src]="tourDetail.photo.src" alt="" class="img-responsive"
+                onerror="this.src = 'assets/images/emptydata.png'">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

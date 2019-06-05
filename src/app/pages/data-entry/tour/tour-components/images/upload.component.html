@@ -1,0 +1,85 @@
+<div class="tour-uploadImage-section fade-in-up">
+    <div class="tour-uploadImage-wp" style="border:1px solid #f5f5f5">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="img-wp">
+                    <img src="{{imgDefault}}" alt="" class="img-responsive img-inputImage" id="imgedit"
+                        (click)="inputFile()">
+                    <!-- <div class="img-inputImage text-center"  (click)="inputFile()">
+                        <i class="fa fa-picture-o  fa-5x" aria-hidden="true"></i>
+                        <div class="m-t-20 title-wp pointer">
+                            <div class="title">Nhấn vào đây để tải hình ảnh</div>
+                            <div class="sub-title">Dung lượng tối đa 5 MB</div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="!!images">
+            <div class="col-md-12">
+                <div class="text-right m-r-30 font-20 text-success">
+                    <i class="fa fa-picture-o" aria-hidden="true"></i>
+                    {{images.photos.length}}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12" *ngIf="!!images">
+                <ul class="list-unstyled list-images" ngxDroppable (drop)="dropTour($event)" [model]="images.photos">
+                    <li *ngFor="let img of images.photos; let i = index; trackBy: index" class="image-item pointer row"
+                        ngxDraggable [model]="img" (drag)="dragTour($event, i)">
+                        <div class="col-md-12">
+                            <div class="d-flex align-items-center justify-content-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <i class="fa fa-bars fa-2x" aria-hidden="true" ngxDragHandle
+                                        title="Kéo/Thả để xếp thứ tự"></i>
+                                    <div class="image">
+                                        <img src="{{img.src | resizeImage: 250}}" [alt]="img.src" [title]="img.src">
+                                    </div>
+                                </div>
+                                <div>{{img.src | fileName}}</div>
+                                <div class="">
+                                    <button class="btn btn-outline-info btn-fix" (click)="setDefaultImageTour(img)"
+                                        [class.bg-info]="selectedImage !== null &&  selectedImage.src === img.src">
+                                        <span class="btn-icon"><i class="fa fa-heart"></i>Ảnh đại diện</span>
+                                    </button>
+                                    <button *ngIf="images.photos.length > 1" class="btn btn-outline-danger btn-fix"
+                                        (click)="deleteImage(img)">
+                                        <span class="btn-icon"><i class="fa fa-trash"></i>Xóa ảnh</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </li>
+                </ul>
+                <!-- <div class="img-wp">
+                    <img src="{{img.src | resizeImage: 250}}" alt=""  (click)="setDefaultImageTour(img)">
+                    <div class="pick-img" *ngIf="selectedImage !== null &&  selectedImage.src === img.src">
+                        <div class="pick-img-wp">
+                            <i class="fa fa-check" aria-hidden="true"></i>
+                            <span>Ảnh đại diện</span>
+                        </div>
+                    </div>
+                    <div class="pick">
+                        <div class="pick-img-wp">
+                            <span>Đặt làm ảnh đại diện</span>
+                        </div>
+                    </div>
+                    <div class="img-del-wp" (click)="deleteImage(img)" *ngIf="images.photos.length > 1">
+                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+    <div class="tab-footer">
+        <div class="text-right">
+            <button class="btn btn-fix btn-success" [disabled]="selectedImage === null"
+                (click)="btnCompleteUploadImage()">{{action
+                === 'update' ? 'Cập nhật' : 'Tiếp tục'}}</button>
+        </div>
+    </div>
+</div>
+<ngx-dnd-container [model]="['']" class="hidden"></ngx-dnd-container>

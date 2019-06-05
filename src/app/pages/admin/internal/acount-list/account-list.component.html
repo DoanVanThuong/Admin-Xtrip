@@ -1,0 +1,96 @@
+<div class="internal-list-page">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-heading">
+
+            </div>
+            <div class="page-content ">
+                <div class="ibox">
+                    <div class="ibox-head row">
+                        <div class="col-md-6">
+                            <h2>Danh sách tài khoản</h2>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <span>Tổng số tài khoản:
+                                <strong>{{total}}</strong>
+                            </span>
+                            <button class="btn btn-fix btn-warning" (click)="createAccount()">
+                                <span>
+                                    <i class="fa fa-plus"></i>
+                                    Thêm tài khoản
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="ibox-body">
+                        <div class="table-list-account table-responsive">
+                            <table class="table table-hover table-head-success">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>#</th>
+                                        <th>Tên</th>
+                                        <th>Username</th>
+                                        <th>Chức vụ</th>
+                                        <th>Ngày tạo</th>
+                                        <th> Trạng thái</th>
+                                        <th>Chức năng</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of accounts; let i  = index" class="text-center">
+                                        <td class="btn-switch-status" data-toggle="tooltip">
+                                            <label class="switch">
+                                                <input type="checkbox" [(ngModel)]="item.enabled" [checked]="item.enabled"
+                                                    (change)="handleCheckboxEnableAccount(item.enabled, item)">
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </td>
+                                        <td>{{item.stt}}</td>
+                                        <td>{{item.fullName === null ? '-' : item.fullName}}</td>
+                                        <td>{{item.userName}}</td>
+                                        <td>{{(item.roles).join()}}</td>
+                                        <td>{{item.createdDate | date: 'dd/MM/yyyy'}}</td>
+                                        <td [ngClass]="item.enabled ? 'text-success': 'text-muted'">{{item.enabled ?
+                                            'Đã kích hoạt': 'Chưa kích hoạt'}}</td>
+                                        <td>
+                                            <ul class=" list-inline">
+                                                <li>
+                                                    <button class="btn btn-fix btn-warning btn-animated from-top"
+                                                        (click)="onEdit(item)">
+                                                        <span class="visible-content">
+                                                            <i class="fa fa-edit"></i>
+                                                        </span>
+                                                        <span class="hidden-content">Sửa</span>
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button class="btn btn-fix btn-danger btn-animated from-top"
+                                                        (click)="onDelete(item)">
+                                                        <span class="visible-content">
+                                                            <i class="fa fa-trash"></i>
+                                                        </span>
+                                                        <span class="hidden-content">Xóa</span>
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="text-center">
+                            <pagination *ngIf="total > limit" [totalItems]="total" [itemsPerPage]="limit" [maxSize]="5"
+                                previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+                                (pageChanged)="pageChanged($event)"></pagination>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>

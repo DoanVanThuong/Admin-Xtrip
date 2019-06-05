@@ -1,0 +1,237 @@
+<div class="create-constrution-page container-fluid fade-in-up">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="page-content">
+        <div class="ibox clearfix">
+          <div class="ibox-body">
+            <h4 class="text-center text-info">
+              {{action === 'update' ? 'Sửa mã ' + code : 'Tạo mã công trình ' + SelectedType.title}}</h4>
+            <div class="row">
+              <div class="col-md-2">
+                <label>Loại mã
+                  <span class="text-danger">*</span>
+                </label>
+              </div>
+              <div class="col-md-10">
+                <label class="radio-inline" *ngFor="let type of types">
+                  <input type="radio" [checked]="type.value === SelectedType.value" name="type"
+                    (change)="selectType(type)" [disabled]="action === 'update'">{{type.title}}
+                </label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <form [formGroup]="formTour" novalidate *ngIf="SelectedType.value === 3" class="form-group m-t-10">
+                  <div class="form-group row">
+                    <div class="col-md-2">
+                      <label for="">Nhà cung cấp
+                        <span class="text-danger">*</span>
+                      </label>
+                    </div>
+                    <div class="col-md-6">
+                      <select class="form-control" [(ngModel)]="tourSupplierSelected" name="tourSupplierSelected"
+                        [ngModelOptions]="{standalone: true}" [disabled]="action === 'update'">
+                        <option *ngFor="let supplier of tourSuppliers" [ngValue]="supplier">
+                          {{supplier.name  + ' - ' + supplier.code}}</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4" *ngIf="!!tourSupplierSelected && !!tourSupplierSelected.logo">
+                      <img [src]="tourSupplierSelected.logo.src" onerror="this.src = 'assets/images/emptydata.png'"
+                        alt="" class="img-responsive img-supplier">
+                    </div>
+                  </div>
+                  <!-- /nhà cung cấp -->
+
+                  <div class="form-group row">
+                    <label for="" class="col-md-2 col-form-label">Nơi khởi hành
+                      <span class="text-danger">*</span>
+                    </label>
+                    <div class="col-md-6">
+                      <div class="depart-wp"
+                        [ngClass]="{'has-error  has-feedback': placeDepart.touched && placeDepart.errors}">
+                        <input type="text" class="form-control" (ngModelChange)="searchDepart($event)"
+                          placeholder="Nhập nơi khởi hành..." [formControl]="placeDepart" formControlName="placeDepart"
+                          (click)="searchDepart(' ')" readonly [class.user-select-none]="action === 'update'">
+                        <search-auto-complete [source]="departs" [show]="isSearch" [isSelected]="isSelectedDepart"
+                          (select)="selectDepart($event)"></search-auto-complete>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /nơi khởi hành -->
+
+                  <div class="form-group row">
+                    <label for="" class="col-md-2 col-form-label">Nơi đến
+                      <span class="text-danger">*</span>
+                    </label>
+                    <div class="col-md-6">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <label class="radio-inline" *ngFor="let tour of tourTypes">
+                            <input type="radio" [checked]="tour.selected" [value]="tour.IsInternational" name="tourType"
+                              [formControl]="tourType" formControlName="tourType"
+                              (change)="onChangeTourType(tour)">{{tour.title}}
+                          </label>
+                        </div>
+                        <br> &nbsp;
+                        <div class="col-md-12">
+                          <div class="depart-wp"
+                            [ngClass]="{'has-error  has-feedback': placeArrival.touched && placeArrival.errors}">
+                            <input type="text" class="form-control" placeholder="Nhập nơi đến..."
+                              [formControl]="placeArrival" formControlName="placeArrival"
+                              (ngModelChange)="searchArrival($event)" (click)="searchArrival(' ')" readonly
+                              [class.user-select-none]="action === 'update'">
+                            <search-auto-complete [source]="arrivals" [show]="isSearch" [isSelected]="isSelectedArrival"
+                              (select)="selectArrival($event)"></search-auto-complete>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /nơi đến -->
+
+                  <div class="form-group row">
+                    <div class="col-md-2">
+                      <label for="">Ngày khởi hành
+                        <span class="text-danger">*</span>
+                      </label>
+                    </div>
+                    <div class="col-md-6">
+                      <input type="text" placeholder="Chọn ngày khởi hành" class="form-control" bsDatepicker readonly
+                        [bsConfig]="bsConfig" [formControl]="departDate" formControlName="departDate"
+                        [isDisabled]="action === 'update'" [value]="departDate.value | moment: 'DD/MM/YYYY'">
+                    </div>
+                  </div>
+                  <!-- /ngày khởi hành -->
+
+                  <div class="form-group row">
+                    <div class="col-md-2">
+                      <label for="">Tên
+                        <span class="text-danger">*</span>
+                      </label>
+                    </div>
+                    <div class="col-md-6" [ngClass]="{'has-error  has-feedback': formTour.controls['name'].touched && formTour.controls['name'].errors}">
+                      <input type="text" placeholder="Nhập tên..." class="form-control" [formControl]="formTour.controls['name']"
+                        formControlName="name">
+                    </div>
+                  </div>
+                  <!-- /tên -->
+
+                  <div class="form-group row">
+                    <div class="col-md-2">
+                      <label for="">Mô tả
+                        <span class="text-danger">*</span>
+                      </label>
+                    </div>
+                    <div class="col-md-6"
+                      [ngClass]="{'has-error  has-feedback': formTour.controls['description'].touched && formTour.controls['description'].errors}">
+                      <textarea class="form-control form-control-air" rows="3" [formControl]="formTour.controls['description']"
+                        formControlName="description"></textarea>
+                    </div>
+                  </div>
+                  <!-- /mô tả -->
+                </form>
+                <!-- /form tour -->
+
+                <form class="form-group m-t-10" [formGroup]="formService" *ngIf="SelectedType.value !== 3 && SelectedType.value !== 6">
+
+                  <div class="form-group row">
+                    <div class="col-md-2">
+                      <label for="">Ngày khởi hành</label>
+                    </div>
+                    <div class="col-md-6">
+                      <input type="text" placeholder="Chọn ngày khởi hành" class="form-control" bsDatepicker readonly
+                        [bsConfig]="bsConfig" [formControl]="departDate" formControlName="departDate"
+                        [value]="departDate.value | moment: 'DD/MM/YYYY'" [isDisabled]="action === 'update'">
+                    </div>
+                  </div>
+                  <!-- /ngày khời hành -->
+
+                  <div class="form-group row">
+                    <div class="col-md-2">
+                      <label for="">Tên</label>
+                    </div>
+                    <div class="col-md-6" [ngClass]="{'has-error  has-feedback': name.touched && name.errors}">
+                      <input type="text" placeholder="Nhập tên..." class="form-control" [formControl]="name"
+                        formControlName="name">
+                    </div>
+                  </div>
+                  <!-- /tên -->
+
+                  <div class="form-group row">
+                    <div class="col-md-2">
+                      <label for="">Mô tả
+                        <span class="text-danger">*</span>
+                      </label>
+                    </div>
+                    <div class="col-md-6"
+                      [ngClass]="{'has-error  has-feedback': description.touched && description.errors}">
+                      <textarea class="form-control form-control-air" rows="3" [formControl]="description"
+                        formControlName="description"></textarea>
+                    </div>
+                  </div>
+                </form>
+                <!-- /form dịch vụ flight, hotel, product -->
+
+                <form class="form-group m-t-10" [formGroup]="formOther" *ngIf="SelectedType.value === 6">
+                  <div class="form-group row">
+                    <div class="col-md-2">
+                      <label for="">Mã
+                        <span class="text-danger">*</span>
+                      </label>
+                    </div>
+                    <div class="col-md-6" [ngClass]="{'has-error  has-feedback': serialCode.touched && serialCode.errors}">
+                      <input type="text" placeholder="Nhập mã công trình..." class="form-control" [formControl]="serialCode"
+                        formControlName="serialCode" [attr.readonly]="action === 'update' ? true : null">
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <div class="col-md-2">
+                      <label for="">Tên
+                        <span class="text-danger">*</span>
+                      </label>
+                    </div>
+                    <div class="col-md-6" [ngClass]="{'has-error  has-feedback': name.touched && name.errors}">
+                      <input type="text" placeholder="Nhập tên..." class="form-control" [formControl]="name"
+                        formControlName="name">
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <div class="col-md-2">
+                      <label for="">Mô tả
+                        <span class="text-danger">*</span>
+                      </label>
+                    </div>
+                    <div class="col-md-6"
+                      [ngClass]="{'has-error  has-feedback': description.touched && description.errors}">
+                      <textarea class="form-control form-control-air" rows="3" [formControl]="description"
+                        formControlName="description"></textarea>
+                    </div>
+                  </div>
+
+                </form>
+                <!-- /form dịch vụ khác -->
+
+              </div>
+            </div>
+          </div>
+          <div class="ibox-footer">
+            <button class="btn btn-success btn-fix" (click)="onSubmit(formService.value)"
+              *ngIf="SelectedType.value !== 3 && SelectedType.value !== 6" [disabled]="!formService.valid">
+              <span class="btn-icon"><i class="fa fa-plus"></i>{{action === 'create' ? 'Tạo' : 'Cập nhật'}}</span>
+            </button>
+            <button class="btn btn-success btn-fix" (click)="onSubmit(formTour.value)" *ngIf="SelectedType.value === 3"
+              [disabled]="!formTour.valid">
+              <span class="btn-icon"><i class="fa fa-plus"></i>{{action === 'create' ? 'Tạo' : 'Cập nhật'}}</span>
+            </button>
+            <button class="btn btn-success btn-fix" (click)="onSubmit(formOther.value)" *ngIf="SelectedType.value === 6"
+              [disabled]="!formOther.valid">
+              <span class="btn-icon"><i class="fa fa-plus"></i>{{action === 'create' ? 'Tạo' : 'Cập nhật'}}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

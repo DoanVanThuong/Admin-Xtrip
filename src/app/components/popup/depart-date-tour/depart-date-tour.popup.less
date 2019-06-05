@@ -1,0 +1,92 @@
+@import "_variables.less";
+@import "_mixins.less";
+.modal.cheap-flight-calendar-popup {
+    .modal-dialog {
+        @media (min-width: 576px) {
+            max-width: 420px;
+        }
+        .modal-content {
+            .border-radius(10px);
+            .modal-header {
+                .modal-title {
+                    font-size: 16px;
+                    font-weight: 700;
+                }
+                .btn-group {
+                    .btn {
+                        .border-radius(5px);
+                        color: @white;
+                        padding: 2px 8px;
+                        font-size: 18px;
+                        line-height: 1;
+                        +.btn {
+                            margin-left: 10px;
+                        }
+                    }
+                }
+            }
+            .modal-body {
+                .note-item-calendar {
+                    span {
+                        &:first-child {
+                            width: 15px;
+                            height: 15px;
+                            display: inline-block;
+                        }
+                        &.bg-enable {
+                            background: @main-2;
+                        }
+                        &.bg-disabled {
+                            background: @main-3;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .full-calendar {
+        margin-bottom: 0;
+        .calendar-row {
+            &.calendar-heading {
+                >.calendar-col {
+                    padding: 7px 10px;
+                    font-size: 14px;
+                    background-color: @main-2;
+                }
+            }
+            >.calendar-col {
+                &.calendar-day {
+                    padding: 2px;
+                    min-height: 60px;
+                    >a {
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        .date {
+                            font-size: 13px;
+                            text-align: center;
+                            padding: 0 3px;
+                            color: @black;
+                        }
+                        .code {
+                            font-weight: 500;
+                            &.lowest {
+                                background-color: transparent;
+                                color: @red;
+                                font-weight: 500;
+                            }
+                        }
+                        &.disabled {
+                            .date {
+                                color: @c-bdbdbd;
+                            }
+                            &.enable {
+                                background-color: @main-3;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

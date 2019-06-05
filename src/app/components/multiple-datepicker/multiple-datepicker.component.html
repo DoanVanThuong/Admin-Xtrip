@@ -1,0 +1,29 @@
+<div id="calendar-container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="header-calendar">
+                <div class="fa fa-chevron-left icon" (click)="gotoMonth('prev') "></div>
+                <div class="title-month">{{date.format('MMMM ')}} {{date.format('YYYY ')}}</div>
+                <div class="fa fa-chevron-right  icon" (click)="gotoMonth('next') "></div>
+            </div>
+        </div>
+    </div>
+    <div class="height-20px "></div>
+    <div class="row calendar-content">
+        <div class="day-in-week">
+            <div class="calendar-days col-md-1">T2</div>
+            <div class="calendar-days col-md-1">T3</div>
+            <div class="calendar-days col-md-1">T4</div>
+            <div class="calendar-days col-md-1">T5</div>
+            <div class="calendar-days col-md-1">T6</div>
+            <div class="calendar-days col-md-1">T7</div>
+            <div class="calendar-days col-md-1">CN</div>
+        </div>
+
+    </div>
+    <div class="row calendar-content">
+        <div *ngFor="let day of daysArr" (click)="selectedDates(day)" class="item" [ngClass]="checkDayInArray(day) ? 'text-danger': ''">
+            <div class="calendar-days col-md-1 " [class.past]="utilityHelper.checkDateInPast(day.value)">{{day.title}}</div>
+        </div>
+    </div>
+</div>

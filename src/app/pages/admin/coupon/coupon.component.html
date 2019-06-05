@@ -1,0 +1,104 @@
+<div class="coupon-page container-fluid fade-in-up">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-heading">
+                <h1 class="page-title">Danh sách {{total}} coupon</h1>
+            </div>
+            <div class="page-content">
+                <div class="ibox clearfix">
+                    <div class="ibox-body">
+                        <div class="pull-left">
+                            <form action="">
+                                <div class="form-group col-md-10 input-search">
+                                    <input type="text" class="form-control   pull-right"
+                                        placeholder="Nhập từ khóa để tìm..." [(ngModel)]="keyword" name="keyword">
+                                </div>
+                                <div class="col-md-1">
+                                    <button class="btn btn-success btn-search" type="submit"
+                                        (click)="onSearch()">Tìm</button>
+                                </div>
+                            </form>
+                        </div>
+                        <ul class=" list-unstyled list-inline pull-right m-b-none">
+                            <button class="btn btn-info btn-fix" (click)="onCreateCoupon()">
+                                <span class="btn-icon"><i class="fa fa-plus"></i>Thêm coupon</span>
+                            </button>
+
+                            <div class="pull-right p-l-10">
+                                <select-limit [numbers]="pageSizeList" (onChange)="onChangeLimitSize($event)"
+                                    [selectedNumber]="limit" class="pull-right"></select-limit>
+                            </div>
+                        </ul>
+                        <table class="table table-bordered table-hover table-responsive table-coupon">
+                            <thead class="thead-default thead-lg">
+                                <tr>
+                                    <th *ngFor="let header of headers; let i = index"
+                                        [class]="sortClass(header.sortable ? header.field : '')"
+                                        (click)="sortBy(header.sortable ? header.field : '')">
+                                        {{ header.title }}
+                                        <span class="sort-indicator"></span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of coupons; let i = index" [class.deactive]="!item.enabled"
+                                    class="text-center pointer">
+                                    <td class="btn-switch-status" data-toggle="tooltip">
+                                        <label class="switch" title="Ẩn/Hiện tour">
+                                            <input type="checkbox" [(ngModel)]="item.enabled" [checked]="item.enabled"
+                                                (change)="handleCheckboxEnableTCoupon(item.enabled, item)">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </td>
+                                    <td>{{i + 1}}</td>
+                                    <td>{{item.code }}</td>
+                                    <td> {{item.summary}} </td>
+                                    <td>
+                                        {{item.discount | number : '.0-2'}}
+                                        <span *ngIf="item.isPercent">%</span>
+                                        <p *ngIf="item.isPercent">(tối đa {{ + item.maxDiscount | number:'.0-2'}})</p>
+                                    </td>
+                                    <td>{{item.quantity}}</td>
+                                    <td>{{item.startDate | moment: 'DD/MM/YYYY'}}</td>
+                                    <td>{{item.endDate | moment: 'DD/MM/YYYY'}}</td>
+                                    <td [ngSwitch]="item.enabled">
+                                        <div *ngSwitchCase="true" class="text-success">Hoạt động</div>
+                                        <div *ngSwitchDefault class="text-muter">Tạm dừng</div>
+                                    </td>
+                                    <td>
+                                        <ul class="list-inline btn-action">
+                                            <li>
+                                                <a [routerLink]="[item.id + '/edit']">
+                                                    <span class="fa-stack fa-lg icon-crud">
+                                                        <i class="fa fa-square-o fa-stack-2x  "></i>
+                                                        <i class="fa fa-pencil  fa-stack-1x  icon-edi"
+                                                            aria-hidden="true"></i>
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a (click)="onDeleteCoupon(item)">
+                                                    <span class="fa-stack fa-lg icon-crud">
+                                                        <i class="fa fa-square-o fa-stack-2x icon-crud "></i>
+                                                        <i class="fa fa-trash fa-stack-1x icon-crud icon-del"
+                                                            aria-hidden="true"></i>
+                                                    </span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <pagination *ngIf="total > limit" [totalItems]="total" [itemsPerPage]="limit" [maxSize]="10"
+                                previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+                                (pageChanged)="pageChanged($event)" [boundaryLinks]="true" [(ngModel)]="page">
+                            </pagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

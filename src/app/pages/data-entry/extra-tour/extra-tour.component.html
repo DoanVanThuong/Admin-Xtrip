@@ -1,0 +1,20 @@
+<div class="extra-tour-page  bg-white m-t-20">
+  <div class="page-content">
+    <div class="tab-content tab-customer-admin">
+      <tabset>
+        <tab heading="Tour hot" (select)="onSelect($event,'hot-tour')" [active]="selectedTab === 'hot-tour'">
+          <hot-tour *ngIf="selectedTab === 'hot-tour'"></hot-tour>
+        </tab>
+        <tab heading="Tour nổi bật" (select)="onSelect($event,'cheap-tour')" [active]="selectedTab === 'cheap-tour'">
+          <cheap-tour *ngIf="selectedTab === 'cheap-tour'"></cheap-tour>
+        </tab>
+        <tab heading="Tour giờ chót" (select)="onSelect($event,'flash-deal-tour')" [active]="selectedTab === 'flash-deal-tour'">
+          <flash-deal-tour *ngIf="selectedTab === 'flash-deal-tour'"></flash-deal-tour>
+        </tab>
+        <tab heading="Tour đề xuất" (select)="onSelect($event,'recommend-tour')" [active]="selectedTab === 'recommend-tour'">
+            <recommend-tour *ngIf="selectedTab === 'recommend-tour'"></recommend-tour>
+          </tab>
+      </tabset>
+    </div>
+  </div>
+</div>

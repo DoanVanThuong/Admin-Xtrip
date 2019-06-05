@@ -1,0 +1,7 @@
+<div class="select-limit-wrapper">
+    <div class="form-group text-center">
+        <select class="form-control form-control-air" [(ngModel)]="selectedNumber" name="selectedNumber" (change)="onChangeNumber($event)">
+            <option *ngFor="let number of numbers" [ngValue]="number">{{number}}</option>
+        </select>
+    </div>
+</div>

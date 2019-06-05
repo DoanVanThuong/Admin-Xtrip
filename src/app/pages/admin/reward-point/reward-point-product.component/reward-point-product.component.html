@@ -1,0 +1,55 @@
+<form action="">
+  <div class="form-group col-md-6 input-search">
+    <input type="text" class="form-control   pull-right" placeholder="Nhập từ khóa để tìm..." [(ngModel)]="keyword"
+      name="keyword">
+  </div>
+  <div class="col-md-1">
+    <button class="btn btn-success btn-search" type="submit" (click)="onSearch()">Tìm</button>
+  </div>
+  <div class="pull-right">
+    <!-- select limiut page size list -->
+    <select-limit [numbers]="pageSizeList" (onChange)="onChangeLimitSize($event)"></select-limit>
+  </div>
+</form>
+<div class="table-customer-flight">
+  <table class="table table-hover table-head-success table-responsive">
+    <thead>
+      <tr class="text-center">
+        <th class="text-center stt">#</th>
+        <th class="text-center bk-code">Mã đặt chỗ</th>
+        <th class="text-center">Tên KH</th>
+        <th class="text-center">Giá vé</th>
+        <th class="text-center">Điểm</th>
+        <th class="text-center">Ngày tích điểm</th>
+        <th class="text-center">Tình trạng</th>
+        <th class="text-center">Chức năng</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let point of rewardPoints; let i = index" class="text-center">
+        <td>{{point.no}}</td>
+        <td>{{point.code}}</td>
+        <td class="text-success lead info-user">{{point.customerName}}</td>
+        <td>{{point.totalPrice | number:'.0-2'}} đ</td>
+        <td>{{point.point}}</td>
+        <td>{{point.dateUpdatePoints | moment: 'DD/MM/YYYY HH:mm'}}</td>
+        <td [ngSwitch]="point.status">
+          <div *ngSwitchCase="1" class="text-success">Đã gửi</div>
+          <div *ngSwitchDefault class="text-warning">Đang chờ xác thực</div>
+        </td>
+        <td>
+          <ul class="list-inline btn-action">
+            <li>
+              <button class="btn btn-fix" (click)="confirmPoint(point)" [class.btn-success]="!point.status" [disabled]="point.status">Xác thực điểm</button>
+            </li>
+          </ul>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="text-center">
+  <pagination *ngIf="total > limit" [totalItems]="total" [itemsPerPage]="limit" [maxSize]="10" previousText="&lsaquo;"
+    nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" (pageChanged)="pageChanged($event)"></pagination>
+</div>

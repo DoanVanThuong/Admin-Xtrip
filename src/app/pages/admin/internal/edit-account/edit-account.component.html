@@ -1,0 +1,112 @@
+<div class="create-account-page container-fluid fade-in-right">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-heading">
+            </div>
+            <div class="page-content">
+                <div class="ibox">
+                    <div class="ibox-head row">
+                        <div class="col-md-6">
+                            <a (click)="back()">
+                                <span>
+                                    <i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i>
+                                </span>
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+
+                        </div>
+                    </div>
+                    <div class="ibox-body">
+                        <div class="form-create">
+                            <form *ngIf="account" (ngSubmit)="onSubmit(formUpdate.value)" [formGroup]="formUpdate" novalidate>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Tên:
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-sm-5" [ngClass]="{'has-error has-feedback': !name.valid && name.dirty}">
+                                        <input type="text" class="form-control" autofocus [formControl]="name" formControlName="name">
+                                    </div>
+                                    <div class="text-danger help-block" [ngClass]="'has-error'? !!error?.name : ''" *ngIf="!name.valid && name.dirty">Tên
+                                        không hợp lệ</div>
+                                </div>
+                                <!-- /tên -->
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Username:
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-sm-5" [ngClass]="{'has-error has-feedback': !userName.valid && userName.dirty}">
+                                        <input type="email" class="form-control" [formControl]="userName" formControlName="userName">
+                                    </div>
+                                    <div class="text-danger help-block" [ngClass]="'has-error'? !!error?.userName : ''" *ngIf="!userName.valid && userName.dirty">Username
+                                        không hợp lệ</div>
+                                </div>
+                                <!-- /user name -->
+
+                                <div class="form-group row">
+                                    <label for="" class="col-sm-2 col-form-label">Chức vụ:</label>
+                                    <div class="col-sm-10">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <label class="checkbox-inline" *ngFor="let role of roles; let i = index">
+                                                    <input type="checkbox" [checked]="checkisChecked(role)" value="{{role}}" (change)="onHandleCheckBox(role,$event)">{{role}}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /chức vụ -->
+
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Mật khẩu:
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <label class="radio-inline" *ngFor="let item of dataChangePassword">
+                                            <input [checked]="item.actived" name="optChangePassword" type="radio" (change)="changePassword(item)" [value]="item.value">{{item.title}}
+                                        </label>
+                                        <div *ngIf="isChangePassword">
+                                            <div class="row m-t-10">
+                                                <label class="col-sm-4 col-form-label">Nhập mật khẩu mới:
+                                                    <span class="text-danger">*</span>
+                                                </label>
+                                                <div class="col-sm-8" [ngClass]="{'has-error has-feedback': !password.valid && password.dirty}">
+                                                    <input type="password" class="form-control" [formControl]="password" formControlName="password">
+                                                </div>
+                                            </div>
+                                            <div class="text-danger help-block" [ngClass]="'has-error'? !!error?.password : ''" *ngIf="!password.valid && password.dirty">mật
+                                                khẩu không hợp lệ</div>
+                                            <div class="row m-t-10">
+                                                <label class="col-sm-4 col-form-label">Xác nhận lại mật khẩu:
+                                                    <span class="text-danger">*</span>
+                                                </label>
+                                                <div class="col-sm-8" [ngClass]="{'has-error has-feedback': !rePassword.valid && rePassword.dirty}">
+                                                    <input type="password" class="form-control" [formControl]="rePassword" formControlName="rePassword">
+                                                </div>
+                                            </div>
+                                            <div class="text-danger help-block" [ngClass]="'has-error'? !!error?.rePassword : ''" *ngIf="!rePassword.valid && rePassword.dirty">Xác
+                                                nhận mật khẩu không hợp lệ</div>
+                                        </div>
+                                        <!-- /form password -->
+                                    </div>
+                                </div>
+                                <!-- /mật khẩu -->
+
+                                <div class="form-group row">
+                                    <label class="col-sm-2 ">
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <button class="btn btn-fix btn-success" type="submit" [disabled]="!formUpdate.valid">Cập
+                                            nhật
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- button -->
+
+                            </form>
+                            <!-- /form -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,67 @@
+<div class="popular-daytour-wp p-l-10">
+  <ul class="list-inline list-destination">
+    <li *ngFor="let destination of destinations; let i = index; trackBy: trackByFn" class="pointer"
+      [class.active]="selectedDestination === destination" (click)="selectDestination(destination)"
+      [title]="destination.name">{{destination.name}}</li>
+  </ul>
+  <form action="" class="form form-group row">
+    <div class="col-md-4">
+      <input type="text" class="form-control" placeholder="Nhập mã vé..." [(ngModel)]="keyword" name="keyword">
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-warning btn-search" (click)="onCreate(keyword)" [disabled]="!keyword">
+        <span class="btn-icon">
+          <i class="fa fa-plus"></i>Thêm
+        </span>
+      </button>
+    </div>
+    <div class="col-md-2">
+      <select-limit [numbers]="pageSizeList" (onChange)="onChangeLimitSize($event)" [selectedNumber]="limit"
+      class="pull-right"></select-limit>
+    </div>
+  </form>
+  <div class="list-content">
+    <ul class="media-list media-list-divider" ngxDroppable (drop)="onDropProduct($event)" [model]="products">
+      <li class="media d-flex align-items-center pointer" *ngFor="let product of products; let i = index"
+        [title]="product.name" [class.active]="selectedProduct === product" (click)="selectProduct(product)" [model]="product" ngxDraggable (drag)="onDragProduct(i)">
+        <a class="p-r-10">
+          <i aria-hidden="true" class="fa fa-bars fa-2x" title="Kéo/Thả để xếp thứ tự"></i>
+        </a>
+        <a class="media-img">
+          <img class="img-responsive" [src]="product.photo.src | resizeImage: 200:100" alt="image"
+            onerror="this.src = 'assets/images/emptydata.png'" alt="" />
+        </a>
+        <div class="media-body d-flex align-items-center">
+          <div class="flex-1">
+            <div class="media-heading">
+              {{product.id}}
+              <span>
+                <a ngxClipboard [cbContent]="product.id" (cbOnSuccess)="onClipboardSuccess($event)"
+                  [title]="'copy ' + product.id ">
+                  <i class="fa fa-clipboard text-success" aria-hidden="true"></i>
+                </a>
+              </span>
+            </div>
+            <small class="text-muted">{{product.name}}</small>
+          </div>
+          <div class="flex-1 text-success ">
+            <span class="badge badge-success badge-circle">{{product.weight}}</span>
+          </div>
+          <button class="btn btn-outline-danger btn-fix" (click)="onDeleteProduct(product)">
+            <span class="btn-icon">
+              <i class="fa fa-trash"></i>Xóa
+            </span>
+          </button>
+        </div>
+      </li>
+    </ul>
+    <div class="text-center">
+      <pagination *ngIf="total > limit" [totalItems]="total" [itemsPerPage]="limit" [maxSize]="maxSize"
+        previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+        (pageChanged)="pageChanged($event)" [boundaryLinks]="true" [(ngModel)]="page"></pagination>
+    </div>
+  </div>
+
+</div>
+
+<ngx-dnd-container [model]="['']" class="hidden"></ngx-dnd-container>

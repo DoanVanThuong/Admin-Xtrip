@@ -1,0 +1,78 @@
+@import "_variables.less";
+.tour-trip-section {
+    ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+        color:@c-bdbdbd;
+      }
+      ::-moz-placeholder { /* Firefox 19+ */
+        color:@c-bdbdbd;
+      }
+      :-ms-input-placeholder { /* IE 10+ */
+        color:@c-bdbdbd;
+      }
+      :-moz-placeholder { /* Firefox 18- */
+        color:@c-bdbdbd;
+      }
+    .tour-trip-wp {
+        padding: 15px;
+        border: 1px solid @c-e5e6e7;
+        margin-bottom: 10px;
+        .create-schedule {
+            .more-schedule {
+                border: 1px solid @color-eee;
+                padding: 10px;
+                min-height: 300px;
+                .list-schedule {
+                    li {
+                        margin: 4px 0px;
+                    }
+                }
+                .btn-add-schedule {
+                    text-decoration: underline;
+                    &:hover {
+                        cursor: pointer;
+                    }
+                }
+            }
+            .schedule-in-trip-list {
+                li {
+                    border: 1px solid @color-eee;
+                    padding: 10px;
+                    margin: 5px 0px;
+                    display: -webkit-box;
+                    display: -ms-flexbox;
+                    display: flex;
+                    -webkit-box-pack: center;
+                    -ms-flex-pack: center;
+                    justify-content: center;
+                    -webkit-box-align: center;
+                    -ms-flex-align: center;
+                    align-items: center;
+                    .trip-in-date-list-action {
+                        .btn-upload,
+                        .btn-delete-schedule {
+                            margin-bottom: 5px;
+                        }
+                    }
+                    .file-name{
+                        word-break: break-all;
+                    }
+                }
+                .sort-icon {
+                    cursor: move;
+                }
+            }
+            .more-jouney {
+                text-align: left;
+                .btn-add-jouney {
+                    text-decoration: underline;
+                    &:hover {
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+    }
+    .selected {
+        background: @color-eee;
+    }
+}

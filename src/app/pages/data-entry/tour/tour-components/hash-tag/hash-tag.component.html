@@ -1,0 +1,35 @@
+<div class="tour-hashtag-section fade-in-up">
+  <div class="tour-hashtag-wp">
+    <button class="btn btn-outline-info btn-fix m-b-4" (click)="addHashTag()">
+      <span class="btn-icon"><i class="fa fa-plus"></i>Thêm từ khóa</span>
+    </button>
+    <ul class="list-unstyled" *ngIf="!!hashTags.length">
+      <li *ngFor="let hashtag of hashTags; let i = index; trackBy: index">
+        <div class="row form-group">
+          <div class="col-md-1">
+            <label for="">Từ khóa {{i + 1}}</label>
+          </div>
+          <div class="col-md-3">
+            <input type="text" class="form-control" placeholder="Nhập từ khóa..." [(ngModel)]="hashtag.keyWord"
+              name="keyWord">
+          </div>
+          <div class="col-md-7">
+            <input type="text" class="form-control" placeholder="Nhập url..." [(ngModel)]="hashtag.url" name="url">
+          </div>
+          <div class="col-md-1">
+            <button class="btn btn-outline-pink btn-icon-only btn-sm btn-thick" (click)="deleteHashTag(hashtag, i)"><i
+                class="fa fa-trash"></i></button>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <div *ngIf="!hashTags.length" class="text-center p-10">Tour hiện chưa có từ khóa</div>
+    <div class="tab-footer">
+      <div class="text-right">
+        <button class="btn btn-fix btn-success" type="button"
+          (click)="onUpdate()">{{action
+                ==='update' ? 'Cập nhật' : 'Hoàn thành'}}</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,46 @@
+<div class="customer-page container-fluid fade-in-up">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="page-heading">
+				<h1 class="page-title">Khách hàng điểm thưởng</h1>
+			</div>
+			<!-- end Page heading -->
+			<div class="page-content">
+				<div class="ibox">
+					<div class="ibox-body">
+						<ul class="filter-icon list-unstyled list-inline pull-right m-t-10">
+							<li>
+								<span>
+									<i class="fa fa-calendar"></i>
+								</span> Chọn ngày</li>
+							<li>
+								<a (click)="openExportFilePopup()">Xuất file</a>
+							</li>
+						</ul>
+						<div class="tab-content tab-customer-admin">
+							<tabset>
+								<tab heading="Máy bay" (select)="onSelect($event,'flight')" [active]="selectedTab === 'flight'">
+                  <reward-point-flight *ngIf="selectedTab === 'flight'"></reward-point-flight>
+								</tab>
+								<tab heading="Khách sạn" (select)="onSelect($event,'hotel')" [active]="selectedTab === 'hotel'">
+									<reward-point-hotel *ngIf="selectedTab === 'hotel'"></reward-point-hotel>
+								</tab>
+								<tab heading="Tour" (select)="onSelect($event,'tour')" [active]="selectedTab === 'tour'">
+									<reward-point-tour *ngIf="selectedTab === 'tour'"></reward-point-tour>
+								</tab>
+								<tab heading="Vui chơi & tham quan" (select)="onSelect($event,'product')" [active]="selectedTab === 'product'">
+										<reward-point-product *ngIf="selectedTab === 'product'"></reward-point-product>
+								</tab>
+							</tabset>
+						</div>
+						<!-- end Tab -->
+					</div>
+				</div>
+			</div>
+			<!-- end page Content -->
+		</div>
+	</div>
+</div>
+<!-- End Page -->
+
+<export-file-popup [module]="selectedTab"></export-file-popup>

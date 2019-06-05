@@ -1,0 +1,126 @@
+<form action="">
+    <div class="form-group col-md-6 input-search">
+        <input type="text" class="form-control   pull-right" placeholder="Nhập từ khóa để tìm..." [(ngModel)]="keyword"
+            name="keyword">
+    </div>
+    <div class="col-md-1">
+        <button class="btn btn-success btn-search" type="submit" (click)="onSearch()">Tìm</button>
+    </div>
+    <div class="col-md-1 text-right" *ngIf="isAdmin || isCS">
+        <button class="btn btn-warning btn-search" (click)="onBookTour()" title="Đặt tour">
+            <span class="btn-icon">
+                <i class="fa fa-shopping-cart"></i>Đặt tour
+            </span>
+        </button>
+    </div>
+    <div class="pull-right">Tổng số booking:
+        <strong class="font-bold">{{total}}</strong>
+
+        <!-- select limiut page size list -->
+        <select-limit [numbers]="pageSizeList" (onChange)="onChangeLimitSize($event)"></select-limit>
+    </div>
+
+</form>
+<div class="table-customer-tour">
+    <table class="table table-hover table-head-success table-responsive" style=" border-spacing: 0;">
+        <thead>
+            <tr class="text-center">
+                <th class="text-center stt">#</th>
+                <th class="text-center bk-code">Mã đặt chỗ</th>
+                <th class="text-center">Tên KH</th>
+                <th class="text-center">Tên tour</th>
+                <th class="text-center">Ngày đặt chỗ</th>
+                <th class="text-center">Tổng tiền</th>
+                <th class="text-center">Hình thức T.Toán</th>
+                <th class="text-center">Hạn thanh toán</th>
+                <th class="text-center">Tình trạng</th>
+                <th class="text-center" *ngIf="isAdmin || isBooker || isCS || isCashier">Chức năng</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let tour of tourBooking; let i = index" class="text-center" [class.active]="selectedTour === tour">
+                <td>{{tour.no}}</td>
+                <td>{{tour.code}}</td>
+                <td class="text-success lead info-user" (click)="showDetailTourBooking(tour)">{{tour.customerName}}
+                </td>
+                <td>{{tour.tourName}}</td>
+                <td>{{tour.bookingDate | moment: 'DD/MM/YYYY HH:mm'}}</td>
+                <td>{{tour.totalPrice | number:'.0-2'}} đ</td>
+                <td [innerHTML]="!tour.paymentMethodName ? '-': tour.paymentMethodName | newline"></td>
+                <td [ngSwitch]="tour.status">
+                    <div *ngSwitchCase="STATUS.WAITING">-</div>
+                    <div *ngSwitchCase="STATUS.CANCELED">00:00:00</div>
+                    <div *ngSwitchCase="STATUS.SUCCESS">-</div>
+                    <div *ngSwitchCase="STATUS.DEPOSITED">-</div>
+                    <div *ngSwitchDefault>
+                        <countdown [time]="tour.expiryDate | date: 'dd/MM/yyyy HH:mm:ss'" (submit)="runOutOfTime()">
+                        </countdown>
+                    </div>
+                </td>
+                <td [ngSwitch]="tour.status">
+                    <div *ngSwitchCase="STATUS.WAITING" class="text-warning"> {{!tour.paymentDate ? ' ' : (tour.paymentDate |
+                        moment: 'DD/MM/YYYY HH:mm') + ' - '}}Đang chờ xuất vé </div>
+                    <div *ngSwitchCase="STATUS.CANCELED" class="text-danger">Đã hủy</div>
+                    <div *ngSwitchCase="STATUS.DEPOSITED" class="text-success">Đã đặt cọc</div>
+                    <div *ngSwitchCase="STATUS.SUCCESS" class="text-success">Xuất vé thành công</div>
+                    <div *ngSwitchCase="STATUS.PENDING" class="text-warning">Đang chờ xác thực</div>
+                    <div *ngSwitchDefault class="text-muted">Chưa thanh toán</div>
+                </td>
+                <td *ngIf="isAdmin || isBooker || isCS || isCashier">
+                    <ul class="list-inline btn-action">
+                        <li *ngIf="isAdmin">
+                            <!-- disibled nút xác thực khi 
+                                        + đã hủy, 
+                                        + đã thanh toán,
+                                        + đã xuất vé
+                                        + chưa thanh toán nhưng hết hạn 
+    
+                                     active nút xác thưc thanh toán khi 
+                                        + chưa thanh toán nhưng CÒN hạn
+                                 -->
+                            <button class="btn btn-fix"
+                                [ngClass]="!isExpiryDate(tour.expiryDate) && tour.status !==STATUS.WAITING && tour.status !==STATUS.CANCELED && tour.status !==STATUS.SUCCESS ? 'btn-success': ''"
+                                [disabled]="(tour.status ==STATUS.CANCELED) || (tour.status ==STATUS.WAITING) || (tour.status ===STATUS.SUCCESS) || ( (tour.status ===STATUS.PENDING || tour.status === 0 ) && isExpiryDate(tour.expiryDate))"
+                                (click)="confirmPayment(tour)">Xác thực T.Toán </button>
+                        </li>
+                        <li *ngIf="isAdmin || isBooker">
+                            <!-- disibled nút hủy vé khi 
+                                        + đã hủy, 
+    
+                                     active nút xác thưc thanh toán khi 
+                                        + chưa thanh toán nhưng HẾT hạn
+                                -->
+                            <button (click)="cancelTour(tour)"
+                                [ngClass]=" (tour.status ==STATUS.WAITING || tour.status !== STATUS.CANCELED) ? 'btn-danger': ''"
+                                class="btn  btn-fix" [disabled]="tour.status ==STATUS.CANCELED ">Hủy tour
+                            </button>
+                        </li>
+                        <li *ngIf="isCS">
+                            <button class="btn btn-fix btn-success" (click)="viewDetail(tour.id)">Xem chi tiết</button>
+                        </li>
+                        <li *ngIf="isCashier">
+                            <button class="btn btn-fix"
+                                [ngClass]="!isExpiryDate(tour.expiryDate) && tour.status !==STATUS.WAITING && tour.status !==STATUS.CANCELED && tour.status !==STATUS.SUCCESS ? 'btn-success': ''"
+                                [disabled]="(tour.status ==STATUS.CANCELED) || (tour.status ==STATUS.WAITING) || (tour.status ===STATUS.SUCCESS) || ( (tour.status ===STATUS.PENDING || tour.status === 0 ) && isExpiryDate(tour.expiryDate))"
+                                (click)="onReceipt(tour)">Thu tiền</button>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+
+    </table>
+</div>
+
+<div class="text-center">
+    <pagination *ngIf="total > limit" [totalItems]="total" [itemsPerPage]="limit" [maxSize]="10"
+      previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+      (pageChanged)="pageChanged($event)" [boundaryLinks]="true" [(ngModel)]="page"></pagination>
+</div>
+
+
+
+<sidebar-detail [open]="openSideBar" [type]="typeBooking" [data]="DetailTourBooking" [id]="tourId"></sidebar-detail>
+
+<!-- popup tour info -->
+<tour-info-popup *ngIf="tourInfo" [data]="tourInfo" [journey]="journey"></tour-info-popup>

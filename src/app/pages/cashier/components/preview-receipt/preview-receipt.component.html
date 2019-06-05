@@ -1,0 +1,119 @@
+<div class="preview-receipt" class="hidden">
+  <div class="preview-content " *ngIf="!!data" id="printer">
+    <div>
+      <div class="row">
+        <div class="col-md-8">
+          <h5 class="">
+            CÔNG TY CỔ PHẦN DU LỊCH XTRIP
+          </h5>
+          <div>136 Nguyễn Duy Dương, Phường 9, Quận 5, TP.HCM</div>
+        </div>
+        <div class="col-md-4">
+          <div class="text-center font-weight-bold font-18">Mẫu số 01 - TT</div>
+          <div class="text-center">
+            <em>
+              (Ban hành theo Thông tư số 200/2014 TT-BTC
+              Ngày 22/12/2014 của Bộ Tài Chính)
+            </em>
+          </div>
+        </div>
+      </div>
+      <!-- /tiêu đề -->
+
+      <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4 text-center title">
+          <h2 class="font-weight-bold">PHIẾU THU</h2>
+          <div>
+            <em>Ngày {{data.createdDate | moment: 'DD'}} tháng
+              {{data.createdDate | moment: 'MM'}} năm
+              {{data.createdDate | moment: 'YYYY'}}</em>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <ul class="list-unstyled">
+            <li>
+              Quyển số: <span>{{data.code}}</span>
+            </li>
+            <li>
+              Số: PT1902038
+            </li>
+            <li>
+              Nợ: 1111
+            </li>
+            <li>
+              Có: 131
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- /tên phiếu thu -->
+
+      <div class="row">
+        <div class="col-md-12">
+          <ul class="list-unstyled list-content">
+            <li>
+              <span>Họ tên người nộp tiền: </span>
+              <span class="font-weight-bold">{{data.customerName | uppercase}}</span>
+            </li>
+            <li>
+              <span>Địa chỉ:</span>
+              <div class="border-dot"></div>
+            </li>
+            <li>
+              <span>Lý do nộp: </span>
+              <span class="font-weight-bold">{{data.remark | uppercase}}</span>
+            </li>
+            <li>
+              <span>Số tiền: </span>
+              <span class="font-weight-bold">{{data.total | number:'.0-2' }} VND</span>
+            </li>
+            <li>
+              <span>Viết bằng chữ: </span>
+              <span class="font-weight-bold">{{data.total | currencyVnd  }} </span>
+
+            </li>
+            <li>
+              <span>Kèm theo:....................chứng từ gốc </span>
+              <div class="border-dot"></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="float-right m-t-20 font-15">
+            <em>
+              Ngày....... tháng....... năm......
+            </em>
+          </div>
+        </div>
+      </div>
+      <div class="row text-center m-t-20 sign">
+        <div class="col-md-3">
+          <div class="font-weight-bold">Giám đốc</div>
+          <em>(Ký, họ tên, đóng dấu)</em>
+        </div>
+        <div class="col-md-2">
+          <div class="font-weight-bold">Kế toán trưởng</div>
+          <em>(Ký, họ tên)</em>
+        </div>
+        <div class="col-md-2">
+          <div class="font-weight-bold">Người nộp tiền</div>
+          <em>(Ký, họ tên)</em>
+        </div>
+        <div class="col-md-2">
+          <div class="font-weight-bold">Người lập phiếu</div>
+          <em>(Ký, họ tên)</em>
+        </div>
+        <div class="col-md-2">
+          <div class="font-weight-bold">Thủ quỷ</div>
+          <em>(Ký, họ tên)</em>
+        </div>
+        <div class="col-md-1">
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

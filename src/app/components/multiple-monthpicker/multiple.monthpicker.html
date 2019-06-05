@@ -1,0 +1,17 @@
+<div class="calendar-month-wp">
+    <div class="header-calendar-month">
+        <div class="next-year" (click)="gotoYear('prev')">
+            <i class="fa fa-angle-left fa-lg"></i>
+        </div>
+        <div>{{monthYear[0].valueStart | date: 'yyyy'}}</div>
+        <div class="previous-year" (click)="gotoYear('next')">
+            <i class="fa fa-angle-right fa-lg"></i>
+        </div>
+    </div>
+    <div class="content-calendar-month">
+        <div class="row text-center">
+            <div class="col-md-4 item " *ngFor="let month of monthYear" [ngClass]="checkSelectedMonth(month) ? 'text-danger' : '' " (click)="selectMonth(month)"
+                [class.past]="utilityHelper.checkMonthInPast(month.valueStart)">{{month.title}}</div>
+        </div>
+    </div>
+</div>

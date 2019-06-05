@@ -1,0 +1,100 @@
+<div class="receipt-page container-fluid fade-in-up">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="page-heading">
+        <h1 class="page-title">Danh sách {{total}} phiếu thu</h1>
+      </div>
+      <div class="page-content">
+        <div class="ibox clearfix">
+          <div class="ibox-body">
+            <div class="pull-left">
+              <form action="">
+                <div class="form-group col-md-10 input-search">
+                  <input type="text" class="form-control   pull-right" placeholder="Nhập từ khóa để tìm..."
+                    [(ngModel)]="keyword" name="keyword">
+                </div>
+                <div class="col-md-1">
+                  <button class="btn btn-success btn-search" type="submit" (click)="onSearch()">Tìm</button>
+                </div>
+              </form>
+            </div>
+            <ul class=" list-unstyled list-inline pull-right m-b-none">
+              <button class="btn btn-info btn-fix" (click)="onCreate()">
+                <span class="btn-icon"><i class="fa fa-plus"></i>Tạo phiếu thu</span>
+              </button>
+
+              <div class="pull-right p-l-10">
+                <select-limit [numbers]="pageSizeList" (onChange)="onChangeLimitSize($event)" [selectedNumber]="limit"
+                  class="pull-right"></select-limit>
+              </div>
+            </ul>
+            <table class="table table-bordered table-hover table-responsive table-receipt">
+              <thead class="thead-default thead-lg">
+                <tr>
+                  <th *ngFor="let header of headers; let i = index"
+                    [class]="sortClass(header.sortable ? header.field : '')"
+                    (click)="sortBy(header.sortable ? header.field : '')">
+                    {{ header.title }}
+                    <span class="sort-indicator"></span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="text-center pointer" *ngFor="let receipt of receipts; let i = index; trackBy: trackByFn"
+                  [title]="receipt.description">
+                  <td>{{receipt.stt}}</td>
+                  <td class="info-user">
+                    <a (click)="onDetail(receipt)">
+                      {{receipt.code}}
+                    </a>
+                  </td>
+                  <td>
+                    <span [ngSwitch]="receipt.type">
+                      <span *ngSwitchCase="1">
+                        Vé máy bay
+                      </span>
+                      <span *ngSwitchCase="2">
+                        Khách sạn
+                      </span>
+                      <span *ngSwitchCase="4">
+                        Vé vui chơi tham quan
+                      </span>
+                      <span *ngSwitchDefault>
+                        Tour
+                      </span>
+                    </span>
+                  </td>
+                  <td>{{receipt.customerName}}</td>
+                  <td>{{receipt.name}}</td>
+                  <td>{{receipt.total | number:'.0-2'}}</td>
+                  <td>{{receipt.date | moment: 'DD/MM/YYYY'}}</td>
+                  <td>{{receipt.createdDate | moment: 'DD/MM/YYYY'}}</td>
+                  <td [ngSwitch]="receipt.status">
+                    <div *ngSwitchCase="1" class="text-warning">Đã thu</div>
+                    <div *ngSwitchCase="2" class="text-success">Đã ghi sổ</div>
+                    <div *ngSwitchCase="3" class="text-danger">Đã hủy</div>
+                    <div *ngSwitchDefault class="text-muted">
+                      Ghi nháp
+                    </div>
+                  </td>
+                  <td>
+                    <button class="btn btn-outline-success btn-fix " (click)="onPrint(receipt.id)">
+                      <span class="btn-icon"><i class="fa fa-print"></i>In phiếu</span>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="text-center">
+              <pagination *ngIf="total > limit" [totalItems]="total" [itemsPerPage]="limit" [maxSize]="10"
+                previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+                (pageChanged)="pageChanged($event)" [boundaryLinks]="true" [(ngModel)]="page"></pagination>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<preview-receipt [data]="receiptDetail"></preview-receipt>

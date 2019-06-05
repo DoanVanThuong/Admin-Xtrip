@@ -1,0 +1,92 @@
+<div class="tour-policy-section fade-in-up">
+    <div class="tour-policy-wrapper">
+        <div class="row policy-cs">
+            <div class="col-md-1">
+                <div class="title">Chính sách</div>
+            </div>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="">Giá bao gồm:
+                            <span class="text-danger">*</span>
+                        </label>
+                        <div [froalaEditor]="optionEditor" [(froalaModel)]="policy.include">
+                            {{ policy }}</div>
+                    </div>
+                    <div class="col-md-12 m-t-20">
+                        <label for="">Giá không bao gồm:
+                            <span class="text-danger">*</span>
+                        </label>
+                        <div [froalaEditor]="optionEditor" [(froalaModel)]="policy.exclude">{{ policy }}</div>
+                    </div>
+                    <div class="col-md-12 m-t-20">
+                        <label for="">Phụ thu:</label>
+                        <span>
+                            <button class="btn btn-success btn-icon-only btn-sm btn-air" (click)="addMoreOption()">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </span>
+                        <ul class="list-unstyled list-group" ngxDroppable [model]="policy.surcharges">
+                            <li *ngFor="let option of policy.surcharges; let i = index" ngxDraggable [model]="option" title="Kéo để sắp xếp thứ tự"
+                                class="list-group-item pointer border-none">
+                                <div class="row form">
+                                    <div class="col-md-1 text-center p-r-none">
+                                        <i class="fa fa-bars fa-2x" aria-hidden="true" ngxDragHandle
+                                            title="Kéo/Thả để xếp thứ tự"></i>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" [(ngModel)]="option.title" placeholder="Nhập nội dung..."
+                                            class="form-control">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" [(ngModel)]="option.value" placeholder="Nhập phí.."
+                                            class="form-control">
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button class="btn btn-outline-pink btn-icon-only btn-sm btn-thick"
+                                            (click)="onDeleteOption(i)"><i class="fa fa-trash"></i></button>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row policy-dk">
+            <div class="col-md-1">
+                <div class="title">Điều khoản</div>
+            </div>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="">Hoàn hủy tour:
+                            <span class="text-danger">*</span>
+                        </label>
+                        <div [froalaEditor]="optionEditor" [(froalaModel)]="term.refund">{{ term }}</div>
+                    </div>
+                    <div class="col-md-12 m-t-20" *ngIf="isInternational">
+                        <label for="">Thủ tục visa:
+                            <span class="text-danger">*</span>
+                        </label>
+                        <div [froalaEditor]="optionEditor" [(froalaModel)]="term.visa">{{ term }}</div>
+                    </div>
+                    <div class="col-md-12 m-t-20">
+                        <label for="">Lưu ý:
+                            <span class="text-danger">*</span>
+                        </label>
+                        <div [froalaEditor]="optionEditor" [(froalaModel)]="term.notes">{{ term }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="tab-footer">
+    <div class="text-right">
+        <button class="btn btn-fix btn-success" [disabled]="detectDisabled()"
+            (click)="onAddPolicyTerm(policy,term)">{{action === 'update' ? 'Cập nhật': 'Tiếp tục'}}</button>
+    </div>
+</div>
+
+<ngx-dnd-container [model]="['']" class="hidden"></ngx-dnd-container>

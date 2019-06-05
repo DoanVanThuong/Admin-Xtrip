@@ -1,0 +1,22 @@
+<div class="select-hotel-wp m-b-4">
+    <div class="form-group row form-item">
+        <label class="col-sm-2 col-form-label "></label>
+        <div class="col-sm-8">
+            <div class="select-container relative">
+                <ul class="list-unstyled list-source">
+                    <li *ngFor="let hotel of selectedHotels; let i = index; trackBy: index">
+                        {{hotel.name}}
+                        <span>
+                            <a (click)="deleteHotel(hotel)">
+                                <i class="fa fa-times fa-lg" aria-hidden="true"></i>
+                            </a>
+                        </span>
+                    </li>
+                </ul>
+                <input type="text" class="form-control form-control-air pointer" placeholder="Chọn khách sạn..."
+                    (ngModelChange)="selectSuggest($event)" [(ngModel)]="keyword" name="keyword" (click)="selectSuggest(' ')">
+                <search-auto-complete [source]="hotels" [show]="isShow" [isSelected]="isSelected" (select)="selectHotel($event)"></search-auto-complete>
+            </div>
+        </div>
+    </div>
+</div>

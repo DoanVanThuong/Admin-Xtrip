@@ -1,0 +1,25 @@
+<div class="create-tour fade-in-up bg-white">
+    <h2> Sửa tour
+        <span class="text-success">{{ tourGeneral.name}} - {{tourGeneral.code}}</span>
+    </h2>
+    <tabset [justified]="true" type="tabs">
+        <tab heading="Chung" (select)="selectTab($event,'general')">
+            <tour-general *ngIf="tab === 'general'"></tour-general>
+        </tab>
+        <tab heading="Ngày khởi hành" (select)="selectTab($event,'starting-date')">
+            <tour-starting-date *ngIf="tab === 'starting-date'"></tour-starting-date>
+        </tab>
+        <tab heading="Hình ảnh" (select)="selectTab($event,'image')">
+            <tour-uploadImage *ngIf="tab === 'image'"></tour-uploadImage>
+        </tab>
+        <tab heading="Lịch trình" (select)="selectTab($event,'journey')">
+            <tour-trip *ngIf="tab === 'journey'"></tour-trip>
+        </tab>
+        <tab heading="Chính sách &amp; Điều khoản" (select)="selectTab($event,'policy')">
+            <tour-policy *ngIf="tab === 'policy'"></tour-policy>
+        </tab>
+        <tab heading="Từ khóa liên quan" (select)="selectTab($event,'hashtag')">
+            <tour-hash-tag *ngIf="tab === 'hashtag'"></tour-hash-tag>
+        </tab>
+    </tabset>
+</div>

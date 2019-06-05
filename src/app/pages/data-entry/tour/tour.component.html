@@ -1,0 +1,177 @@
+<section class="tour-data-entry fade-in-up bg-white">
+    <div class="page-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="m-l-10 pull-left">
+                        <h2>Danh sách {{total}} tour
+                        </h2>
+                    </div>
+                    <div class="pull-right m-t-20 m-r-10 ">
+                        <button class="btn btn-warning" (click)="showTourTab()">
+                            <span>
+                                <i class="fa fa-plus"></i>
+                            </span>
+                            Thêm tour
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="p-l-10">
+                        <form action="">
+                            <div class="form-group col-md-6 input-search">
+                                <input type="text" class="form-control   pull-right" placeholder="Nhập từ khóa để tìm..."
+                                    [(ngModel)]="keyword" name="keyword">
+                            </div>
+                            <div class="col-md-1">
+                                <button class="btn btn-success btn-search" type="submit" (click)="onSearch()">Tìm</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-2 ">
+                    <div class="pull-right p-r-10">
+                        <!-- select limiut page size list -->
+                        <select-limit [numbers]="pageSizeList" (onChange)="onChangeLimitSize($event)" [selectedNumber]="limit"
+                            class="pull-right"></select-limit>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-content p-t-0 m-t-0">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="list-tour">
+                        <div class="table-responsive">
+                            <table class="table table-list-tour table-head-success">
+                                <thead>
+                                    <tr class="">
+                                        <th>#</th>
+                                        <th class="tour-img">Hình ảnh</th>
+                                        <th class="tour-code">Mã tour</th>
+                                        <th class="tour-name">Tên tour</th>
+                                        <th class="tour-img">Hành trình</th>
+                                        <th class="tour-img">Danh mục</th>
+                                        <th>Ngày khởi hành</th>
+                                        <th>Chức năng</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of tours; let i = index; trackBy: trackByFn" [class.deactive]="!item.enabled">
+                                        <td class="btn-switch-status" data-toggle="tooltip">
+                                            <label class="switch" title="Ẩn/Hiện tour">
+                                                <input type="checkbox" [(ngModel)]="item.enabled" [checked]="item.enabled"
+                                                    (change)="handleCheckboxEnableTour(item.enabled, item)">
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <div class="img-tour">
+                                                <div class="day-night">{{item.days + 'N' + item.nights + 'Đ'}}</div>
+                                                <div *ngIf="item.tourHot" class="tour-hot">
+                                                   Tour hot
+                                                </div>
+                                                <div *ngIf="item.tourPopular" class="tour-popular">
+                                                    Tour nổi bật
+                                                 </div>
+                                                <img [src]="item.photo.src" onerror="this.src = 'assets/images/emptydata.png'"
+                                                    alt="" class="img-responsive">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {{item.code }}
+                                            <span>
+                                                <a ngxClipboard [cbContent]="item.code" (cbOnSuccess)="onClipboardSuccess($event)">
+                                                    <i class="fa fa-clipboard text-success" aria-hidden="true"></i>
+                                                </a>
+                                            </span>
+                                        </td>
+                                        <td>{{item.name}}</td>
+                                        <td>{{item.departureName}} - {{item.arrivalName}}</td>
+                                        <td>
+                                            <ul class="list-unstyled">
+                                                <li *ngFor="let category of item.categories">{{category}}</li>
+                                            </ul>
+                                        </td>
+                                        <td class="depart-date">
+                                            <ul class="list-unstyled" *ngIf="!!item.departDates.length">
+                                                <li *ngFor="let date of item.departDates | slice:0:item.showItemDepart; let i = index"
+                                                    class="d-inline font-11">{{date}}</li>
+                                                <span class="col-12 text-right text-main font-16 font-medium text-underline pointer d-flex justify-content-center">
+                                                    <a (click)="showMoreItems(item)" *ngIf="item.departDates.length - item.showItemDepart > 0 else tourPrice ">
+                                                        <span class="font-13 text-info">Xem thêm </span><span class="font-11">({{item.departDates.length - item.showItemDepart}})</span>
+                                                    </a>
+                                                    <ng-template #tourPrice>
+                                                        <span *ngFor="let code of item.pricesCode" class="font-11">
+                                                            {{ code }} &nbsp;
+                                                        </span>
+                                                    </ng-template>
+                                                    
+                                                </span>
+                                            </ul>
+                                            <div *ngIf="!item.departDates.length" class="text-success">Không có thông tin</div>
+                                        </td>
+                                        
+                                        <td>
+                                            <ul class="list-inline btn-action">
+                                                <li>
+                                                    <a [routerLink]="[item.id + '/edit']" [target]="'_blank'" [queryParams]="{action: 'update',id: item.id}" title="Sửa tour">
+                                                        <span class="fa-stack fa-lg icon-crud">
+                                                            <i class="fa fa-square-o fa-stack-2x  "></i>
+                                                            <i class="fa fa-pencil  fa-stack-1x  icon-edi" aria-hidden="true"></i>
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a (click)="onDeleteTour(item)" title="Xóa tour">
+                                                        <span class="fa-stack fa-lg icon-crud">
+                                                            <i class="fa fa-square-o fa-stack-2x icon-crud "></i>
+                                                            <i class="fa fa-trash fa-stack-1x icon-crud icon-del"
+                                                                aria-hidden="true"></i>
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a [routerLink]="[item.id + '/clone']" [target]="'_blank'" [queryParams]="{action: 'clone', id: item.id}" title="copy tour thủ công">
+                                                        <span class="fa-stack fa-lg icon-crud">
+                                                            <i class="fa fa-square-o fa-stack-2x icon-crud "></i>
+                                                            <i class="fa fa-clipboard fa-stack-1x icon-crud icon-cre"
+                                                                aria-hidden="true"></i>
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a (click)="onCloneTour(item)" title="copy tour tự động">
+                                                        <span class="fa-stack fa-lg icon-crud">
+                                                            <i class="fa fa-square-o fa-stack-2x icon-crud "></i>
+                                                            <i class="fa fa-clone fa-stack-1x icon-crud icon-cre"
+                                                                aria-hidden="true"></i>
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="text-center">
+                            <pagination *ngIf="total > limit" [totalItems]="total" [itemsPerPage]="limit" [maxSize]="maxSize"
+                                previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+                                (pageChanged)="pageChanged($event)" [boundaryLinks]="true" [(ngModel)]="page"></pagination>
+                        </div>
+                    </div>
+                    <!-- end list tour -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end page content -->
+
+</section>
+<depart-date-tour-calendar-popup [departDates]="departDates" *ngIf="!!selectedTour" [id]="selectedTour.id"></depart-date-tour-calendar-popup>
+
+<!-- End Page -->

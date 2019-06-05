@@ -1,0 +1,67 @@
+<div class="preview-tour">
+  <div bsModal #popup="bs-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="pull-right">
+            <i class="fa fa-times" (click)="popup.hide()"></i>
+          </div>
+          <div class=" text-center ">
+            <h4 class="modal-title title-preview ">{{title}}</h4>
+          </div>
+        </div>
+        <div class="modal-body preview-content ">
+          <div class="tour-journey-desktop-page" *ngIf="!!journey">
+            <div class="tour-journey-group" *ngFor="let item of journey.details; trackBy: trackByFn; let i = index">
+              <div class="row position-relative">
+                <div class="col-md-12">
+                  <div class="tour-dot">
+                    <div class="text-in-dot">Ngày <span class="font-weight-bold font-20">{{item.idx + 1}}</span></div>
+                  </div>
+                  <div class="title-journey">
+                    {{ item.name }}
+                  </div>
+                </div>
+                <div class="content">
+                  <div class="col-md-12 m-t-16">
+                    <ul class="sub-item list-unstyled">
+                      <li *ngFor="let ops of item.options">{{ops.title}}: {{ops.value}}</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-12 m-t-10" *ngIf="!item.isShow">
+                    <span class="text-main btn-showmore pointer" (click)="item.isShow = !item.isShow">Chi tiết hành
+                      trình
+                      <span>
+                        <i class="fa fa-angle-down"></i>
+                      </span>
+                    </span>
+                  </div>
+                  <div class="col-md-12 m-t-20" *ngIf="item.isShow">
+                    <div class="detail-journey" *ngFor="let detail of item.items">
+                      <img class="w-full h-424 img-fix" *ngIf="!!detail.image.src" src="{{detail.image.src | resizeImage: 600}} "
+                        [alt]="detail.image.name"  />
+                      <div class="detail-text m-t-20" [innerHTML]="detail.text"></div>
+                    </div>
+                    <div class="col-md-12 m-t-20 m-l-n-15">
+                      <span class="text-main btn-showmore pointer" (click)="item.isShow = !item.isShow">Thu gọn hành
+                        trình
+                        <span>
+                          <i class="fa fa-angle-up"></i>
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer ">
+          <div class="text-center">
+            <button class="btn btn-fix " (click)="popup.hide()">Đóng</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

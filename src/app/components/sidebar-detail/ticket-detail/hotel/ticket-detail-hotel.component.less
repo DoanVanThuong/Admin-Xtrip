@@ -1,0 +1,42 @@
+@import '_variables.less';
+
+.detail-ticket-flight    {
+    &.quick-sidebar {
+        z-index: 1041 !important;
+        &.shined {
+            overflow: scroll;
+            z-index: 1041 !important;
+            width: 450px;
+            &::-webkit-scrollbar{
+                display: none;
+            }
+        }
+    }
+    .detail-customer-list {
+        clear: both;
+        .info-customer-contact {
+            padding-left: 38px;
+        }
+        .info-passenger {
+            max-width: 100%;
+            ul {
+                list-style-type: disc;
+            }
+        }
+    }
+    .detail-passenger-list {
+        clear: both;
+        height: 38px;
+    }
+
+    .form-edit-pnr{
+        input{
+            height:20px;
+        }
+        .icon-confirm{
+            position: absolute;
+            right: 6px;
+            top:0;
+        }
+    }
+}

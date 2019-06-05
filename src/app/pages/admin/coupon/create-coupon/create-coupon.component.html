@@ -1,0 +1,317 @@
+<div class="create-coupon-page bg-white">
+    <h2 *ngIf="action === 'create'">Thêm mã khuyến mãi mới</h2>
+    <h2 *ngIf="action === 'update' && !!couponDetail">{{couponDetail.code}}</h2>
+    <div class="row">
+        <div class="col-lg-8 col-md-9 col-sm-12 col-xs-12">
+            <div class="left-content content">
+                <form autocomplete="on" novalidate class="form-create-coupon" [formGroup]="formCoupon" novalidate
+                    (ngSubmit)="onSubmit(formCoupon.value)">
+                    <div class="form-group row form-item">
+                        <label class="col-sm-2 col-form-label label-title">Dịch vụ</label>
+                        <div class="col-sm-8">
+                            <ul class="list-unstyled list-services">
+                                <li class="pointer" *ngFor="let item of services; let i = index; trackBy: trackByFn"
+                                    [class.active]="detectActiveService(item)" (click)="selectService(item)">
+                                    <a>
+                                        <i class="{{item.icon}}" aria-hidden="true"></i>
+                                        {{item.title}}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- /dịch vụ -->
+
+                    <div class="form-group row form-item">
+                        <label class="col-sm-2 col-form-label label-title">Áp dụng cho</label>
+                        <div class="col-sm-8">
+                            <div class="form-group object">
+                                <label class="radio" *ngFor="let item of applyObjects">
+                                    <input name="applier" type="radio" [checked]="selectedApplyObject.customApply === item.customApply"
+                                        (change)="onChangeSupplyObject($event, item)">
+                                    <span class="input-span"></span>{{item.title}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- áp dụng cho -->
+                    
+                    <select-hotel *ngIf="selectedApplyObject.type === 'option' && detectActiveService('hotel')"
+                        (onSelect)="getDataSuggest($event, 'hotel')" [selectedHotels]="hotels"></select-hotel>
+                    <!-- /khách sạn -->
+
+                    <select-tour *ngIf="selectedApplyObject.type === 'option' && detectActiveService('tour')"
+                        (onSelect)="getDataSuggest($event, 'tour')" [selectedTours]="tours"></select-tour>
+                    <!-- /tour -->
+
+                    <select-flight *ngIf="selectedApplyObject.type === 'option' && detectActiveService('flight')"
+                        (onselect)="getDataSuggest($event,'flight')" [tickets]="flights"></select-flight>
+                    <!-- /chặng bay -->
+
+                    <select-activity *ngIf="selectedApplyObject.type === 'option' && detectActiveService('product')"
+                        [selectedProducts]="products" (onSelect)="getDataSuggest($event,'product')"></select-activity>
+                    <!-- activity -->
+
+                    <div class="form-group row form-item form-object">
+                        <label class="col-sm-2 col-form-label label-title">Đối tượng</label>
+                        <div class="col-sm-10">
+                            <div class="form-group object">
+                                <label class="radio" *ngFor="let item of objects">
+                                    <input name="object" type="radio" [checked]="selectedObject.value === item.value"
+                                        (change)="onChangeObject($event, item)">
+                                    <span class="input-span"></span>{{item.title}}
+                                </label>
+                            </div>
+                            <div class="choice-text">
+                                <select-account *ngIf="selectedObject.type === 'user'" (onSelect)="getDataSuggest($event, 'account')"
+                                    [selectedAccounts]="accounts"></select-account>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /đối tượng áp dụng -->
+
+                    <div class="form-group row form-item">
+                        <label class="col-sm-2 col-form-label label-title">Nền tảng</label>
+                        <div class="col-sm-8">
+                            <div class="form-group object">
+                                <label class="checkbox checkbox-outline-primary checkbox-inline p-r-10" *ngFor="let item of devices; let i = index">
+                                    <input [checked]="checkIsChecked(item)" type="checkbox" (change)="onSelectDevice($event,item)" value="{{item.value}}">
+                                    <span class="input-span"></span>{{item.title}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /nền tảng -->
+
+                    <div class="form-group row form-item">
+                        <label class="col-sm-2 col-form-label label-title">Giá trị giảm
+                            <span class="text-danger">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <select class="form-control form-control-air" [(ngModel)]="selectedDiscountOption"
+                                        [ngModelOptions]="{standalone: true}" (ngModelChange)="selectDiscountOption($event)">
+                                        <option [ngValue]="item" *ngFor="let item of discountOptions">{{item.title}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-7">
+                                    <div class="form-group object">
+                                        <input currencyMask [options]="currencyMask" *ngIf="selectedDiscountOption.type !== 'percent'"
+                                            class="form-control form-control-air" placeholder="Nhập giá trị" type="text"
+                                            [formControl]="discountAmount" formControlName="discountAmount">
+                                        <div class="text-danger help-block" *ngIf="discountAmount.touched && discountAmount.errors| equalError: 'required'">
+                                            Vui lòng nhập đầy đủ thông tin </div>
+                                        <div class="text-danger help-block" *ngIf="discountAmount.dirty && discountAmount.errors| equalError: 'min'">Giá
+                                            trị giảm không hợp lệ </div>
+                                        <input *ngIf="selectedDiscountOption.type == 'percent'" type="number" class="form-control form-control-air"
+                                            [formControl]="discountPercentage" formControlName="discountPercentage"
+                                            placeholder="Nhập %">
+                                        <div class="text-danger help-block" *ngIf="discountPercentage.touched && discountPercentage.errors| equalError: 'required'">
+                                            Vui lòng nhập đầy đủ thông tin </div>
+                                        <div class="text-danger help-block" *ngIf="discountPercentage.dirty && discountPercentage.errors| equalError: 'min'">
+                                            % không hợp lệ </div>
+                                        <div class="text-danger help-block" *ngIf="discountPercentage.dirty && discountPercentage.errors| equalError: 'max'">
+                                            % không hợp lệ </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- giá trị giảm -->
+
+                    <div class="form-group row form-item">
+                        <label class="col-sm-2 col-form-label label-title">Mức giảm tối đa
+                            <span class="text-danger">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="form-group object">
+                                <input min="0" currencyMask [options]="currencyMask" class="form-control form-control-air"
+                                    [class.readonly]="selectedDiscountOption.type === 'money'" placeholder="Nhập mức giảm tối đa"
+                                    type="text" [readonly]="selectedDiscountOption.type !== 'percent' " [formControl]="maxDiscount"
+                                    formControlName="maxDiscount">
+                                <div class="text-danger help-block" *ngIf="maxDiscount.touched && maxDiscount.errors| equalError: 'required'">
+                                    Vui lòng nhập đầy đủ thông tin </div>
+                                <div class="text-danger help-block" *ngIf="maxDiscount.dirty && maxDiscount.errors| equalError: 'min'">
+                                    Mức giảm không hợp lệ </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /giảm tối đa -->
+
+                    <div class="form-group row form-item">
+                        <label class="col-sm-2 col-form-label label-title">Đơn hàng tối thiểu
+                            <span class="text-danger">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="form-group object">
+                                <input currencyMask [options]="currencyMask" class="form-control form-control-air"
+                                    placeholder="Nhập mức tối thiểu để được áp dụng mã" type="text" [formControl]="minOrderAmount"
+                                    formControlName="minOrderAmount">
+                                <div class="text-danger help-block" *ngIf="minOrderAmount.touched && minOrderAmount.errors| equalError: 'required'">
+                                    Vui lòng nhập đầy đủ thông tin </div>
+                                <div class="text-danger help-block" *ngIf="minOrderAmount.dirty && minOrderAmount.errors| equalError: 'min'">
+                                    Đơn hàng tối thiểu không hợp lệ </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /đơn hàng tối thiểu để sd -->
+
+                    <div class="form-group row form-item">
+                        <label class="col-sm-2 col-form-label label-title">Số lần sử dụng trên một người
+                            <span class="text-danger">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="form-group object">
+                                <input class="form-control form-control-air" placeholder="Nhập số lần sử dụng" type="number"
+                                    [formControl]="limitationValue" formControlName="limitationValue" [class.past]="selectedObject.type === 'user'">
+                                <div class="text-danger help-block" *ngIf="limitationValue.touched && limitationValue.errors| equalError: 'required'">
+                                    Vui lòng nhập đầy đủ thông tin </div>
+                                <div class="text-danger help-block" *ngIf="limitationValue.dirty && limitationValue.errors| equalError: 'min'">
+                                    Số lần sử dụng không hợp lệ </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- số lần sd -->
+
+                    <div class="form-group row form-item">
+                        <label class="col-sm-2 col-form-label label-title">Số lượng mã
+                            <span class="text-danger">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="form-group object">
+                                <input class="form-control form-control-air" placeholder="Nhập số lượng mã" type="number"
+                                    [formControl]="maxTimesUsed" formControlName="maxTimesUsed">
+                                <div class="text-danger help-block" *ngIf="maxTimesUsed.touched && maxTimesUsed.errors| equalError: 'required'">
+                                    Vui lòng nhập đầy đủ thông tin </div>
+                                <div class="text-danger help-block" *ngIf="maxTimesUsed.dirty && maxTimesUsed.errors| equalError: 'min'">
+                                    Số lượng mã không hợp lệ </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /số lượng -->
+
+                    <div class="form-group row form-item">
+                        <label class="col-sm-2 col-form-label label-title">Thời gian sử dụng
+                            <span class="text-danger">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="form-group object">
+                                <input class="form-control form-control-air" placeholder="Chọn thời gian sử dụng"
+                                    [bsConfig]="bsConfig" bsDaterangepicker readonly
+                                    [formControl]="rangeValue" value="{{rangeValue.value[0] | moment: 'DD/MM/YYYY'}} - {{rangeValue.value[1] | moment: 'DD/MM/YYYY'}}"
+                                    formControlName="rangeValue" (bsValueChange)="onChangeRangeValue($event)">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /thời gian sử dụng -->
+
+                    <div class="form-group row form-item">
+                        <label class="col-sm-2 col-form-label label-title">Mã khuyến mã
+                            <span class="text-danger">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="form-group object relative">
+                                        <input class="form-control form-control-air" placeholder="Nhập mã" type="text"
+                                            [formControl]="code" formControlName="code" [class.past]="action === 'update'"
+                                            (blur)="onCheckCode()" (ngModelChange)="onChangeCode($event)">
+                                        <div class="text-danger help-block" *ngIf="code.touched && code.errors| equalError: 'required'">
+                                            Mã coupon không được để trống </div>
+                                        <div class="text-danger help-block" *ngIf="code.dirty && code.errors| equalError: 'minlength'">
+                                            Mã coupon phải lớn hơn 3 ký tự</div>
+                                        <div class="text-danger help-block" *ngIf="code.dirty && code.errors| equalError: 'maxlength'">
+                                            Mã coupon không được lớn hơn 8 ký tự</div>
+                                        <div class="text-danger help-block" *ngIf="!code.errors && code.touched && isShowMessageError">
+                                            {{messageError}}</div>
+                                        <div class="icon-check-code bg-success" *ngIf="!code.errors && code.touched && isShowSuccess">
+                                            <i class="fa fa-check" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 text-right">
+                                    <button (click)="genCode()" [disabled]="action === 'update'" type="button" class="btn btn-danger btn-fix btn-random">Mã
+                                        ngẫu nhiên</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /mã coupon -->
+
+                    <div class="form-group row form-item">
+                        <label class="col-sm-2 col-form-label label-title">Tên khuyến mã
+                            <span class="text-danger">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="form-group object">
+                                <input class="form-control form-control-air" placeholder="Nhập tên" type="text"
+                                    [formControl]="name" formControlName="name">
+                                <div class="text-danger help-block" *ngIf="name.touched && name.errors| equalError: 'required'">
+                                    Tên coupon không được để trống </div>
+                                <div class="text-danger help-block" *ngIf="name.dirty && name.errors| equalError: 'maxlength'">
+                                    Tên coupon không được lớn hơn 50 ký tự</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /tên -->
+
+                    <div class="form-group row form-item">
+                        <label class="col-sm-2 col-form-label label-title">Mô tả
+                            <span class="text-danger">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="form-group object">
+                                <textarea class="form-control form-control-air" rows="3" placeholder="Nhập mô tả"
+                                    [formControl]="description"></textarea>
+                                <div class="text-danger help-block" *ngIf="description.touched && description.errors| equalError: 'required'">
+                                    Vui lòng nhập đầy đủ thông tin </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /mô tả -->
+
+                    <div class="form-group row form-item">
+                        <label class="col-sm-2 col-form-label label-title">Điều kiện &
+                            Điều khoản
+                            <span class="text-danger">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="form-group object">
+                                <textarea class="form-control form-control-air" rows="3" placeholder="Nhập Điều kiện & Điều khoản"
+                                    [formControl]="terms"></textarea>
+                                <div class="text-danger help-block" *ngIf="terms.touched && terms.errors| equalError: 'required'">
+                                    Vui lòng nhập đầy đủ thông tin </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /điều kiện - chính sách -->
+
+                    <div class="form-group row form-item">
+                        <label class="col-sm-2 col-form-label label-title"></label>
+                        <div class="col-sm-8">
+                            <a class="m-r-10" (click)="cancel()">Hủy</a>
+                            <button class="btn  btn-fix btn-square" [ngClass]="action === 'create' ? 'btn-success' : 'btn-danger'"
+                                type="submit" [disabled]="!formCoupon.valid">
+                                {{action === 'create' ? 'Hoàn thành' : 'Cập nhật'}}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <!-- /form create coupon -->
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-3 col-sm-12 col-xs-12">
+            <div class="right-content">
+                <h4>Xem trước</h4>
+                <div class="preview-coupon ">
+                    <preview-coupon [type]="typeCoupon" [code]="code.value" [description]="description.value"
+                        [maxTimesUsed]="maxTimesUsed.value" [maxDiscount]="maxDiscount.value" [endDate]="endDate"
+                        [isPercent]="selectedDiscountOption.usePercentage" [discountAmount]="selectedDiscountOption.type == 'percent' ? discountPercentage.value : discountAmount.value"
+                        [startDate]="startDate"></preview-coupon>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

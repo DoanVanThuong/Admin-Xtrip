@@ -1,0 +1,82 @@
+@import '_variables.less';
+.preview-tour {
+    font-size: 16px;
+    padding: 5px;
+    .title-preview {
+        font-weight: bold;
+        text-align: center;
+        font-size: 18px;
+    }
+    .preview-content {
+        max-width: 800px;
+        button {
+            margin-top: 30px;
+        }
+        p {
+            line-height: 1.5;
+        }
+    }
+    .title-schedule {
+        font-weight: bold;
+        margin: 10px 0px;
+    }
+    img {
+        margin: 10px 0px;
+    }
+    .tour-journey-desktop-page {
+        margin-top: 20px;
+        .tour-journey-group {
+            border-left: 1px dashed @c-bdbdbd;
+            margin: 0px 12px;
+            .tour-dot {
+                width: 52px;
+                height: 52px;
+                background-color: @main;
+                color: @white;
+                border-radius: 50%;
+                left: -10px;
+                position: absolute;
+                overflow: hidden;
+                .text-in-dot {
+                    padding: 5px;
+                    text-align: center;
+                    font-size: 13px;
+                }
+            }
+            .title-journey {
+                font-size: 16px;
+                font-weight: bold;
+                color: @black;
+                padding: 0 40px;
+                margin-top: 14px;
+            }
+            .btn-showmore {
+                border: 1px solid @main-3;
+                border-radius: 5px;
+                padding: 6px 12px;
+                font-weight: bold;
+                color:@main-3;
+            }
+            .content {
+                padding: 0 18px;
+                .sub-item {
+                    font-size: 14px;
+                    color: black;
+                    line-height: 1.8;
+                }
+                .detail-journey {
+                    text-align: justify;
+                    .detail-text {
+                        p {
+                            font-size: 15px;
+                        }
+                    }
+                }
+                .rotate-180 {
+                    -webkit-transform: rotate(180deg);
+                    transform: rotate(180deg);
+                }
+            }
+        }
+    }
+}

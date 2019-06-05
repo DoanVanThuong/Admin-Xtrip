@@ -1,0 +1,46 @@
+<div class="payment-page customer-page container-fluid fade-in-up">
+	<div class="row">
+		<div class="col-md-12 ">
+			<div class="page-heading">
+				<h1 class="page-title">Danh Sách chuyển khoản</h1>
+			</div>
+			<div class="page-content ">
+				<div class="ibox">
+					<div class="ibox-body">
+						<ul class="filter-icon list-unstyled list-inline pull-right m-t-10">
+							<li>Bộ lọc</li>
+							<li>
+								<span>
+									<i class="fa fa-calendar"></i>
+								</span> Chọn ngày</li>
+							<li>
+								<a (click)="openExportFilePopup()">Xuất file</a>
+							</li>
+						</ul>
+
+						<div class="tab-content tab-payment-transfer">
+							<tabset>
+								<tab heading="Máy bay" (select)="onSelect($event,'flight')" [active]="selectedTab === 'flight'">
+									<transfer-flight *ngIf="selectedTab === 'flight'"></transfer-flight>
+								</tab>
+								<tab heading="Khách sạn" (select)="onSelect($event,'hotel')" [active]="selectedTab === 'hotel'">
+									<transfer-hotel *ngIf="selectedTab === 'hotel'"></transfer-hotel>
+								</tab>
+								<tab heading="Tour" (select)="onSelect($event,'tour')" [active]="selectedTab === 'tour'">
+									<transfer-tour *ngIf="selectedTab === 'tour'"></transfer-tour>
+								</tab>
+								<tab heading="Vui chơi & tham quan" (select)="onSelect($event,'product')" [active]="selectedTab === 'product'">
+										<transfer-product *ngIf="selectedTab === 'product'"></transfer-product>
+									</tab>
+							</tabset>
+							<!-- end Tour -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- end page content -->
+		</div>
+	</div>
+</div>
+
+<export-file-popup [module]="module"></export-file-popup>

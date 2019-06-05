@@ -1,0 +1,25 @@
+<div class="create-tour-hot-wp m-t-20">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="ibox">
+        <div class="ibox-body">
+          <div class="row">
+            <form action="" [formGroup]="formCreate" novalidate (ngSubmit)="onSubmit(formCreate.value)">
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Mã tour</label>
+                <div class="col-sm-6" [ngClass]="{'has-error  has-feedback': tourCode.touched && tourCode.errors}">
+                  <input type="text" class="form-control" placeholder="Nhập mã tour" [formControl]="tourCode"
+                    formControlName="tourCode">
+                </div>
+              </div>
+              <button class="btn btn-fix btn-success" type="submit" [disabled]="!formCreate.valid">Hoàn
+                thành</button>
+              <button class="btn btn-fix btn-secondary" type="button" (click)="back()">
+                Quay lại</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

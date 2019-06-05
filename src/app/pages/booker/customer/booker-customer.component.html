@@ -1,0 +1,47 @@
+<div class="table-customer-flight m-t-10 fade-in-up">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="page-heading">
+				<h1 class="page-title">Khách hàng đặt chỗ </h1>
+			</div>
+			<div class="page-content">
+				<div class="ibox">
+					<div class="ibox-body">
+						<ul class="filter-icon list-unstyled list-inline pull-right m-t-10">
+							<li>Bộ lọc</li>
+							<li>
+								<span>
+									<i class="fa fa-calendar"></i>
+								</span> Chọn ngày</li>
+							<li>
+								<a (click)="openExportFilePopup()">Xuất file</a>
+							</li>
+						</ul>
+						<div class="tab-content tab-customer-admin">
+							<tabset>
+								<tab heading="Máy bay" (select)="onSelect($event,'flight')" [active]="selectedTab === 'flight'">
+									<customer-flight *ngIf="selectedTab === 'flight'" [role]="role"></customer-flight>
+								</tab>
+								<tab heading="Khách sạn" (select)="onSelect($event,'hotel')" [active]="selectedTab === 'hotel'">
+									<customer-hotel *ngIf="selectedTab === 'hotel'" [role]="role"></customer-hotel>
+								</tab>
+								<tab heading="Tour" (select)="onSelect($event,'tour')" [active]="selectedTab === 'tour'">
+									<customer-tour *ngIf="selectedTab === 'tour'" [role]="role"></customer-tour>
+								</tab>
+								<tab heading="Vui chơi & tham quan" (select)="onSelect($event,'product')" [active]="selectedTab === 'product'">
+									<customer-product *ngIf="selectedTab === 'product'" [role]="role"></customer-product>
+								</tab>
+							</tabset>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<!-- sidebar detial -->
+
+<!-- export file  -->
+<export-file-popup [module]="'flight'"></export-file-popup>

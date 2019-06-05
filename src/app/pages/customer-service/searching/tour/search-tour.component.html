@@ -1,0 +1,113 @@
+<section class="search-tour">
+  <h3 class="text-center">Tra cứu tour</h3>
+  <form action="" class="form" [formGroup]="formTour" (ngSubmit)="onSubmit(formTour.value)">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="row">
+          <div class="col-md-4 form-group">
+            <select class="form-control" [(ngModel)]="tourTypeSelected" name="tourTypeSelected"
+              [ngModelOptions]="{standalone: true}" (ngModelChange)="onChangeTourType($event)">
+              <option *ngFor="let tour of tourTypes" [ngValue]="tour">{{tour.title}}</option>
+            </select>
+          </div>
+          <div class="col-md-8 form-group">
+            <div class="depart-wp" [ngClass]="{'has-error  has-feedback': placeDepart.touched && placeDepart.errors}">
+              <input type="text" class="form-control" (ngModelChange)="searchDepart($event)"
+                placeholder="Chọn nơi khởi hành..." [formControl]="placeDepart" formControlName="placeDepart"
+                (click)="searchDepart(' ')" readonly>
+              <search-auto-complete [source]="departs" [show]="isSearch" [isSelected]="isSelectedDepart"
+                (select)="selectDepart($event)"></search-auto-complete>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /nơi khởi hành -->
+
+      <div class="col-md-3">
+        <div class=" form-group row">
+          <div class="depart-wp col-md-12" [ngClass]="{'has-error  has-feedback': placeArrival.touched && placeArrival.errors}">
+            <input type="text" class="form-control" placeholder="Chọn nơi đến..." [formControl]="placeArrival"
+              formControlName="placeArrival" (ngModelChange)="searchArrival($event)" (click)="searchArrival(' ')"
+              readonly>
+            <search-auto-complete [source]="arrivals" [show]="isSearch" [isSelected]="isSelectedArrival"
+              (select)="selectArrival($event)"></search-auto-complete>
+          </div>
+        </div>
+      </div>
+      <!-- /nơi đến -->
+
+      <div class="col-md-3">
+        <div class="form-group row">
+          <div class="col-md-12">
+              <input type="text" placeholder="Chọn ngày khởi hành..." class="form-control" bsDaterangepicker readonly
+              [bsConfig]="bsConfig" [minDate]="bsConfig.minDate" [formControl]="departDate" formControlName="departDate"
+              (ngModelChange)="onRangeDateChange($event)">
+          </div>
+        </div>
+      </div>
+      <!-- /ngày khởi hành -->
+
+      <div class="col-md-2 text-center">
+        <div class="button-search">
+          <button class="btn btn-fix btn-info" [disabled]="!formTour.valid">Tra cứu</button>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="table-responsive table-hover animated fadeIn" *ngIf="!!tours.length">
+    <table class="table">
+      <thead class="thead-default thead-lg">
+        <tr>
+          <th>#</th>
+          <th class="tour-code">Mã công trình</th>
+          <th class="tour-img">Hình ảnh</th>
+          <th>Tên tour</th>
+          <th>Ngày khởi hành</th>
+          <th>Giá người lớn</th>
+          <th>Giá trẻ em</th>
+          <th>Giá em bé</th>
+          <th>Ưu đãi</th>
+          <th>Chức năng</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="text-center pointer" *ngFor="let tour of tours; let i = index; trackBy: trackByFn"
+          [title]="tour.name">
+          <td>{{tour.no}}</td>
+          <td class="font-bold text-underline text-success info-user" (click)="viewDetail(tour)">{{tour.code}}
+          </td>
+          <td>
+            <div class="img-tour">
+              <img [src]="tour.photo.src" onerror="this.src = 'assets/images/emptydata.png'" alt=""
+                class="img-responsive">
+              <div class="tour-day">{{tour.days + 'N' + tour.nights+ 'Đ'}}</div>
+              <div class="tour-available" [class.bg-danger]="tour.available <= 3">
+                <span class="available ">{{!!tour.available ? 'Còn ' + tour.available + ' chỗ' : 'Hết chỗ'}}</span>
+              </div>
+            </div>
+          </td>
+          <td>{{tour.name}}</td>
+          <td>{{tour.departDate | moment: 'DD/MM/YYYY'}}</td>
+          <td>{{tour.adultPrice | number:'.0-2'}}</td>
+          <td>{{tour.childPrice | number:'.0-2'}}</td>
+          <td>{{tour.infantPrice | number:'.0-2'}}</td>
+          <td class="text-warning">{{!!tour.highlights ? tour.highlights : '-'}}</td>
+          <td>
+            <button class="btn  btn-fix" [class.btn-info]="tour.available" (click)="onBookTour(tour)"
+              [disabled]="!tour.available">
+              <span class="btn-icon"><i class="fa fa-shopping-cart"></i>Đặt</span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="text-center text-muted" *ngIf="isLookup && !tours.length">Không thấy dữ liệu tour</div>
+  <div class="text-center">
+    <pagination *ngIf="total > limit" [totalItems]="total" [itemsPerPage]="limit" [maxSize]="maxSize"
+      previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+      (pageChanged)="pageChanged($event)"></pagination>
+  </div>
+</section>
+
+<tour-detail-popup *ngIf="!!selectedTour" [code]="selectedTour.code"></tour-detail-popup>

@@ -1,0 +1,46 @@
+<div class="customer-page container-fluid fade-in-up">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-heading">
+                <h1 class="page-title">Danh sách vé đã xuất</h1>
+            </div>
+            <div class="page-content">
+                <div class="ibox">
+                    <div class="ibox-body">
+                        <ul class="filter-icon list-unstyled list-inline pull-right m-t-10">
+                            <li>Bộ lọc</li>
+                            <li>
+                                <span>
+                                    <i class="fa fa-calendar"></i>
+                                </span> Chọn ngày</li>
+                            <li>
+                                <a (click)="openExportFilePopup()">Xuất file</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content tab-customer-admin">
+                            <tabset>
+                                <tab heading="Máy bay" (select)="onSelect($event,'flight')" [active]="selectedTab === 'flight'">
+                                   <ticket-issue-flight *ngIf="selectedTab === 'flight'"></ticket-issue-flight>
+                                </tab>
+                                <tab heading="Khách sạn" (select)="onSelect($event,'hotel')" [active]="selectedTab === 'hotel'">
+                                    <ticket-issued-hotel *ngIf="selectedTab === 'hotel'"></ticket-issued-hotel>
+                                 </tab>
+                                <tab heading="Vui chơi & tham quan" (select)="onSelect($event,'product')" [active]="selectedTab === 'product'">
+                                    <ticket-issued-product *ngIf="selectedTab === 'product'"></ticket-issued-product>
+                                </tab>
+                                <tab heading="Tour" (select)="onSelect($event,'tour')" [active]="selectedTab === 'tour'">
+                                        <ticket-issued-tour *ngIf="selectedTab === 'tour'"></ticket-issued-tour>
+                                    </tab>
+                            </tabset>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- end page Content -->
+    </div>
+</div>
+<!-- End Page -->
+
+<export-file-popup [module]="'ticket-issued'"></export-file-popup>

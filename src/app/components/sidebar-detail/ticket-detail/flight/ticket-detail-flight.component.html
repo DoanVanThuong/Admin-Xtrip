@@ -1,0 +1,107 @@
+<div class="quick-sidebar detail-ticket-flight text-left" [ngClass]="open ? 'shined' : ''">
+    <div class="detail-wp ">
+        <div class="header-detail " (click)="hideDetail() " data-toggle="tooltip">
+            <h1 class="display-1 " title="Nhấn ESC để thoát">
+                <img id="img-cancel" src="assets/images/icon/cancel.svg" tabindex="0">
+                <span>Thoát</span>
+            </h1>
+        </div>
+        <div class="heading ">Thông tin khách hàng</div>
+        <ul class="list-unstyled detail-customer-list ">
+            <div class="pull-left info-title ">
+                <li class="font-bold ">Khách hàng:</li>
+                <li class="font-bold ">Số điện thoại:</li>
+                <li class="font-bold ">Email:</li>
+
+            </div>
+            <div class="pull-left info info-customer-contact">
+                <li>{{data.customerName}}</li>
+                <li>{{data.mobileNumber}}</li>
+                <li>{{data.email}}</li>
+            </div>
+
+        </ul>
+        <div class="heading " style="clear:both ">Thông tin vé</div>
+
+        <ul class="list-unstyled detail-customer-list " *ngFor="let item of data.tickets; let i = index">
+            <div class="strike-through" *ngIf="i == 0 && data.tickets.length > 1">
+                <div>Chiều đi</div>
+            </div>
+            <div class="strike-through" *ngIf="i == 1">
+                <div>Chiều về</div>
+            </div>
+            <div class="pull-left info-title">
+                <li class="font-bold ">Hành trình:</li>
+                <li class="font-bold ">Hãng hàng không:</li>
+                <li class="font-bold ">Thời gian khởi hành</li>
+                <li class="font-bold ">Thời gian đến (dự kiến)</li>
+                <li *ngIf="item.pnrCode !== null" class="font-bold">Mã vé:</li>
+                <li class="font-bold">Thời gian giữ vé: </li>
+            </div>
+            <div class=" pull-left info ">
+                <li>{{item.journey}}</li>
+                <li>{{item.airline}}</li>
+                <li>{{returnTimeDepart(item.times)}}</li>
+                <li>{{returnTimeArrival(item.times)}}</li>
+                <li *ngIf="!!item.pnrCode && !isShowFormEditPnr || item.actualStatus">{{item.pnrCode}}
+                    <span *ngIf="isShowEditPnr && !item.actualStatus">
+                        <a (click)="onEditPrn(item)" data-toggle="tooltip" title="click để sửa" #a>
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                        </a>
+                    </span>
+                </li>
+                <li *ngIf="isShowFormEditPnr && !item.actualStatus">
+                    <form action="" class="form-edit-pnr relative">
+                        <input type="text" class="form-control height-20" [ngModelOptions]="{standalone: true}"
+                            [(ngModel)]="item.pnrCode" name="item" autofocus>
+                        <a class="icon-confirm" (click)="onUpdatePnr(item)">
+                            <i class="fa fa-check" aria-hidden="true"></i>
+                        </a>
+                    </form>
+                </li>
+                <li>{{item.holdExpiry | moment: ' HH:mm DD/MM/YYYY'}}</li>
+            </div>
+        </ul>
+        <div>
+            <div class="heading detail-passenger-list ">
+                <div class="pull-left ">Thông tin hành khách</div>
+                <div class="pull-right p-r-20 ">Hành lý</div>
+            </div>
+            <ol class="list-unstyled detail-customer-list ">
+                <div class="info-title " *ngFor="let p of data.passenger; let i = index ">
+                    <li>
+                        <div class="info-passenger pull-left ">
+                            <span>{{i + 1 + '. '}}</span>
+                            <span>{{p.title}}</span>
+                            <span class="font-bold ">{{ p.fullName +' '}}</span>
+                            <ul>
+                                <li *ngIf="!!p.dateOfBirth">Ngày sinh:{{ p.dateOfBirth | moment: 'DD/MM/YYYY'}}</li>
+                                <li *ngIf="!!p.passportNumber">Số hộ chiếu:{{p.passportNumber}}</li>
+                                <li *ngIf="p.passportCountry !== null && p.passportCountry !== ''  ">Quốc
+                                    gia:{{p.passportCountry}} </li>
+                                <li *ngIf="p.passportExpiry !== null && p.passportExpiry !== '' ">Ngày hết
+                                    hạn:{{p.passportExpiry | date: 'dd/MM/yyyy'}} </li>
+                                <li *ngIf="p.national !== null && p.national !== '' ">Quốc tịch:{{p.national}}</li>
+
+                            </ul>
+                        </div>
+
+                        <div class="pull-right ">
+                            <ul class="list-unstyled ">
+                                <li *ngFor="let item of p.baggages; let i = index ">
+                                    <span *ngIf="i == 0 &&  p.baggages.length > 1" class="font-bold">Chiều đi:</span>
+                                    <span *ngIf="i == 1 " class="font-bold">Chiều về:</span>
+                                    {{item.flightNumber}} - {{item.weight}} kg
+                                </li>
+                            </ul>
+
+                        </div>
+                        <div class="clearfix "></div>
+                    </li>
+                </div>
+            </ol>
+        </div>
+
+
+    </div>
+</div>

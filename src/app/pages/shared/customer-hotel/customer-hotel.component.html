@@ -1,0 +1,116 @@
+<form action="">
+	<div class="form-group col-md-6 input-search">
+		<input type="text" class="form-control   pull-right" placeholder="Nhập từ khóa để tìm..." [(ngModel)]="keyword"
+			name="keyword">
+	</div>
+	<div class="col-md-1">
+		<button class="btn btn-success btn-search" type="submit" (click)="onSearch()">Tìm</button>
+	</div>
+	<div class="pull-right">Tổng số booking:
+		<strong class="font-bold">{{total}}</strong>
+
+		<!-- select limiut page size list -->
+		<select-limit [numbers]="pageSizeList" (onChange)="onChangeLimitSize($event)"></select-limit>
+	</div>
+</form>
+<div class="table-customer-hotel">
+	<table class="table table-hover table-head-success table-responsive">
+		<thead>
+			<tr class="text-center">
+				<th class="text-center stt">#</th>
+				<th class="text-center bk-code">Mã đặt chỗ</th>
+				<th class="text-center bk-code">Code</th>
+				<th class="text-center">Tên KH</th>
+				<th class="text-center bk-hotel">Tên KS</th>
+				<th class="text-center">Ngày đặt chỗ</th>
+				<th class="text-center">Tống tiền</th>
+				<th class="text-center ">Hình thức T.Toán</th>
+				<th class="text-center">Hạn thanh toán</th>
+				<th class="text-center">Book</th>
+				<th class="text-center">Tình trạng</th>
+				<th class="text-center bk-action" *ngIf="isAdmin || isCashier">Chức năng</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let hotel of hotelBooking; let i = index" class="text-center" [class.active]="selectedHotel === hotel">
+				<td>{{hotel.no}}</td>
+				<td>{{hotel.code}}</td>
+				<td>{{hotel.bookingCode}}</td>
+				<td class="text-success lead info-user" (click)="showDetailHotelBooking(hotel)">{{hotel.customerName}}</td>
+				<td>{{hotel.hotelName == null ? '-' : hotel.hotelName}}</td>
+				<td>{{hotel.bookingDate | moment: 'DD/MM/YYYY HH:mm'}}</td>
+				<td>{{hotel.totalPrice | number:'.0-2'}} đ</td>
+				<td>{{!hotel.paymentMethodName ? '-': hotel.paymentMethodName}}</td>
+				<td [ngSwitch]="hotel.status">
+					<div *ngSwitchCase="STATUS.WAITING">-</div>
+					<div *ngSwitchCase="STATUS.CANCELED">-</div>
+					<div *ngSwitchCase="STATUS.SUCCESS">-</div>
+					<div *ngSwitchDefault>
+						<countdown [time]="hotel.expiryDate | date: 'dd/MM/yyyy HH:mm:ss'" (submit)="runOutOfTime()"></countdown>
+					</div>
+				</td>
+				<td [title]="hotel.actualStatus ? 'Book thành công' : 'Book thất bại'">
+					<i *ngIf="hotel.actualStatus" class="fa fa-check fa-lg text-success " aria-hidden="true"></i>
+					<i *ngIf="!hotel.actualStatus" class="fa fa-ban fa-lg text-danger" aria-hidden="true"></i>
+				</td>
+				<td [ngSwitch]="hotel.status">
+					<div *ngSwitchCase="STATUS.WAITING" class="text-warning">{{!hotel.paymentDate ? ' ' : (hotel.paymentDate |
+						moment: 'DD/MM/YYYY HH:mm')}} - Đang chờ xuất vé </div>
+					<div *ngSwitchCase="STATUS.CANCELED" class="text-danger">Đã hủy</div>
+					<div *ngSwitchCase="STATUS.SUCCESS" class="text-success">Xuất vé thành công</div>
+					<div *ngSwitchCase="STATUS.PENDING" class="text-warning">Đang chờ xác thực</div>
+					<div *ngSwitchDefault class="text-muted">Chưa thanh toán</div>
+				</td>
+				<td *ngIf="isAdmin || isCashier">
+					<ul class="list-inline btn-action">
+						<li *ngIf="isAdmin">
+							<!-- disibled nút xác thực khi 
+								+ đã hủy, 
+								+ đã thanh toán,
+								+ xuất vé thành công
+								+ chưa thanh toán nhưng hết hạn 								
+							-->
+							<!-- active nút xác thưc thanh toán khi 
+								+ chưa thanh toán nhưng CÒN hạn
+							 -->
+							<button class="btn btn-fix"
+								[ngClass]="!isExpiryDate(hotel.expiryDate) && hotel.status !== STATUS.WAITING && hotel.status !== STATUS.CANCELED && hotel.status !== STATUS.SUCCESS ? 'btn-success': ''"
+								[disabled]="(hotel.status == STATUS.CANCELED) || (hotel.status == STATUS.WAITING) || (hotel.status === STATUS.SUCCESS) || ( (hotel.status === STATUS.PENDING || hotel.status === STATUS.UNPAID) && isExpiryDate(hotel.expiryDate))"
+								(click)="conFirmHotel(hotel)">Xác thực T.Toán </button>
+						</li>
+						<li *ngIf="isAdmin">
+							<!-- disibled nút hủy vé khi 
+								+ đã hủy, 
+							-->
+							<!-- active nút xác thưc thanh toán khi 
+								+ chưa thanh toán nhưng HẾT hạn
+							 -->
+							<button (click)="cancelHotel(hotel)"
+								[ngClass]=" (hotel.status == STATUS.WAITING || hotel.status !== STATUS.CANCELED) ? 'btn-danger': ''"
+								class="btn  btn-fix" [disabled]="hotel.status == STATUS.CANCELED ">Hủy
+								Phòng
+							</button>
+						</li>
+						<li *ngIf="isCashier">
+							<button class="btn btn-fix"
+								[ngClass]="!isExpiryDate(hotel.expiryDate) && hotel.status !== STATUS.WAITING && hotel.status !== STATUS.CANCELED && hotel.status !== STATUS.SUCCESS ? 'btn-success': ''"
+								[disabled]="(hotel.status == STATUS.CANCELED) || (hotel.status == STATUS.WAITING) || (hotel.status === STATUS.SUCCESS) || ( (hotel.status === STATUS.PENDING || hotel.status === STATUS.UNPAID) && isExpiryDate(hotel.expiryDate))"
+								(click)="onReceipt(hotel)">Thu tiền</button>
+						</li>
+					</ul>
+				</td>
+			</tr>
+		</tbody>
+
+
+	</table>
+</div>
+
+<div class="text-center">
+	<pagination *ngIf="total > limit" [totalItems]="total" [itemsPerPage]="limit" [maxSize]="10"
+		previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+		(pageChanged)="pageChanged($event)" [boundaryLinks]="true" [(ngModel)]="page"></pagination>
+</div>
+
+
+<sidebar-detail [open]="openSideBar" [type]="typeBooking" [data]="DetailHotelBooking"></sidebar-detail>

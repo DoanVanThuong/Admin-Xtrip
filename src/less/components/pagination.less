@@ -1,0 +1,44 @@
+.pagination {
+  text-align: center;
+  margin-top: 44px;
+  border-radius: 0;
+  a.item {
+    background: @main;
+    color: #fff;
+    margin: 0px 10px;
+  }
+  & > li > a,
+  & > li > span {
+    border: 0;
+  }
+
+  .page-item {
+    float: left;
+    line-height: 30px;
+    outline: 0;
+    color: @c-5d5d5d;
+    text-align: center;
+
+    a {
+      font-family: @f-qsare;
+      width: 31px;
+      height: 30px;
+      line-height: 30px;
+      float: left;
+      font-size: @font-size-base;
+      padding: 0;
+    }
+
+    &.active {
+      a {
+        background-color: @green;
+        color: @white;
+        border: 0;
+
+        & + .paginate_button {
+          border-left: 0;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,141 @@
+/**
+ * These are the custom mixins used throughout the application.
+ */
+// RGBA colours in IE via a LESS mixin
+.rgba(@colour, @alpha) {
+  @alphaColour: hsla(hue(@colour), saturation(@colour), lightness(@colour), @alpha);
+  @ieAlphaColour: argb(@alphaColour);
+
+  background-color: @colour; // Fallback for older browsers
+  background-color: @alphaColour;
+
+  // IE hacks
+  zoom: 1; // hasLayout
+  background-color: transparent \9;
+  /*
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=@{ieAlphaColour}, endColorstr=@{ieAlphaColour})"; // IE 8+
+      filter:  ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=@{ieAlphaColour}, endColorstr=@{ieAlphaColour})";  // IE 6 & 7
+  */
+}
+
+.placeholder(@color: @light-gray) {
+  &::-webkit-input-placeholder {
+    color: @color;
+  }
+  &::-moz-placeholder {
+    color: @color;
+  }
+  &:-ms-input-placeholder {
+    color: @color;
+  }
+  &:-moz-placeholder {
+    color: @color;
+  }
+}
+
+.border-radius(@radius: 5px) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  border-radius: @radius;
+}
+
+.border-radiuses (@topright: 0, @bottomright: 0, @bottomleft: 0, @topleft: 0) {
+  -webkit-border-top-right-radius: @topright;
+  -webkit-border-bottom-right-radius: @bottomright;
+  -webkit-border-bottom-left-radius: @bottomleft;
+  -webkit-border-top-left-radius: @topleft;
+
+  -moz-border-radius-topright: @topright;
+  -moz-border-radius-bottomright: @bottomright;
+  -moz-border-radius-bottomleft: @bottomleft;
+  -moz-border-radius-topleft: @topleft;
+
+  border-top-right-radius: @topright;
+  border-bottom-right-radius: @bottomright;
+  border-bottom-left-radius: @bottomleft;
+  border-top-left-radius: @topleft;
+
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+
+.border(@border-top: @std-border, @border-right: @std-border, @border-bottom: @std-border, @border-left: @std-border) {
+  border-top: @border-top;
+  border-right: @border-right;
+  border-bottom: @border-bottom;
+  border-left: @border-left;
+}
+
+.border(@border: @std-border) {
+  border: @border;
+}
+
+.user-select(@select: none) {
+  -webkit-user-select: @select; /* Chrome/Safari */
+  -moz-user-select: @select; /* Firefox */
+  -ms-user-select: @select; /* IE10+ */
+  -o-user-select: @select;
+  user-select: @select;
+}
+
+.box-center() {
+  margin: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.box-shadow(@hoff: 0, @voff: 0, @blur: 0, @color: @white) {
+  -webkit-box-shadow: @hoff @voff @blur @color;
+  -moz-box-shadow: @hoff @voff @blur @color;
+  box-shadow: @hoff @voff @blur @color;
+}
+
+// Font-family
+.font-back {
+  font-family: 'back-to-school';
+}
+
+.font-saltie {
+  font-family: 'saltie-sea';
+}
+
+.font-fred {
+  font-family: 'fredokaone-regular';
+}
+
+.font-quick-light {
+  font-family: @f-qsali;
+}
+
+.font-quick {
+  font-family: 'quicksand-bold';
+}
+
+.font-quick-regular {
+  font-family: 'quicksand-regular';
+}
+
+.font-quick-medium {
+  font-family: 'quicksand-medium';
+}
+
+.font-roboto {
+  font-family: 'roboto-bold';
+}
+
+.font-quick-book {
+  font-family: 'quicksandbook-regular';
+}
+
+.font-roboto {
+  font-family: 'roboto-bold';
+}
+
+.font-roboto-regular {
+  font-family: 'roboto-regular';
+}
+

@@ -1,0 +1,100 @@
+@import '_variables.less';
+.full-calendar {
+    background-color: @white;
+    margin-bottom: 30px;
+    .calendar-row {
+        border-bottom: 1px solid @c-bdbdbd;
+        display: flex;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        &.calendar-heading {
+            .calendar-col {
+                border-width: 0;
+                background-color: #008060;
+                min-height: auto;
+                padding: 0;
+                color: @white;
+            }
+        }
+        .calendar-col {
+            background-color: @white;
+            text-align: center;
+            width: 14.28%;
+            color: @black;
+            font-size: 13px;
+            border-right: 1px solid @c-bdbdbd;
+            min-height: 85px;
+            padding-top: 5px;
+            position: relative;
+            &:last-child {
+                border-width: 0;
+            }
+            >a {
+                display: block;
+                width: 100%;
+                height: 100%;
+                position: relative;
+                &.disabled {
+                    color: @c-bdbdbd;
+                    >.price {
+                        display: none;
+                    }
+                }
+                &.enable {
+                    background: @main-2;
+                    >.date {
+                        color: @white  !important;
+                    }
+                    &.active {
+                        border: 4px solid @red;
+                    }
+                }
+                >.date {
+                    width: 100%;
+                    text-align: center;
+                    font-size: 13px; // color: @white;
+                    &.disabled {
+                        color: @c-bdbdbd;
+                    }
+                }
+                >.price {
+                    font-size: 13px;
+                    position: absolute;
+                    bottom: 0;
+                    width: 100%;
+                    display: block;
+                    color: @main-2;
+                    font-weight: 700;
+                    &.lowest {
+                        background-color: @red;
+                        color: @white;
+                        font-weight: 400;
+                    }
+                }
+            }
+            .arrow_box {
+                background: #88b7d5;
+                width: 100%;
+                position: absolute;
+                top: 0;
+                z-index: 2;
+                color: @white;
+                left: -100%;
+                top: -100px;
+                width: 225px;
+                text-align: left;
+                border-radius: 10px;
+                -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
+                box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
+                li {
+                    font-size: 12px;
+                    span {
+                        &:first-child {
+                            color: @black;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

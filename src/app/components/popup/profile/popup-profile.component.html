@@ -1,0 +1,59 @@
+<div bsModal #popup="bs-modal" class="modal fade profile-popup" role="dialog" (onHide)="onPopupClose()">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="pull-right">
+                    <i class="fa fa-times" (click)="popup.hide()"></i>
+                </div>
+                <div class=" text-center ">
+                    <h4 class="modal-title title-preview ">Thông tin tài khoản</h4>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="ibox ibox-fullheight">
+                        <form class="form-info font-15">
+                            <div class="ibox-body">
+                                <div class="row m-b-2">
+                                    <div class="col-md-6 text-muted">
+                                        <span>
+                                            <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                                        </span>
+                                        Họ:</div>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" [(ngModel)]="firstName" name="firstName">
+                                    </div>
+                                </div>
+                                <div class="row m-b-2">
+                                    <div class="col-md-6 text-muted">
+                                        <span>
+                                            <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                                        </span>
+                                        Tên:</div>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" [(ngModel)]="lastName" name="lastName">
+                                    </div>
+                                </div>
+                                <div class="row m-b-2">
+                                    <div class="col-md-6 text-muted">
+                                        <span>
+                                            <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                        </span>
+                                        Email:</div>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" value="{{data.email}}" class="read-only form-control"
+                                            readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-none">
+                <button class="btn btn-lg btn-primary btn-rounded btn-air" style="width:200px;" (click)="updateProfile()">Cập
+                    nhật</button>
+            </div>
+        </div>
+    </div>
+</div>

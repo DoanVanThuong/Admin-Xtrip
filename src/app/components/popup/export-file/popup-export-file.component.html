@@ -1,0 +1,49 @@
+<div bsModal #popup="bs-modal" class="modal fade export-file-popup" role="dialog" (onHide)="onPopupClose()">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="pull-right">
+                    <i class="fa fa-times" (click)="hide()"></i>
+                </div>
+                <div class=" text-center ">
+                    <h4 class="modal-title title-preview ">Xuất file
+                   </h4>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>Chọn file</label>
+                        <ul class="list-inline list-file">
+                            <li *ngFor="let item of files; let i = index">
+                                <a class="btn btn-outline-info btn-fix" (click)="selectFileType(item)" [ngClass]="item === selectedFileType ? 'text-white bg-info' : ''">
+                                    <i class="item.icon" aria-hidden="true"></i> {{item.title}}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-12  form-group">
+                        <label>Chọn ngày</label>
+                        <input type="text" readonly placeholder="Chọn ngày" class="form-control" bsDaterangepicker
+                            [bsConfig]="bsConfig"  [(ngModel)]="bsRangeValue" name="bsRangeValue"
+                            (bsValueChange)="getDateRange($event)">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class=" m-b-4 m-t-10">
+                            <button (click)="downLoadFile()" class="btn btn-fix btn-primary btn-air" [disabled]="!bsRangeValue">Xuất
+                                file</button>
+                            <button class="btn btn-fix btn-danger btn-air pull-right" (click)="hide()">Đóng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-none">
+
+            </div>
+        </div>
+    </div>
+</div>

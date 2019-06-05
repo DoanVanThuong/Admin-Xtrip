@@ -1,0 +1,39 @@
+<div class="full-calendar">
+  <div class="calendar-row calendar-heading calendar-week-title">
+    <div class="calendar-col" *ngFor="let day of headers; trackBy: trackByFn; let col = index">
+      {{ day }}
+    </div>
+  </div>
+
+  <div class="calendar-row calendar-week"
+    *ngFor="let row of convertNumberToArray(rows); trackBy: trackByFn; let row = index">
+    <div class="calendar-col calendar-day" (clickOutside)="onClickOutside(dates[row][col])"
+      *ngFor="let col of convertNumberToArray(headers.length); trackBy: trackByFn; let col = index">
+      <a *ngIf="!!onShowDate(dates[row][col].date)" [class.disabled]="onDisabledDate(dates[row][col].date)"
+        [class.enable]="!!dates[row][col].data" [title]="!!dates[row][col].code ? dates[row][col].code : (onShowDate(dates[row][col].date) | moment: 'DD/MM/YYYY') "  (click)="onSelectDate(dates[row][col])"
+        [class.active]="selectedDate === dates[row][col]">
+        <div class="date">{{ onShowDate(dates[row][col].date) | moment: 'DD'}}</div>
+        <!-- <div class="code"  [class.text-danger]="!!dates[row][col].code">
+          {{ dates[row][col].code }}
+        </div> -->
+        <div class="arrow_box" *ngIf="dates[row][col].isShowInfo">
+          <ul class="list-unstyled">
+            <li>
+              <span class="">Code:</span>
+              <span>{{dates[row][col].code}}</span>
+            </li>
+            <li>
+              <span class="">Số chỗ:</span>
+              <span>{{dates[row][col].available}}</span>
+            </li>
+            <li>
+              <span class="">Giá tour:</span>
+              <span>{{dates[row][col].adultPrice | number:'.0-2'}}</span>
+            </li>
+          </ul>
+        </div>
+      </a>
+    </div>
+  </div>
+
+</div>

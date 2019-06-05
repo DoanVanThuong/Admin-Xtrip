@@ -1,0 +1,72 @@
+<div class="recommend-tour-page animated fadeIn">
+  <div class="ibox">
+    <div class="ibox-head">
+      <div class="ibox-title">
+        <h3>Danh sách {{total}} điểm đến đề xuất</h3>
+          <button class="btn btn-fix btn-outline-blue" (click)="addCategory()">
+            <span class="btn-icon"><i class="fa fa-plus"></i>Điểm đến</span>
+          </button>
+      </div>
+      <select-limit [numbers]="pageSizeList" (onChange)="onChangeLimitSize($event)" [selectedNumber]="limit"
+        class="pull-right"></select-limit>
+    </div>
+    <div class="ibox-body">
+      <div class="table-responsive table-hover">
+        <table class="table">
+          <thead class="thead-default thead-lg">
+            <tr>
+              <th>Hình ảnh</th>
+              <th>Tên</th>
+              <th>Loại</th>
+              <th>Giá từ</th>
+              <th>Danh sách mã CT</th>
+              <th>Thứ tự hiển thị</th>
+              <th>Chức năng</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="text-center pointer" *ngFor="let category of categories; let i = index; trackBy: index">
+              <td>
+                <div class="img-tour text-center">
+                  <img [src]="category.photo.src | resizeImage: 200" alt="">
+                  <div class="tour-day">Mã: {{category.code}}</div>
+                </div>
+              </td>
+              <td>{{category.name}}</td>
+              <td [ngClass]="category.type === 'international' ? 'text-success' : 'text-danger'">{{category.type === 'international' ? 'Quốc tế' : 'Trong nước'}}</td>
+              <td>{{category.priceFrom}}</td>
+              <td>
+                <ul class="list-unstyled">
+                  <li class="font-11" *ngFor="let tour of category.listTour; trackBy: trackByFn">{{tour}}</li>
+                </ul>
+              </td>
+              <td class="text-success">{{category.weight}}</td>
+              <td>
+                <ul class="list-inline btn-action d-flex justify-content-center">
+                  <li>
+                    <button title="Sửa {{category.name}}" class="btn btn-outline-success btn-fix "
+                      (click)="onEdit(category)">
+                      <span class="btn-icon"><i class="fa fa-edit"></i>Sửa</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button class="btn btn-outline-danger btn-fix" (click)="onDeleteCategory(category)"
+                      title="Xóa {{category.name}}">
+                      <span class="btn-icon"><i class="fa fa-trash"></i>Xóa</span>
+                    </button>
+                  </li>
+                </ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="text-center">
+        <pagination *ngIf="total > limit" [totalItems]="total" [itemsPerPage]="limit" [maxSize]="maxSize"
+          previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+          (pageChanged)="pageChanged($event)"></pagination>
+      </div>
+    </div>
+  </div>
+
+  <ngx-dnd-container [model]="['']" class="hidden"></ngx-dnd-container>

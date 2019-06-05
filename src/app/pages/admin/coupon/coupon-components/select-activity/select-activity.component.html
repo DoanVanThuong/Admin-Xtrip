@@ -1,0 +1,22 @@
+<div class="select-product-wp m-b-4">
+    <div class="form-group row form-item">
+        <label class="col-sm-2 col-form-label "></label>
+        <div class="col-sm-8">
+            <div class="select-container relative">
+                <ul class="list-unstyled list-source">
+                    <li *ngFor="let product of selectedProducts; let i = index; trackBy: index">
+                        {{product.name}}
+                        <span>
+                            <a (click)="deleteActivity(product)">
+                                <i class="fa fa-times fa-lg" aria-hidden="true"></i>
+                            </a>
+                        </span>
+                    </li>
+                </ul>
+                <input type="text" class="form-control form-control-air pointer" placeholder="Chọn hoạt động, vui chơi, tham quan..."
+                    (ngModelChange)="selectSuggest($event)" [(ngModel)]="keyword" name="keyword" (click)="selectSuggest(' ')">
+                <search-auto-complete [source]="products" [show]="isShow" [isSelected]="isSelected" (select)="selectProduct($event)"></search-auto-complete>
+            </div>
+        </div>
+    </div>
+</div>

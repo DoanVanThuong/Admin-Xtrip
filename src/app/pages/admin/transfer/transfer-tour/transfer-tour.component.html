@@ -1,0 +1,55 @@
+<form action="">
+	<div class="form-group col-md-6 input-search">
+		<input type="text" class="form-control   pull-right" placeholder="Nhập từ khóa để tìm..." [(ngModel)]="keyword" name="keyword">
+	</div>
+	<div class="col-md-1">
+		<button class="btn btn-success btn-search" type="submit" (click)="onSearch()">Tìm</button>
+	</div>
+	<div class="pull-right">Tổng số booking:
+		<strong class="font-bold">{{totalItemTour}}</strong>
+
+		<!-- select limiut page size list -->
+		<select-limit [numbers]="pageSizeList" (onChange)="onChangeLimitSize($event)"></select-limit>
+	</div>
+</form>
+
+<table class="table table-hover table-head-success">
+	<thead>
+		<tr>
+			<th class="text-center stt">#</th>
+			<th class="text-center">Mã đặt chỗ</th>
+			<th class="text-center">Tên Khách hàng</th>
+			<th class="text-center">Ngày đặt chỗ</th>
+			<th class="text-center">Hạn thanh toán</th>
+			<th class="text-center">Nội dung thanh toán</th>
+			<th class="text-center">Tổng tiền</th>
+			<th class="text-center">Xác thực CK</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let t of transferTours; let i = index" class="text-center">
+			<td>{{t.no}}</td>
+			<td>{{t.code}}</td>
+			<td class="lead info-user" (click)=showDetailTour(t.id)>{{t.customerName}}</td>
+			<td>{{t.bookingDate | date: 'dd/MM/yyyy'}}</td>
+			<td>{{t.expiryDate | date: 'dd/MM/yyyy HH:mm'}}</td>
+			<td>{{t.description}}</td>
+			<td>{{t.totalPrice | number:'.0-2'}} đ</td>
+			<td>
+				<button *ngIf="t.status == 1" [disabled]="t.status == 1" class="btn btn-fix">Xác thực</button>
+				<button *ngIf="t.status == 0 || t.status == 7 " class="btn btn-fix btn-success" (click)=confirmTransferTour(t)>Xác thực</button>
+
+			</td>
+		</tr>
+	</tbody>
+
+
+
+</table>
+
+<pagination *ngIf="totalItemTour > limit" [totalItems]="totalItemTour" [itemsPerPage]="limit" [maxSize]="5" previousText="&lsaquo;"
+ nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" (pageChanged)="pageChanged($event)"></pagination>
+
+
+
+<sidebar-detail [open]="openSideBar" [type]="typeTransfer" [data]="transferTourDetail"></sidebar-detail>

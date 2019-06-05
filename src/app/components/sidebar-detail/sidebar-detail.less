@@ -1,0 +1,91 @@
+@import '_variables.less';
+
+&.detail-customer {
+    &.quick-sidebar {
+        z-index: 1041 !important;
+
+        &.shined {
+            overflow: scroll;
+            z-index: 1041 !important;
+            width: 450px;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    }
+
+    .info-flight {
+        padding: 0px 20px;
+    }
+
+    .list-tickets {
+        .info-title {
+            max-width: 40%;
+        }
+
+        .strike-through {
+            display: table;
+            width: 100%;
+            margin-top: 15px;
+
+            &:after,
+            &:before {
+                content: "";
+                display: block;
+                position: relative;
+                top: 10px;
+                width: 100%;
+                border-top: 1px dashed @c-dfdfdf;
+            }
+
+            div {
+                font-size: 13px;
+                color: @black;
+                margin: 10px;
+                display: table-cell;
+                padding: 0 15px;
+                width: 1px;
+                white-space: nowrap;
+                vertical-align: middle;
+                font-weight: 600;
+            }
+        }
+    }
+
+    .detail-passenger-list {
+        height: 40px;
+    }
+
+    .deposit-wp {
+        .list-deposit-item {
+            li {
+                padding:10px;
+                &.unactive {
+                    span {
+                        color: @c-b7b7b7;
+                    }
+                    color: @c-cccccc;
+                }
+            }
+        }
+    }
+    .pricesummary-wp{
+        .list-price{
+            li{
+                padding:10px;
+            }
+            border-bottom: 1px solid @c-dfdfdf;
+        }
+        .price{
+            color: @red;
+        }
+    }
+    .price {
+        color: @green-2;
+    }
+
+    .price-rest {
+        color: @red;
+    }
+}

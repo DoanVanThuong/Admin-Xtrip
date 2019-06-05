@@ -1,0 +1,27 @@
+@import '_variables.less';
+
+.counter {
+  > a {
+    display: inline-block;
+    width: 25px;
+
+    > img {
+      margin-bottom: 0;
+      margin-top: -5px;
+      width: 24px;
+      height: 24px;
+    }
+
+    &:disabled {
+      cursor: unset;
+    }
+  }
+
+  .counter-value {
+    display: inline-block;
+    min-width: 30px;
+    text-align: center;
+    font-size: 20px;
+    color: @black;
+  }
+}

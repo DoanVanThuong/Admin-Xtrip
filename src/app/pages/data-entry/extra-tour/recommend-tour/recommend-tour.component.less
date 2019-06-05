@@ -1,0 +1,44 @@
+@import '_variables.less';
+
+.recommend-tour-page {
+    .table {
+        thead {
+            tr {
+                th {
+                    border: none;
+                }
+            }
+        }
+
+        tr {
+            td {
+                border-right: none;
+            }
+        }
+    }
+
+    .img-tour {
+        overflow: hidden;
+        position: relative;
+        text-align: left;
+
+        img {
+            max-height: 90px;
+            margin: 0px auto;
+            width: 180px;
+            -o-object-fit: cover;
+            object-fit: cover;
+        }
+
+        .tour-day {
+            position: absolute;
+            top: 10%;
+            left: 5%;
+            background: @main-3;
+            color: @white;
+            padding: 1px 7px;
+            border-radius: 5px;
+        }
+    }
+   
+}

@@ -1,0 +1,50 @@
+<div class="form-group row form-item form-select-flight">
+    <label class="col-sm-2 col-form-label "></label>
+    <div class="col-sm-8">
+        <div class="form-group object">
+            <div class="row">
+                <div class="col-sm-3 p-r-0">
+                    <div class="relative">
+                        <input class="form-control form-control-air" type="text" placeholder="Nơi đi" [(ngModel)]="departPlace"
+                            name="departPlace" (ngModelChange)="selectSuggest($event,'depart')" (click)="selectSuggest(' ', 'depart')">
+                        <search-auto-complete [source]="departs" [show]="isShowDepart" [isSelected]="isSelectedDepart"
+                            (select)="selectDepart($event)"></search-auto-complete>
+                    </div>
+                </div>
+                <div class="col-sm-3 p-r-0">
+                    <div class="relative">
+                        <input class="form-control form-control-air" type="text" placeholder="Nơi đến" [(ngModel)]="arrivalPlace"
+                            name="arrivalPlace" (ngModelChange)="selectSuggest($event,'arrival')" (click)="selectSuggest(' ', 'arrival')">
+                        <search-auto-complete [source]="arrivals" [show]="isShowArrival" [isSelected]="isSelectedArrival"
+                            (select)="selectArrival($event)"></search-auto-complete>
+                    </div>
+
+                </div>
+                <div class="col-sm-3">
+                    <select class="form-control form-control-air" [(ngModel)]="selectedTypeTicket" [ngModelOptions]="{standalone: true}">
+                        <option [ngValue]="item" *ngFor="let item of typeTickets">{{item.title}}</option>
+                    </select>
+                </div>
+                <div class="col-sm-3 p-l-0">
+                    <button class="btn btn-warning btn-fix btn-random" (click)="addTicket()" type="button" [disabled]="!arrivalPlace || !departPlace">Thêm
+                        chặng</button>
+                </div>
+                <div class="col-sm-12">
+                    <div class="data-flight">
+                        <ul class="list-unstyled list-inline">
+                            <li class="item-selected pointer" *ngFor="let ticket of tickets; let i = index; trackBy: index">
+                                <span *ngIf="ticket.roundTrip">KH: </span> {{ ticket.departure.code}} -
+                                {{ticket.arrival.code}}
+                                <span>
+                                    <a (click)="deleteTicket(i)">
+                                        <i class="fa fa-times fa-lg" aria-hidden="true"></i>
+                                    </a>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

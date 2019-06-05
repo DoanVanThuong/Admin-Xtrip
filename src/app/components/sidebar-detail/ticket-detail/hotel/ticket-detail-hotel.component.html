@@ -1,0 +1,83 @@
+<div class="quick-sidebar detail-ticket-flight text-left" [ngClass]="open ? 'shined' : ''">
+  <div class="detail-wp ">
+    <div class="header-detail " (click)="hideDetail() " data-toggle="tooltip">
+      <h1 class="display-1 " title="Nhấn ESC để thoát">
+        <img id="img-cancel" src="assets/images/icon/cancel.svg" tabindex="0">
+        <span>Thoát</span>
+      </h1>
+    </div>
+    <div class="heading ">Thông tin khách hàng</div>
+    <ul class="list-unstyled detail-customer-list ">
+      <div class="pull-left info-title ">
+        <li class="font-bold ">Khách hàng:</li>
+        <li class="font-bold ">Số điện thoại:</li>
+        <li class="font-bold ">Email:</li>
+      </div>
+      <div class="pull-left info info-customer-contact">
+        <li>{{data.customerName}}</li>
+        <li>{{data.mobileNumber}}</li>
+        <li>{{data.email}}</li>
+      </div>
+    </ul>
+    <div class="heading clearfix">Thông tin phòng</div>
+    <ul class="list-unstyled detail-customer-list ">
+      <div class="pull-left info-title ">
+        <li class="font-bold ">Người nhận phòng</li>
+        <li class="font-bold ">Ngày nhận phòng:</li>
+        <li class="font-bold ">Số đêm:</li>
+        <li class="font-bold ">Số Phòng:</li>
+        <li class="font-bold ">Loại Phòng:</li>
+        <li class="font-bold">Mã đặt chỗ</li>
+        <li class="font-bold">Mã vé</li>
+      </div>
+      <div class="pull-left info info-customer-contact">
+        <li>{{data.receiverName}}</li>
+        <li>{{data.checkIn | moment: 'HH:mm DD/MM/YYYY'}}</li>
+        <li>{{data.nights}}</li>
+        <li>{{data.rooms}}</li>
+        <li>{{data.roomType}}</li>
+        <li>{{data.code}}</li>
+        <li *ngIf="!!data && !!data.pnrCode && !isShowFormEditPnr || data.actualStatus">{{data.pnrCode}}
+          <span *ngIf="!!data && isShowEditPnr && !data.actualStatus">
+              <a (click)="onEditPrn()" data-toggle="tooltip" title="click để sửa" #a>
+                  <i class="fa fa-pencil" aria-hidden="true"></i>
+              </a>
+          </span>
+      </li>
+      <li *ngIf="isShowFormEditPnr && !data.actualStatus">
+          <form action="" class="form-edit-pnr relative">
+              <input type="text" class="form-control height-20" [ngModelOptions]="{standalone: true}"
+                  [(ngModel)]="data.pnrCode" name="data" autofocus>
+              <a class="icon-confirm" (click)="onUpdatePnr(data.pnrCode)">
+                  <i class="fa fa-check" aria-hidden="true"></i>
+              </a>
+          </form>
+      </li>
+      </div>
+    </ul>
+    <div class="heading clearfix" *ngIf="!!data && !!data.cancellationPolicies">Thông tin hoàn hủy</div>
+    <div *ngIf="!!data && !!data.cancellationPolicies" class="p-l-10">
+      <ul class="list-unstyled">
+        <li *ngFor="let data of data.cancellationPolicies">
+          <span class="font-bold">Từ {{data.from | moment: 'HH:mm DD/MM/YYYY'}}</span>
+          <span class="font-bold"> đến {{data.to | moment: 'HH:mm DD/MM/YYYY'}}</span>
+          <span class="text-danger">{{data.chargedAmount | number:'.0-2'}} đ</span>
+        </li>
+      </ul>
+    </div>
+    <div class="heading clearfix" *ngIf="!!data && !!data.vatInvoiceInfo">Thông tin VAT</div>
+    <ul class="list-unstyled detail-customer-list " *ngIf="!!data && !!data.vatInvoiceInfo">
+      <div class="pull-left info-title ">
+        <li class="font-bold ">Tên công ty</li>
+				<li class="font-bold ">Địa chỉ</li>
+				<li class="font-bold ">Mã số thuế</li>
+      </div>
+      <div class="pull-left info info-customer-contact">
+        <li>{{data.vatInvoiceInfo.companyName}}</li>
+				<li>{{data.vatInvoiceInfo.companyAddress}}</li>
+				<li>{{data.vatInvoiceInfo.taxIdentificationNo}}</li>
+      </div>
+    </ul>
+
+  </div>
+</div>

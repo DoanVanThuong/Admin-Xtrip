@@ -1,0 +1,90 @@
+@import '_variables.less';
+.create-coupon-page {
+    .content {
+        padding: 30px;
+        background: @white;
+        .form-create-coupon {
+            .title-label {
+                font-size: 15px;
+            }
+            .form-item {
+                margin-bottom: 0px;
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex-pack: distribute;
+                -webkit-box-align: center;
+                -ms-flex-align: center;
+                align-items: center;
+                &.form-object {
+                    display: inherit;
+                    label {
+                        margin-top: 15px;
+                    }
+                    .choices {
+                        margin-bottom: 10px;
+                    }
+                }
+            }
+           
+            .list-services {
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex-pack: distribute;
+                justify-content: space-around;
+                // max-width: 400px;
+                li {
+                    color: @black;
+                    background: transparent;
+                    padding: 10px;
+                    min-width: 120px;
+                    border: 1px solid @c-bdbdbd;
+                    text-align: center;
+                    &.active {
+                        background: @turquoise;
+                        color: @white;
+                        a {
+                            &:hover {
+                                color: @white;
+                            }
+                        }
+                    }
+                }
+            }
+            .object {
+                label {
+                    margin: 15px auto;
+                }
+                input,
+                textarea {
+                    &::-webkit-input-placeholder {
+                        color: @gray;
+                        font-size: 13px;
+                    }
+                    &:-ms-input-placeholder {
+                        color: @gray;
+                        font-size: 13px;
+                    }
+                    &::placeholder {
+                        color: @gray;
+                        font-size: 13px;
+                    }
+                }
+            }
+            .btn-random {
+                padding: 6px;
+            }
+        }
+    }
+
+    .icon-check-code{
+        position: absolute;
+        right: -36px;
+        z-index: 2;
+        top: 9px;
+        border-radius: 50%;
+        padding: 2px 4px;
+        color:@white;
+    }
+}

@@ -1,0 +1,119 @@
+<form action="">
+    <div class="form-group col-md-6 input-search">
+        <input type="text" class="form-control   pull-right" placeholder="Nhập từ khóa để tìm..." [(ngModel)]="keyword"
+            name="keyword">
+    </div>
+    <div class="col-md-1">
+        <button class="btn btn-success btn-search" type="submit" (click)="onSearch()">Tìm</button>
+    </div>
+    <div class="pull-right">Tổng số booking:
+        <strong class="font-bold">{{totalItemFlight}}</strong>
+
+        <!-- select limiut page size list -->
+        <select-limit [numbers]="pageSizeList" (onChange)="onChangeLimitSize($event)"></select-limit>
+    </div>
+</form>
+<div class="table-customer-flight">
+    <table class="table table-hover table-head-success table-responsive">
+        <thead>
+            <tr class="text-center">
+                <th class="text-center stt">#</th>
+                <th class="text-center bk-code">Mã đặt chỗ</th>
+                <th class="text-center bk-code">Code</th>
+                <th class="text-center">Tên KH</th>
+                <th class="text-center">Hành trình</th>
+                <th class="text-center">Ngày đặt chỗ</th>
+                <th class="text-center mn-w-50">Đại lý</th>
+                <th class="text-center">Giá vé</th>
+                <th class="text-center">Hình thức T.Toán</th>
+                <th class="text-center">Hạn thanh toán</th>
+                <th class="text-center">Book</th>
+                <th class="text-center">Tình trạng</th>
+                <th class="text-center" *ngIf="isAdmin || isBooker || isCashier">Chức năng</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let flight of flightBooking ; let i = index" class="text-center pointer" [class.active]="selectedFlight === flight">
+                <td>{{flight.no}}</td>
+                <td>{{flight.code}}</td>
+                <td>{{flight.bookingCode}}</td>
+                <td class="text-success lead info-user" (click)="showDetailFlightBooking(flight)">
+                    {{flight.customerName}}</td>
+                <td>{{flight.journey == null ? '-': flight.journey}}</td>
+                <td>{{flight.bookingDate | moment: 'DD/MM/YYYY HH:mm'}}</td>
+                <td>{{flight.agency}}</td>
+                <td>{{flight.totalPrice | number:'.0-2'}} đ</td>
+                <td>{{!flight.paymentMethodName ? '-': flight.paymentMethodName}}</td>
+                <td [ngSwitch]="flight.status">
+                    <div *ngSwitchCase="STATUS.WAITING">-</div>
+                    <div *ngSwitchCase="STATUS.SUCCESS">-</div>
+                    <div *ngSwitchCase="STATUS.CANCELED">00:00:00</div>
+                    <div *ngSwitchDefault>
+                        <countdown [time]="flight.expiryDate | date: 'dd/MM/yyyy HH:mm:ss'" (submit)="runOutOfTime()">
+                        </countdown>
+                    </div>
+                </td>
+                <td [title]="flight.actualStatus ? 'Book thành công' : 'Book thất bại'">
+                    <i *ngIf="flight.actualStatus" class="fa fa-check fa-lg text-success " aria-hidden="true"></i>
+                    <i *ngIf="!flight.actualStatus" class="fa fa-ban fa-lg text-danger" aria-hidden="true"></i>
+                </td>
+                <td [ngSwitch]="flight.status">
+                    <div *ngSwitchCase="STATUS.WAITING" class="text-warning">{{!flight.paymentDate ? ' ' : (flight.paymentDate |
+                        moment: 'DD/MM/YYYY HH:mm') + ' - '}}Đang chờ xuất vé</div>
+                    <div *ngSwitchCase="STATUS.CANCELED" class="text-danger">Đã hủy</div>
+                    <div *ngSwitchCase="STATUS.PENDING" class="text-warning">Đang xác thực</div>
+                    <div *ngSwitchCase="STATUS.SUCCESS" class="text-success">Xuất vé thành công</div>
+                    <div *ngSwitchDefault class="text-muted">Chưa thanh toán</div>
+                </td>
+                <td *ngIf="isAdmin || isCS || isBooker || isCashier">
+                    <ul class="list-inline btn-action">
+                        <li *ngIf="isAdmin">
+                            <!-- disibled nút xác thực khi 
+                                    + đã hủy, 
+                                    + đã thanh toán, 
+                                    + xuất vé thành công
+                                -->
+                            <!-- active nút xác thưc thanh toán khi 
+                                    + chưa thanh toán nhưng CÒN hạn
+                                 -->
+
+                            <button class="btn btn-fix"
+                                [ngClass]="!isExpiryDate(flight.expiryDate) && flight.status !== STATUS.WAITING && flight.status !== STATUS.CANCELED && flight.status !== STATUS.SUCCESS ? 'btn-success': ''"
+                                [disabled]="(flight.status == STATUS.CANCELED) || (flight.status == STATUS.WAITING) || (flight.status === STATUS.SUCCESS) || ( (flight.status === STATUS.PENDING || flight.status === STATUS.UNPAID) && isExpiryDate(flight.expiryDate))"
+                                (click)="conFirmFlight(flight)">Xác thực T.Toán </button>
+                        </li>
+                        <li *ngIf="isAdmin || isBooker">
+                            <!-- disibled nút hủy vé khi 
+                                    + đã hủy, 
+                                -->
+                            <!-- active nút xác thưc thanh toán khi 
+                                    + chưa thanh toán nhưng HẾT hạn
+                                 -->
+
+                            <button (click)="cancelFlight(flight)"
+                                [ngClass]=" (flight.status == STATUS.WAITING || flight.status !== STATUS.CANCELED) ? 'btn-danger': ''"
+                                class="btn  btn-fix" [disabled]="flight.status == STATUS.CANCELED ">Hủy vé
+                            </button>
+                        </li>
+                        <li *ngIf="isCashier">
+                            <button class="btn btn-fix"
+                                [ngClass]="!isExpiryDate(flight.expiryDate) && flight.status !== STATUS.WAITING && flight.status !== STATUS.CANCELED && flight.status !== STATUS.SUCCESS ? 'btn-success': ''"
+                                [disabled]="(flight.status == STATUS.CANCELED) || (flight.status == STATUS.WAITING) || (flight.status === STATUS.SUCCESS) || ( (flight.status === STATUS.PENDING || flight.status === STATUS.UNPAID) && isExpiryDate(flight.expiryDate))"
+                                (click)="onReceipt(flight)">Thu tiền</button>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="text-center">
+    <pagination *ngIf="total > limit" [totalItems]="total" [itemsPerPage]="limit" [maxSize]="10"
+      previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+      (pageChanged)="pageChanged($event)" [boundaryLinks]="true" [(ngModel)]="page"></pagination>
+</div>
+
+
+
+<sidebar-detail [open]="openSideBar" [type]="typeBooking" [data]="DetailFlightBooking"></sidebar-detail>

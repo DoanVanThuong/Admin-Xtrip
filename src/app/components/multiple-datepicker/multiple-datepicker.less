@@ -1,0 +1,59 @@
+// style for calendar date
+#calendar-container {
+    max-width: 425px;
+    margin: 0px auto;
+    padding: 10px 0px;
+    .header-calendar {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        .icon {
+            font-size: 20px;
+        }
+    }
+    .title-month {
+        font-size: 16px;
+    }
+    .calendar-content {
+        .day-in-week {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+            justify-content: space-between;
+            max-width: 90%;
+        }
+        .calendar-days {
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            font-size: 19px;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            &:hover {
+                &:not(.past) {
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}
+
+.inactive {
+    opacity: 0.5;
+}
+
+.today {
+    color: red;
+}

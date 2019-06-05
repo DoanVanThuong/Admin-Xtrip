@@ -1,0 +1,115 @@
+<form action="">
+    <div class="form-group col-md-6 input-search">
+        <input type="text" class="form-control   pull-right" placeholder="Nhập từ khóa để tìm..." [(ngModel)]="keyword"
+            name="keyword">
+    </div>
+    <div class="col-md-1">
+        <button class="btn btn-success btn-search" type="submit" (click)="onSearch()">Tìm</button>
+    </div>
+    <div class="pull-right">Tổng số booking:
+        <strong class="font-bold">{{total}}</strong>
+
+        <!-- select limiut page size list -->
+        <select-limit [numbers]="pageSizeList" (onChange)="onChangeLimitSize($event)"></select-limit>
+    </div>
+</form>
+<div class="table-customer-product">
+    <table class="table table-hover table-head-success table-responsive">
+        <thead>
+            <tr class="text-center">
+                <th class="text-center stt">#</th>
+                <th class="text-center bk-code">Mã đặt chỗ</th>
+                <th class="text-center bk-code">Code</th>
+                <th class="text-center">Khách hàng</th>
+                <th class="text-center">Sản phẩm</th>
+                <th class="text-center">Ngày đặt chỗ</th>
+                <th class="text-center">Tổng tiền</th>
+                <th class="text-center">Hình thức T.Toán</th>
+                <th class="text-center">Hạn thanh toán</th>
+                <th class="text-center">Book</th>
+                <th class="text-center">Tình trạng</th>
+                <th class="text-center" *ngIf="isAdmin || isBooker || isCashier">Chức năng</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let product of productBooking; let i = index ; trackBy: trackByFn" class="text-center" [class.active]="selectedProduct === product">
+                <td>{{product.no}}</td>
+                <td>{{product.code}}</td>
+                <td>{{product.bookingCode}}</td>
+                <td class="text-success lead info-user" (click)="onGetDetail(product)">{{product.contactName}}</td>
+                <td>{{product.productName}}</td>
+                <td>{{product.bookingDate | moment: 'HH:mm DD/MM/YYYY '}}</td>
+                <td>{{product.totalPrice | number:'.0-2'}} đ</td>
+                <td>{{!product.paymentMethodName ? '-': product.paymentMethodName}}</td>
+                <td [ngSwitch]="product.status">
+                    <div *ngSwitchCase="STATUS.WAITING">-</div>
+                    <div *ngSwitchCase="STATUS.SUCCESS">-</div>
+                    <div *ngSwitchCase="STATUS.CANCELED">00:00:00</div>
+                    <div *ngSwitchDefault>
+                        <countdown [time]="product.expiryDate | date: 'dd/MM/yyyy HH:mm:ss'"></countdown>
+                    </div>
+                </td>
+                <td [title]="product.actualStatus ? 'Book thành công' : 'Book thất bại'">
+                    <i *ngIf="product.actualStatus" class="fa fa-check fa-lg text-success " aria-hidden="true"></i>
+                    <i *ngIf="!product.actualStatus" class="fa fa-ban fa-lg text-danger" aria-hidden="true"></i>
+                </td>
+                <td [ngSwitch]="product.status">
+                    <div *ngSwitchCase="STATUS.WAITING" class="text-warning">{{!product.paymentDate ? ' ' :
+                        (product.paymentDate | moment: 'HH:mm DD/MM/YYYY ')}} - Đang chờ xuất vé </div>
+                    <div *ngSwitchCase="STATUS.CANCELED" class="text-danger">Đã hủy</div>
+                    <div *ngSwitchCase="STATUS.SUCCESS" class="text-success">Xuất vé thành công</div>
+                    <div *ngSwitchCase="STATUS.PENDING" class="text-warning">Đang chờ xác thực</div>
+                    <div *ngSwitchDefault class="text-muted">Chưa thanh toán</div>
+                </td>
+                <td *ngIf="isAdmin || isBooker || isCashier">
+                    <ul class="list-inline btn-action">
+                        <li *ngIf="isAdmin">
+                            <!-- disibled nút xác thực khi 
+								+ đã hủy, 
+								+ đã thanh toán, 
+							-->
+                            <!-- active nút xác thưc thanh toán khi 
+								+ chưa thanh toán nhưng CÒN hạn
+							 -->
+
+                            <button class="btn btn-fix"
+                                [ngClass]="!isExpiryDate(product.expiryDate) && product.status !== STATUS.WAITING && product.status !== STATUS.CANCELED &&  product.status !== STATUS.SUCCESS ? 'btn-success': ''"
+                                [disabled]="(product.status == STATUS.CANCELED) || (product.status == STATUS.WAITING) || (product.status === STATUS.SUCCESS)||  ( (product.status === STATUS.PENDING ||  product.status === STATUS.UNPAID) && isExpiryDate(product.expiryDate))"
+                                (click)="onConfirmBooking(product)">Xác thực t.toán </button>
+                        </li>
+                        <li *ngIf="isAdmin || isBooker">
+                            <!-- disibled nút hủy vé khi 
+								+ đã hủy, 
+							-->
+                            <!-- active nút xác thưc thanh toán khi 
+								+ chưa thanh toán nhưng HẾT hạn
+							 -->
+
+                            <button (click)="onCancelBooking(product)"
+                                [ngClass]=" (product.status == STATUS.WAITING || product.status !== STATUS.CANCELED) ? 'btn-danger': ''"
+                                class="btn  btn-fix" [disabled]="product.status == STATUS.CANCELED ">Hủy vé
+                            </button>
+                        </li>
+                        <li *ngIf="isCashier">
+                            <button class="btn btn-fix"
+                                [ngClass]="!isExpiryDate(product.expiryDate) && product.status !== STATUS.WAITING && product.status !== STATUS.CANCELED &&  product.status !== STATUS.SUCCESS ? 'btn-success': ''"
+                                (click)="onReceipt(product)"
+                                [disabled]="(product.status == STATUS.CANCELED) || (product.status == STATUS.WAITING) || (product.status === STATUS.SUCCESS)||  ( (product.status === STATUS.PENDING ||  product.status === STATUS.UNPAID) && isExpiryDate(product.expiryDate))">Thu
+                                tiền</button>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!-- (product.status !== STATUS.WAITING) && (product.status !== STATUS.CANCELED) && (product.status !== STATUS.SUCCESS) -->
+<div class="text-center">
+    <pagination *ngIf="total > limit" [totalItems]="total" [itemsPerPage]="limit" [maxSize]="10"
+      previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+      (pageChanged)="pageChanged($event)" [boundaryLinks]="true" [(ngModel)]="page"></pagination>
+</div>
+
+
+
+<sidebar-detail [open]="isOpenSideBar" [type]="typeBooking" [data]="productBookingDetail"></sidebar-detail>

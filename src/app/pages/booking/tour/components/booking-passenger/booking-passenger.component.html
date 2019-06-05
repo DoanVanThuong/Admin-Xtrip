@@ -1,0 +1,60 @@
+<div class="booking-tour-passenger container ">
+  <div class="row">
+    <div class="col-12">
+      <div class="title">Thông tin liên hệ</div>
+
+      <form autocomplete="on" novalidate [formGroup]="formContact" class="form-contact">
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Họ & Tên</label>
+          <div class="col-sm-2 p-r-0" [ngClass]="{'has-error  has-feedback': lastName.touched && lastName.errors}">
+            <input type="text" autofocus class="form-control" placeholder="Nhập họ..." [formControl]="lastName"
+              formControlName="lastName" [attr.readonly]="params.action === 'update-passenger' ? true : null">
+          </div>
+          <div class="col-sm-4" [ngClass]="{'has-error  has-feedback': firstName.touched && firstName.errors}">
+            <input type="text" class="form-control" placeholder="Nhập tên..." [formControl]="firstName"
+              formControlName="firstName" [attr.readonly]="params.action === 'update-passenger' ? true : null" >
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Điện thoại</label>
+          <div class="col-sm-6" [ngClass]="{'has-error  has-feedback': mobileNumber.touched && mobileNumber.errors}">
+            <input type="text" class="form-control" placeholder="Nhập sđt..." [formControl]="mobileNumber"
+              formControlName="mobileNumber" [attr.readonly]="params.action === 'update-passenger' ? true : null">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Email</label>
+          <div class="col-sm-6" [ngClass]="{'has-error  has-feedback': email.touched && email.errors}">
+            <input type="text" class="form-control" placeholder="Nhập email..." [formControl]="email"
+              formControlName="email" [attr.readonly]="params.action === 'update-passenger' ? true : null">
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="title">Thông tin hành khách</div>
+      <ul class="list-unstyled list-passenger-info m-t-10">
+        <li *ngFor="let passenger of passengers; let i = index">
+          <passenger-info [data]="passenger" 
+            (onChange)="onChangePassenger($event)"></passenger-info>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="tab-footer">
+      <div class="text-right">
+        <button class="btn btn-success btn-fix" (click)="onBookTour()" *ngIf="params.action === 'book'"  [disabled]="!formContact.valid">
+          <span class="btn-icon"><i class="fa fa-shopping-cart"></i>Đặt tour</span>
+        </button>
+        <button class="btn btn-success btn-fix" (click)="upDatePassengerInfo()" *ngIf="params.action === 'update-passenger'" [disabled]="!isValidPassenger">
+          <span class="btn-icon"><i class="fa fa-pencil"></i>Cập nhật</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

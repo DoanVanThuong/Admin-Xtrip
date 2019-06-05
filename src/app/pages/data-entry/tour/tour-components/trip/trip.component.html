@@ -1,0 +1,178 @@
+<div class="tour-trip-section fade-in-up">
+    <div class="tour-trip-wp">
+        <form action="">
+            <div class="row create-schedule">
+                <div class="col-md-1">
+                    <div class="title">Tạo lịch trình
+                        <span class="text-danger">* </span>
+                    </div>
+                </div>
+                <div class="col-md-11">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="more-schedule" *ngIf="!!journey">
+                                <ul class="list-schedule list-unstyled">
+                                    <li *ngFor="let item of journey.details; let i = index" #schedule
+                                        [class.selected]="item.idx === selectedSchedule.idx">
+                                        <a (click)="onSelectSchedule(item)">
+                                            {{'Ngày'+' '+(i+1)}}
+                                            <span class="pull-right" (click)="onDeleteItemSchedule(item)"
+                                                *ngIf="journey.details.length > 1">
+                                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                            </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <a *ngIf="journey.details.length < days" class="btn-add-schedule text-danger"
+                                    (click)="onAddMoreSchedule()">Thêm
+                                    lịch trình</a>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="div" *ngIf="selectedSchedule">
+                                <div class="form-group">
+                                    <label for="">Tên hành trình ngày {{selectedSchedule.idx + 1 || 1}}</label>
+                                    <input required type="text" class="form-control" value=""
+                                        [(ngModel)]="selectedSchedule.name" name="name"
+                                        placeholder="Nhập những hành trình sẽ đi. ví dụ: Ngày 1: HCM - Tham quan chùa XYZ...">
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Các tùy chọn</label>
+                                    <span>
+                                        <button class="btn btn-success btn-icon-only btn-sm btn-air"
+                                            (click)="addMoreOption()">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </span>
+                                    <ul class="list-unstyled list-group" ngxDroppable
+                                        [model]="selectedSchedule.options">
+                                        <li *ngFor="let option of selectedSchedule.options; let i = index;"
+                                            class="pointer list-group-item border-none" ngxDraggable [model]="option"
+                                            title="Kéo để sắp xếp thứ tự">
+                                            <div class="row form">
+                                                <div class="col-md-1 text-center p-r-none">
+                                                    <i class="fa fa-bars fa-2x" aria-hidden="true" ngxDragHandle
+                                                        title="Kéo/Thả để xếp thứ tự"></i>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input type="text" placeholder="Nhập tùy chọn..."
+                                                        class="form-control" [(ngModel)]="option.title" name="title"
+                                                        [ngModelOptions]="{standalone: true}">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <select class="form-control" [(ngModel)]="option.value" name="value"
+                                                        [ngModelOptions]="{standalone: true}">
+                                                        <option *ngFor="let item of optionValues; let i = index"
+                                                            [value]="item.value">
+                                                            {{!!item.title ? item.title : 'Vui lòng chọn'}}</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <button class="btn btn-outline-pink btn-icon-only btn-sm btn-thick"
+                                                        (click)="onDeleteOption(selectedSchedule,i)"><i
+                                                            class="fa fa-trash"></i></button>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- <div class="schedule-in-trip-list " *ngIf="selectedSchedule">
+                                    <label for="">Chi tiết hành trình</label>
+                                    <ul class="list-unstyled" ngxDroppable [model]="selectedSchedule.items">
+                                        <li ngxDraggable class="row"
+                                            *ngFor="let item of selectedSchedule.items; let i = index" [model]="item">
+                                            <div class="col-md-1">
+                                                <i class="fa fa-list sort-icon" aria-hidden="true" ngxDragHandle></i>
+                                            </div>
+                                            <div class="col-md-2" *ngIf="selectedSchedule.items">
+                                                <img-upload [path]="path" [item]="item" [folderImage]="folderImage"
+                                                    [src]="item.image.src" (select)="onUploadImage($event,item)">
+                                                </img-upload>
+                                                <div class="text-center file-name">{{item.image.src | fileName}}</div>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <div class="form-group">
+                                                    <div [froalaEditor]="optionEditor" [(froalaModel)]="item.text">
+                                                        {{ item.text }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 text-center">
+                                                <button class="btn btn-danger btn-fix btn-air"
+                                                    *ngIf="selectedSchedule.items.length > 1"
+                                                    (click)="onDeleteActivity(item)">
+                                                    <span class="btn-icon">
+                                                        <i class="fa fa-trash"></i>Xóa
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <div class="more-jouney">
+                                        <a *ngIf="selectedSchedule" class="btn-add-jouney text-danger"
+                                            (click)="onAddMoreActivities()">Thêm
+                                            hành trình</a>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="schedule-in-trip-list m-t-20" *ngIf="selectedSchedule">
+                                <label for="">Chi tiết hành trình ngày {{selectedSchedule.idx + 1 || 1}} <span
+                                        class="text-danger">({{!!selectedSchedule.items ? selectedSchedule.items.length : 1}})</span>: </label>
+                                <ul class="list-unstyled" ngxDroppable [model]="selectedSchedule.items">
+                                    <li ngxDraggable class="row"
+                                        *ngFor="let item of selectedSchedule.items; let i = index" [model]="item">
+                                        <div class="col-md-1 text-center">
+                                            <i class="fa fa-list sort-icon" aria-hidden="true" ngxDragHandle></i>
+                                        </div>
+                                        <div class="col-md-2" *ngIf="selectedSchedule.items">
+                                            <img-upload [path]="path" [item]="item" [folderImage]="folderImage"
+                                                [src]="item.image.src" (select)="onUploadImage($event,item)">
+                                            </img-upload>
+                                            <div class="text-center file-name font-11">{{item.image.src | fileName}}
+                                            </div>
+                                        </div>
+                                        <div [ngClass]="selectedSchedule.items.length > 1 ? 'col-md-8' : col-md-10">
+                                            <div class="form-group">
+                                                <div [froalaEditor]="optionEditor" [(froalaModel)]="item.text">
+                                                    {{ item.text }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1 text-center" *ngIf="selectedSchedule.items.length > 1">
+                                            <button class="btn btn-outline-pink btn-icon-only btn-sm btn-thick"
+                                                (click)="onDeleteActivity(item)"><i class="fa fa-trash"></i></button>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <div class="more-jouney">
+                                    <a *ngIf="selectedSchedule" class="btn-add-jouney text-danger"
+                                        (click)="onAddMoreActivities()">Thêm
+                                        hành trình</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <div class="tab-footer">
+        <div class="text-right">
+
+            <button class="btn btn-fix btn-success" type="button" (click)="onPreviewJourney()">Xem trước lịch
+                trình</button>
+            <button class="btn btn-fix btn-success" type="submit" (click)="btnCreateJourney(formJourney)"
+                [disabled]="detectDisabled()">{{action
+                ==='update' ? 'Cập nhật' : 'Tiếp tục'}}</button>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- preview popup -->
+<preview-journey-popup [title]="'Xem lại lịch trình'" [data]="journey"></preview-journey-popup>
+
+
+<ngx-dnd-container [model]="['']" class="hidden"></ngx-dnd-container>

@@ -1,0 +1,38 @@
+.calendar-month-wp {
+    background: #fff;
+    padding: 10px;
+    font-size: 14px;
+    .next-year {
+        &:hover {
+            cursor: pointer;
+        }
+    }
+    .previous-year {
+        &:hover {
+            cursor: pointer;
+        }
+    }
+    .header-calendar-month {
+        padding: 4px 0px;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+    }
+    .content-calendar-month {
+        padding: 0px 10px;
+        .item {
+            padding: 10px 0px;
+            &:hover {
+                &:not(.past) {
+                    cursor: pointer;
+                } // color: blue;
+            }
+        }
+        .selected {
+            color: red;
+        }
+    }
+}

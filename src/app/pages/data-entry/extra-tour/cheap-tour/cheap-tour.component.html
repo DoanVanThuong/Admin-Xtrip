@@ -1,0 +1,76 @@
+<div class="hot-tour-page animated fadeIn">
+  <div class="ibox">
+    <div class="ibox-head">
+      <div class="ibox-title">
+        <h3 >Danh sách {{total}} tour nổi bật
+              {{tourTypeSelected.isInternational ? 'nước ngoài' : 'trong nước'}}</h3>
+        <button class="btn btn-fix btn-outline-blue" (click)="addTourPopular(tour)">
+          <span class="btn-icon"><i class="fa fa-plus"></i>Tour nổi bật</span>
+        </button>
+      </div>
+      <div class="pull-right">
+        <select-limit [numbers]="pageSizeList" (onChange)="onChangeLimitSize($event)" [selectedNumber]="limit"
+        class="pull-right"></select-limit>
+        <select class="form-control" [(ngModel)]="tourTypeSelected" name="tourTypeSelected"
+        [ngModelOptions]="{standalone: true}" [disabled]="action === 'update'"
+        (ngModelChange)="onChangeTourType($event)">
+        <option *ngFor="let tour of tourTypes" [ngValue]="tour">{{tour.title}}</option>
+      </select>
+      </div>
+    </div>
+    <div class="ibox-body">
+      <div class="table-responsive table-hover">
+        <table class="table">
+          <thead class="thead-default thead-lg">
+            <tr>
+              <th></th>
+              <th>Mã tour</th>
+              <th>Tên tour</th>
+              <th>Thứ tự hiển thị</th>
+              <th>Chức năng</th>
+            </tr>
+          </thead>
+          <tbody ngxDroppable (drop)="dropTour($event)" [model]="tours">
+            <tr class="text-center pointer" ngxDraggable *ngFor="let tour of tours; let i = index; trackBy: index"
+              (drop)="dropTour($evet)" [model]="tour" (drag)="dragTour($event)">
+              <td>
+                <i class="fa fa-bars fa-2x" aria-hidden="true" ngxDragHandle title="Kéo/Thả để xếp thứ tự"></i>
+              </td>
+              <td class="font-bold">{{tour.code}}
+                <span>
+                  <a ngxClipboard [cbContent]="tour.code" (cbOnSuccess)="onClipboardSuccess($event)">
+                    <i class="fa fa-clipboard text-success" aria-hidden="true"></i>
+                  </a>
+                </span>
+              </td>
+              <td>
+                <div class="img-tour">
+                  <img [src]="tour.photo.src" onerror="this.src = 'assets/images/emptydata.png'" alt="" class="">
+                  <span>{{tour.name}}</span>
+                  <div class="tour-day">{{tour.days + 'N' + tour.nights+ 'Đ'}}</div>
+                </div>
+              </td>
+              <td class="text-success">{{tour.weight}}</td>
+              <td>
+                <ul class="list-inline btn-action">
+                  <li>
+                    <button class="btn btn-outline-danger btn-fix" (click)="onDeleteTour(tour)"
+                      title="Xóa tour {{tour.name}}">
+                      <span class="btn-icon"><i class="fa fa-trash"></i>Xóa</span>
+                    </button>
+                  </li>
+                </ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="text-center">
+        <pagination *ngIf="total > limit" [totalItems]="total" [itemsPerPage]="limit" [maxSize]="maxSize"
+          previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+          (pageChanged)="pageChanged($event)"></pagination>
+      </div>
+    </div>
+  </div>
+
+  <ngx-dnd-container [model]="['']" class="hidden"></ngx-dnd-container>

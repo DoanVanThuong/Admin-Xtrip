@@ -1,0 +1,122 @@
+/*Footer*/
+.footer {
+  @media screen and (min-width: 768px) {
+    margin-top: 23px;
+    padding-top: 45px;
+  }
+  background-color: @dark-green;
+  position: relative;
+  color: @white;
+  padding: 10px 15px;
+
+  .footer-title {
+    @media screen and (min-width: 768px) {
+      font-size: 35px;
+      margin-bottom: 30px;
+    }
+    color: @white;
+    .font-saltie;
+    font-size: 21px;
+  }
+
+  .links {
+    @media screen and (min-width: 768px) {
+      font-size: @font-size-x-large;
+      padding: 0 93px;
+    }
+
+    .font-quick-regular;
+    font-size: @font-size-medium;
+
+    padding: 42px 0 0 0;
+    > ul {
+      @media screen and (min-width: 768px) {
+        font-size: @font-size-x-large;
+        margin-top: -3px;
+      }
+      padding: 0;
+      font-size: @font-size-medium;
+      list-style: none;
+      margin-top: 32px;
+
+      > li {
+        margin-bottom: 17px;
+        @media screen and (max-width: 768px) {
+          margin-bottom: 21px;
+        }
+        > a {
+          color: @white;
+          letter-spacing: .8px;
+          word-spacing: -2px;
+
+          &:hover {
+            color: @main;
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+
+  p {
+    @media screen and (min-width: 768px) {
+      font-size: @font-size-base;
+    }
+    font-size: 10px;
+    line-height: 1.5;
+    .font-quick-regular;
+
+  }
+
+  .copyright {
+    a {
+      color: @main;
+      &:hover, &:active {
+        text-decoration: underline;
+      }
+    }
+
+    p {
+      &:first-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.contact {
+  .form-contact form {
+    margin-top: 33px;
+  }
+
+  form input.form-control {
+    padding: 13px 35px 12px 38px;
+    @media screen and (max-width: 768px) {
+      padding: 14px 35px 12px 14px;
+      height: 50px;
+    }
+  }
+
+  form {
+    .form-control {
+      padding: 13px 35px 12px 38px;
+      @media screen and (max-width: 768px) {
+        padding: 14px 35px 12px 14px;
+      }
+    }
+
+    .form-group {
+      @media screen and (max-width: 768px) {
+        margin-bottom: 12px;
+      }
+    }
+  }
+
+  .btn-primary {
+    margin-bottom: 23px !important;
+    @media screen and (max-width: 768px) {
+      margin-top: -13px !important;
+      margin-bottom: 49px !important;
+    }
+  }
+}

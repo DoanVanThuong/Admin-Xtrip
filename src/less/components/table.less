@@ -1,0 +1,202 @@
+.table {
+    thead {
+        tr {
+            th {
+                padding: 4px;
+                font-family: 'Roboto';
+                vertical-align: middle;
+                border-right: 1px solid @color-eee;
+                text-align: center;
+                position: relative;
+                &.sortable {
+                    cursor: pointer;
+                    padding-right: 18px;
+          
+                    .sort-indicator {
+                      padding-right: 18px;
+                      position: absolute;
+                      display: inline-block;
+                      top: 50%;
+                      right: 0;
+                      transform: translateY(-50%);
+          
+                      &:after,
+                      &:before {
+                        content: "";
+                        border-width: 0 4px 4px;
+                        border-style: solid;
+                        border-color: @white transparent;
+                        visibility: visible;
+                        right: 5px;
+                        top: 50%;
+                        position: absolute;
+                        opacity: .9;
+                        margin-top: -4px;
+                      }
+                      &:before {
+                        margin-top: 2px;
+                        border-bottom: none;
+                        border-left: 4px solid transparent;
+                        border-right: 4px solid transparent;
+                        border-top: 4px solid @white;
+                      }
+                    }
+          
+                    &.sort-asc .sort-indicator:before,
+                    &.sort-desc .sort-indicator:before {
+                      visibility: hidden;
+                    }
+          
+                    &.sort-desc .sort-indicator:after {
+                      border-bottom: none;
+                      border-left: 4px solid transparent;
+                      border-right: 4px solid transparent;
+                      border-top: 4px solid @white;
+                      box-shadow: none;
+                    }
+                  }
+            }
+            th.stt {
+                min-width: 25px;
+            }
+        }
+    }
+    tbody {
+        tr {
+            td {
+                background: transparent;
+                font-family: 'Roboto';
+                font-size: 13px;
+                padding: 4px;
+                border-right: 1px solid #eee;
+            }
+        }
+        &+tbody {
+            border-width: 1px;
+            tr {
+                background-color: transparent !important;
+            }
+        }
+    }
+    &.table-bordered {
+        >thead>th {
+            border: 1px solid;
+            border-bottom-width: 0;
+        }
+        >tbody>tr>td,
+        >tfoot>tr>td {
+            border-top-width: 0;
+        }
+    }
+    &.table-health {
+        @media screen and (min-width: 768px) {
+            margin-bottom: 12px;
+        }
+        thead {
+            tr {
+                th {
+                    @media screen and (min-width: 768px) {
+                        font-size: @font-size-small;
+                        position: relative;
+                    }
+                    padding: 10px;
+                    border-bottom: none;
+                    color: @black;
+                    font-size: @font-size-small;
+                    font-weight: bold;
+                    background: transparent;
+                    .font-quick;
+                    text-align: left;
+                }
+                .sortable {
+                    .sort-indicator {
+                        @media screen and (min-width: 768px) {
+                            position: absolute;
+                            display: inline-block;
+                            top: 50%;
+                            right: 0;
+                            transform: translateY(-50%);
+                        }
+                        padding-right: 18px;
+                        position: relative;
+                        display: block;
+                        right: -12px;
+                        top: -5px;
+                    }
+                }
+            }
+        }
+        tbody {
+            tr {
+                td {
+                    @media screen and (min-width: 768px) {
+                        font-size: @font-size-medium;
+                    }
+                    padding: 10px;
+                    border-top: none;
+                    border-bottom: none;
+                    font-size: @font-size-medium;
+                    color: @black-3;
+                    text-align: left;
+                    vertical-align: middle;
+                    background: transparent;
+                    .deleted {
+                        td {
+                            background: @white;
+                            span {
+                                text-decoration: line-through;
+                            }
+                            &.column-action {
+                                text-decoration: none;
+                            }
+                        }
+                    }
+                }
+                &:nth-child(odd) {
+                    background: @bg-row;
+                }
+                &:nth-child(even) {
+                    background: @white;
+                }
+            }
+        }
+        overflow-x: auto;
+    }
+}
+
+.table-panel {
+    .button-wrapper {
+        margin-bottom: 20px;
+    }
+    .column-action {
+        width: 30px;
+        vertical-align: middle;
+        a {
+            color: #ffffff;
+            padding: 0 5px;
+            display: inline-block;
+            cursor: pointer;
+        }
+    }
+}
+
+.table-option {
+    //   @include clearfix();
+    .table-filter {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .page-size {
+        float: left;
+        select.form-control {
+            display: inline;
+        }
+    }
+    .box-search {
+        float: right;
+        input[type="search"].form-control {
+            display: inline;
+        }
+    }
+}
+

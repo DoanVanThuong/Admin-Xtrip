@@ -1,0 +1,23 @@
+<div class="create-tour fade-in-up bg-white">
+    <h2>Thêm tour mới</h2>
+    <tabset [justified]="true" type="tabs">
+        <tab heading="Chung" [active]="tab === 'general'" [disabled]="tab !== 'general'">
+            <tour-general *ngIf="tab === 'general'" (changeTab)="changeTab($event)"></tour-general>
+        </tab>
+        <tab heading="Ngày khởi hành" [active]="tab === 'starting-date'" [disabled]="tab !== 'starting-date'">
+            <tour-starting-date *ngIf="tab === 'starting-date'" (changeTab)="changeTab($event)"></tour-starting-date>
+        </tab>
+        <tab heading="Hình ảnh" [active]="tab === 'image'" [disabled]="tab !== 'image'">
+            <tour-uploadImage *ngIf="tab === 'image'" (changeTab)="changeTab($event)"></tour-uploadImage>
+        </tab>
+        <tab heading="Lịch trình" [active]="tab === 'journey'" [disabled]="tab !== 'journey'">
+            <tour-trip *ngIf="tab === 'journey'" (changeTab)="changeTab($event)"></tour-trip>
+        </tab>
+        <tab heading="Chính sách &amp; Điều khoản" [active]="tab === 'policy'" [disabled]="tab !== 'policy'">
+            <tour-policy *ngIf="tab === 'policy'" (changeTab)="changeTab($event)"></tour-policy>
+        </tab>
+        <tab heading="Từ khóa liên quan" [active]="tab === 'hashtag'" [disabled]="tab !== 'hashtag'">
+            <tour-hash-tag *ngIf="tab === 'hashtag'" (changeTab)="changeTab($event)"></tour-hash-tag>
+        </tab>
+    </tabset>
+</div>

@@ -1,0 +1,293 @@
+<div class="tour-general-section ">
+    <div class="form-general">
+        <form autocomplete="on" [formGroup]="formGeneral" novalidate (ngSubmit)="onSubmit(formGeneral.value)">
+            <div class="form-group row has-error has-feedback"
+                [ngClass]="{'has-error has-feedback': (!tourName.valid && tourName.touched)}">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Tên tour</label>
+                <div class="col-sm-6">
+                    <input type="email" class="form-control" autofocus placeholder="Nhập tên tour..."
+                        [formControl]="tourName" formControlName="tourName">
+                    <span *ngIf="!tourName.valid && tourName.touched" class="form-control-feedback"></span>
+                    <div class="text-danger help-block"
+                        *ngIf="tourName.touched && tourName.errors| equalError: 'required'">Tên
+                        tour không được để trống</div>
+                    <div class="text-danger help-block"
+                        *ngIf="tourName.dirty && tourName.errors| equalError: 'minlength'">Tên
+                        tour không hợp lệ</div>
+
+                </div>
+            </div>
+            <!-- /tên tour -->
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Hành trình</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" placeholder="Nhập hành trình" [formControl]="journey"
+                        formControlName="journey">
+                    <div class="text-danger help-block"
+                        *ngIf="journey.touched && journey.errors| equalError: 'required'">Hành trình không được để trống
+                    </div>
+                    <div class="text-danger help-block"
+                        *ngIf="journey.dirty && journey.errors| equalError: 'minlength'">Hành trình không hợp lệ</div>
+                </div>
+            </div>
+            <!-- /hành trình -->
+            <div class="form-group row">
+                <label for="inputPassword3" class="col-sm-2 col-form-label">Hoa hồng</label>
+                <div class="col-sm-6">
+                    <input currencyMask [options]="optionCurrencyMask" type="text" class="form-control"
+                        placeholder="Nhập hoa hồng...(%)" [formControl]="tourCommissionRate"
+                        formControlName="tourCommissionRate">
+                    <div class="text-danger help-block"
+                        *ngIf="tourCommissionRate.touched && tourCommissionRate.errors| equalError: 'required'">Hoa hồng
+                        không được để trống</div>
+                    <div class="text-danger help-block"
+                        *ngIf="tourCommissionRate.dirty && tourCommissionRate.errors| equalError: 'max'">Hoa hồng không
+                        hợp lệ</div>
+                    <div class="text-danger help-block"
+                        *ngIf="tourCommissionRate.dirty && tourCommissionRate.errors| equalError: 'min'">Hoa hồng không
+                        hợp lệ</div>
+                </div>
+            </div>
+            <!-- /hoa hồng -->
+            <div class="form-group row">
+                <label for="" class="col-sm-2 col-form-label">Nơi khởi hành</label>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <select class="form-control" [(ngModel)]="selectedDepart" name="selectedDepart"
+                            [ngModelOptions]="{standalone: true}" [disabled]="action === 'update'">
+                            <option *ngFor="let depart of departs; let i = index; trackBy: trackByFn" [ngValue]="depart">{{depart.name}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!-- /nơi khởi hành -->
+            <div class="form-group row">
+                <label for="" class="col-sm-2 col-form-label">Nơi đến</label>
+                <div class="col-sm-6">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="radio-inline" *ngFor="let tour of tourTypes">
+                                <input type="radio" [checked]="tour.IsInternational === tourTypeSelected"
+                                    [value]="tour.IsInternational" [formControl]="tourType" formControlName="tourType"
+                                    (change)="onChangeTourType(tour)">{{tour.title}}
+                            </label>
+                        </div>
+                        <br> &nbsp;
+                        <div class="col-md-12">
+                            <div class="depart-wp">
+                                <input [attr.readonly]="action === 'update'"
+                                    [class.user-select-none]="action === 'update'" type="text" class="form-control"
+                                    placeholder="Nhập nơi đến..." [formControl]="placeArrival"
+                                    formControlName="placeArrival" (ngModelChange)="searchArrival($event)"
+                                    (click)="searchArrival(' ')">
+                                <search-auto-complete [source]="arrivals" [show]="isearch"
+                                    [isSelected]="isSelectedArrival" (select)="selectArrival($event)">
+                                </search-auto-complete>
+                            </div>
+                            <div class="text-danger help-block"
+                                *ngIf="placeArrival.touched && placeArrival.errors| equalError: 'required'">Nơi đến
+                                không được để trống</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="" class="col-sm-2 col-form-label">Category</label>
+                <div class="col-sm-6">
+                    <div class="select-cateogry-container relative">
+                        <ul class="list-unstyled list-source">
+                            <li *ngFor="let category of selectedCategory; let i = index; trackBy: trackByFn">
+                                {{category.name}}
+                                <span>
+                                    <a (click)="deleteCategory(category)" title="Xóa {{category.name}}">
+                                        <i class="fa fa-times fa-lg" aria-hidden="true"></i>
+                                    </a>
+                                </span>
+                            </li>
+                        </ul>
+                        <input type="text" readonly class="form-control form-control-air pointer"
+                            placeholder="Chọn category..." (click)="searchCategory(null)">
+                        <search-auto-complete [source]="catogories" [show]="isearch" [isSelected]="isSelectedCategory"
+                            (select)="selectCategory($event)"></search-auto-complete>
+                    </div>
+                </div>
+            </div>
+            <!-- /nơi đến -->
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Số ngày</label>
+                <div class="col-sm-6">
+                    <input [class.readonly]="action === 'update'" type="number" class="form-control"
+                        placeholder="Nhập số ngày..." [formControl]="numDay" formControlName="numDay">
+                    <div class="text-danger help-block" *ngIf="numDay.touched && numDay.errors| equalError: 'required'">
+                        Số ngày không được để trống</div>
+
+                </div>
+            </div>
+            <!-- /số ngày -->
+            <div class="form-group row">
+                <label for="inputPassword3" class="col-sm-2 col-form-label">Số đêm</label>
+                <div class="col-sm-6">
+                    <input type="number" class="form-control" placeholder="Nhập số đêm..." [formControl]="numNight"
+                        formControlName="numNight" [class.readonly]="action === 'update'">
+                    <div class="text-danger help-block"
+                        *ngIf="numNight.dirty && numNight.errors| equalError: 'validNights'">Số đêm không hợp lệ</div>
+                </div>
+            </div>
+            <!-- /số đêm -->
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Điểm</label>
+                <div class="col-sm-6">
+                    <input currencyMask [options]="optionCurrencyMask" type="text" class="form-control"
+                        placeholder="Nhập số điểm" [formControl]="rewardPoints" formControlName="rewardPoints">
+                    <div class="text-danger help-block"
+                        *ngIf="rewardPoints.touched && rewardPoints.errors| equalError: 'required'">Số điểm không được
+                        để trống</div>
+                    <div class="text-danger help-block"
+                        *ngIf="rewardPoints.dirty && rewardPoints.errors| equalError: 'min'">Số điểm không hợp lệ</div>
+                </div>
+            </div>
+            <!-- /điểm -->
+            <div class="form-group row">
+                <label for="inputPassword3" class="col-sm-2 col-form-label">Nhà tổ chức</label>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <select class="form-control" [(ngModel)]="tourSupplierSelected" name="tourSupplierSelected"
+                            [ngModelOptions]="{standalone: true}" [disabled]="action === 'update'">
+                            <option *ngFor="let tour of tourSuppliers" [ngValue]="tour">{{tour.code}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="" class="col-sm-2">Tuổi người lớn</label>
+                <div class="col-sm-6">
+                    <div class="p-10">
+                        <nouislider [(ngModel)]="adultRangeAge" [config]="nouisliderConfigAdult"
+                            [ngModelOptions]="{standalone: true}">
+                        </nouislider>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="" class="col-sm-2">Tuổi trẻ em</label>
+                <div class="col-sm-6 ">
+                    <div class="p-10">
+                        <nouislider [(ngModel)]="childRangeAge" [config]="nouisliderConfigChild"
+                            [ngModelOptions]="{standalone: true}">
+                        </nouislider>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="" class="col-sm-2">Tuổi em bé</label>
+                <div class="col-sm-6 form-group">
+                    <div class="p-10">
+                        <nouislider [(ngModel)]="infantRangeAge" [config]="nouisliderConfigInfant"
+                            [ngModelOptions]="{standalone: true}">
+                        </nouislider>
+                    </div>
+                </div>
+            </div>
+            <!-- end nhà tổ chức -->
+            <div class="form-group row">
+                <label for="" class="col-sm-2 col-form-label">Chủ đề tour</label>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label class="checkbox-inline" *ngFor="let topic of tourTopics; let i = index">
+                                <input type="checkbox" [checked]="handleDataChecked(topic.code,'topic')"
+                                    value="{{topic.code}}" name="tourTopic"
+                                    (change)="onHandleCheckBox(topic,$event,'topic')" />{{topic.name}}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end nơi đến -->
+            <div class="form-group row">
+                <label for="" class="col-sm-2 col-form-label">Dịch vụ đi kèm</label>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label class="checkbox-inline" *ngFor="let service of tourServices; let i = index">
+                                <input type="checkbox" [checked]="handleDataChecked(service.code,'service')"
+                                    value="{{service.code}}"
+                                    (change)="onHandleCheckBox(service,$event,'service')">{{service.name}}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="" class="col-sm-2 col-form-label">Nổi bật</label>
+                <div class="col-sm-6 highlights-wp">
+                    <!-- <choices [text]="true" [formControl]="hightLightChoice" [items]="highlights"  placeholder="Nhập điểm nổi bật..." ></choices> -->
+                    <div class="row">
+                        <div class="col-md-1">
+                            <button class="btn btn-success btn-icon-only btn-sm btn-air btn-circle"
+                                (click)="addHightlight()" type="button" [disabled]="!highlightKeyword">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                        <div class="col-md-11">
+                            <input type="text" placeholder="Nhập điểm nổi bật" class="form-control"
+                                [ngModelOptions]="{standalone: true}" [(ngModel)]="highlightKeyword">
+                        </div>
+                    </div>
+                    <div class="highlight-items">
+                        <ul class="list-group list-group-full" ngxDroppable [model]="highlights">
+                            <li class="list-group-item flexbox pointer" *ngFor="let item of highlights; let i = index"
+                                [title]="item" ngxDraggable [model]="item">
+                                <span>
+                                    <button class="btn btn-outline-pink btn-icon-only btn-sm btn-thick" type="button"
+                                        (click)="onDeleteHightlight(i)"><i class="fa fa-trash"></i>
+                                    </button>
+                                </span>
+                                {{item}}
+                                <span class="badge badge-primary badge-circle">{{i + 1}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- end dịch vụ đi kèm -->
+            <!-- <div class="form-group row">
+                <label for="" class="col-sm-2 col-form-label">Điểm nổi bật</label>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label class="checkbox-inline" *ngFor="let benefit of tourBenefits; let i = index">
+                                <input type="checkbox" [checked]="handleDataChecked(benefit.code,'benefit')" value="{{benefit.code}}" (change)="onHandleCheckBox(benefit,$event,'benefit')">{{benefit.name}}</label>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            <!-- /điểm nổi bật -->
+            <!-- <div class="form-group row">
+                <label for="" class="col-sm-2 col-form-label">Tour nổi bật</label>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label class="switch" title="Ẩn/Hiện tour">
+                                <input type="checkbox" [checked]="isMostPopular" (change)="onChangeTourPopular($event)">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            <!-- /tour nổi bật -->
+
+
+            <div class="tab-footer">
+                <div class="text-right">
+                    <button class="btn btn-fix btn-success" [disabled]="!formGeneral.valid" type="button"
+                        (click)="onSubmit(formGeneral.value)">{{action ===
+                        'update' ? 'Cập nhật': 'Tiếp tục'}}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<ngx-dnd-container [model]="['']" class="hidden"></ngx-dnd-container>

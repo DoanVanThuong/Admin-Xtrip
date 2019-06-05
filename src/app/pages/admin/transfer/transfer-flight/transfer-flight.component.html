@@ -1,0 +1,51 @@
+<form action="">
+	<div class="form-group col-md-6 input-search">
+		<input type="text" class="form-control   pull-right" placeholder="Nhập từ khóa để tìm..." [(ngModel)]="keyword" name="keyword">
+	</div>
+	<div class="col-md-1">
+		<button class="btn btn-success btn-search" type="submit" (click)="onSearch()">Tìm</button>
+	</div>
+	<div class="pull-right">Tổng số booking:
+		<strong class="font-bold">{{totalItemFlight}}</strong>
+		<!-- select limiut page size list -->
+		<select-limit [numbers]="pageSizeList" (onChange)="onChangeLimitSize($event)"></select-limit>
+	</div>
+</form>
+<table class="table table-hover table-head-success">
+	<thead>
+		<tr class="text-center">
+			<th class="text-center stt">#</th>
+			<th class="text-center">Mã đặt chỗ</th>
+			<th class="text-center">Tên Khách hàng</th>
+			<th class="text-center">Ngày đặt chỗ</th>
+			<th class="text-center">Hạn thanh toán</th>
+			<th class="text-center">Nội dung thanh toán</th>
+			<th class="text-center">Tổng tiền</th>
+			<th class="text-center">Xác thực CK</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let f of transferFlights; let i = index" class="text-center">
+			<td>{{f.no}}</td>
+			<td>{{f.bookingCode}}</td>
+			<td class="lead info-user" (click)=showDetailFlight(f.id)>{{f.customerName}}</td>
+			<td>{{f.bookingDate | date: 'dd/MM/yyyy'}}</td>
+			<td>{{f.holdExpiry | date: 'dd/MM/yyyy HH:mm'}}</td>
+			<td>{{f.description}}</td>
+			<td>{{f.totalPayment | number:'.0-2'}} đ</td>
+			<td>
+				<button *ngIf="f.status == 1" [disabled]="f.status == 1" class="btn btn-fix">Xác thực</button>
+				<button *ngIf="f.status == 0 || f.status == 7 " class="btn btn-fix btn-success" (click)=confirmTransferFlight(f)>Xác thực</button>
+
+			</td>
+		</tr>
+	</tbody>
+
+</table>
+<div class="pagination-table">
+	<pagination *ngIf="totalItemFlight > limit" [totalItems]="totalItemFlight" [itemsPerPage]="limit" [maxSize]="5" previousText="&lsaquo;"
+	 nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" (pageChanged)="pageChanged($event)"></pagination>
+</div>
+
+
+<sidebar-detail [open]="openSideBar" [type]="typeTransfer" [data]="transferFlightDetail"></sidebar-detail>

@@ -1,0 +1,22 @@
+<div class="preview-coupon-wp">
+    <div class="preview-coupon-item content" [ngClass]="type === 0 ? 'bg-0' : (type === 1 ? 'bg-1' : 'bg-2')">
+        <div class="title">Giảm {{discountAmount | number : '.0-2'}}
+            <span *ngIf="isPercent">%</span>
+            <span *ngIf="!isPercent">đ</span>
+
+        </div>
+        <div class="m-t-20">
+            <span *ngIf="isPercent">Tối đa {{maxDiscount}}, </span>
+            {{description}}
+        </div>
+        <div class="num">{{maxTimesUsed | number: '.0-2'}}</div>
+    </div>
+    <div class="description">
+        <div>
+            Nhập mã: <span class="code">{{code | uppercase}}</span>
+        </div>
+        <div>
+            Thời hạn còn: <span class="date">{{numDate < 0 ? 'hết hạn' : numDate + ' ngày'}}</span>
+        </div>
+    </div>
+</div>

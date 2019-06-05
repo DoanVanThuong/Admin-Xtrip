@@ -1,0 +1,55 @@
+<div class="page-brand">
+    <img src="../../../assets/images/logo.png" alt="" width="60%" class="img-responsive" style="margin: 0px auto">
+</div>
+<div class="flexbox flex-1">
+    <ul class="nav navbar-toolbar">
+        <li>
+            <a class="nav-link sidebar-toggler js-sidebar-toggler" href="javascript:;">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+        </li>
+    </ul>
+    <ul class="nav navbar-toolbar">
+        <li class="dropdown dropdown-user">
+            <a class="nav-link dropdown-toggle link" data-toggle="dropdown">
+                <span>{{!fullName ? emailName : fullName}}</span>
+                <img src="./assets/img/users/admin-image.png" alt="image" />
+            </a>
+            <div class="dropdown-menu dropdown-arrow dropdown-menu-right admin-dropdown-menu">
+                <div class="dropdown-arrow"></div>
+                <div class="dropdown-header">
+                    <div class="admin-avatar">
+                        <img src="./assets/img/users/admin-image.png" alt="image" class="img-responsive" />
+                    </div>
+                    <div>
+                        <h5 class="font-strong text-white">{{!fullName ? emailName : fullName}}</h5>
+                    </div>
+
+                </div>
+                <div class="admin-menu-features">
+                    <a class="admin-features-item" (click)="openProfilePopup()"><i class="fa fa-user"></i>
+                        <span>Hồ sơ</span>
+                    </a>
+                    <a class="admin-features-item" (click)="openChangePasswordPopup()"><i class="fa fa-key"></i>
+                        <span>Mật khẩu</span>
+                    </a>
+                    <a class="admin-features-item"><i class="fa fa-cogs"></i>
+                        <span>Cài đặt</span>
+                    </a>
+                </div>
+                <div class="admin-menu-content">
+                    <div class="d-flex justify-content-between mt-2">
+                        <a class="text-muted">Xtrip</a>
+                        <a class="d-flex align-items-center" (click)="logout()">Logout<i class="fa fa-shift-right ml-2 font-20"></i></a>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<profile-popup [data]="currentUser" (onUpdated)="onUpdateUserProfile($event)"></profile-popup>
+
+<change-password-popup></change-password-popup>

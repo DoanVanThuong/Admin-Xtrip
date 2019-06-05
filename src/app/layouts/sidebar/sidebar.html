@@ -1,0 +1,37 @@
+<div id="sidebar-collapse">
+	<ul class="side-menu metismenu xtravel-sidebar">
+		<li routerLinkActive="active" *ngFor="let item of menuArr; let i = index">
+			<a *ngIf="item.submenu">
+				<i class="sidebar-item-icon {{item.icon}}"></i>
+				<span class="nav-label">{{item.title}}</span>
+				<i class="fa fa-angle-left arrow"></i>
+			</a>
+			<a *ngIf="!item.submenu" [href]="item.url">
+				<span class="nav-label">{{ item.title }}</span>
+			</a>
+			<ul class="nav-2-level collapse" routerLinkActive="{{item.active ? 'in': ''}}" [ngClass]="{'nav-2-level collapse': item.submenu}">
+				<li *ngFor="let menu of item.submenu">
+					<a routerLink="{{menu.url}}" routerLinkActive="active">
+						<span class="nav-label">
+							<span>
+								<i class="{{menu.icon}}" aria-hidden="true"></i>
+							</span> {{menu.title}}
+						</span>
+					</a>
+				</li>
+			</ul>
+		</li>
+
+		<li>
+			<a routerLinkActive="active" (click)="logout()">
+				<span class="nav-label">
+					<span>
+						<i class="fa fa-sign-out" aria-hidden="true"></i>
+					</span> Đăng xuất
+				</span>
+			</a>
+		</li>
+
+
+	</ul>
+</div>

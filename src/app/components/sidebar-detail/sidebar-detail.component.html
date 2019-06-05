@@ -1,0 +1,366 @@
+<div class="quick-sidebar detail-customer detail-wrapper text-left" [ngClass]="open ? 'shined' : ''">
+	<div class="detail-wp ">
+		<div class="header-detail " (click)="hideDetail() " data-toggle="tooltip">
+			<h1 class="display-1 " title="Nhấn ESC để thoát">
+				<img id="img-cancel" src="assets/images/icon/cancel.svg" tabindex="0">
+				<span>Thoát</span>
+			</h1>
+		</div>
+		<div class="heading clearfix">Thông tin khách hàng</div>
+		<ul class="list-unstyled detail-customer-list ">
+			<div class="pull-left info-title ">
+				<li class="font-bold ">Khách hàng:</li>
+				<li class="font-bold ">Số điện thoại:</li>
+				<li class="font-bold ">Email:</li>
+			</div>
+			<div class="pull-left info " *ngIf="type != 'PRODUCT'">
+				<li>{{data.customerName }}</li>
+				<li>{{data.mobileNumber}}</li>
+				<li>{{data.email}}</li>
+			</div>
+			<div class="pull-left info " *ngIf="type === 'PRODUCT'">
+				<li>{{data.contactName }}</li>
+				<li>{{data.contactMobileNumber}}</li>
+				<li>{{data.contactEmail}}</li>
+			</div>
+			<div class="pull-left info " *ngIf="type === 'TOUR'">
+				<li>{{data.detail.customerName }}</li>
+				<li>{{data.detail.mobileNumber}}</li>
+				<li>{{data.detail.email}}</li>
+			</div>
+		</ul>
+		<!-- /info customer -->
+
+		<div *ngIf="isShowFlight" class="heading clearfix">Thông tin vé</div>
+		<div *ngIf="isShowHotel" class="heading clearfix">Thông tin đặt phòng</div>
+		<div *ngIf="isShowTour" class="heading clearfix">Thông tin tour
+			<span class="pull-right">
+				<a class="text-primary font-15" (click)="viewTourDetail()">Xem chi tiết</a>
+			</span>
+		</div>
+		<div *ngIf="isShowProduct" class="heading clearfix">Thông tin product</div>
+
+		<ul class="list-unstyled detail-customer-list ">
+			<div *ngIf="isShowFlight">
+				<ul *ngFor="let item of data.tickets; let i = index" class="list-unstyled list-tickets">
+					<div class="strike-through" *ngIf="i == 0 && data.tickets.length > 1">
+						<div>Chiều đi</div>
+					</div>
+					<div class="strike-through" *ngIf="i == 1">
+						<div>Chiều về</div>
+					</div>
+					<div class="info-flight">
+						<li>
+							<span class="font-bold">Hành trình:</span>
+							<span class="pull-right">
+								{{item.journey}}
+							</span>
+						</li>
+						<li>
+							<span class="font-bold">Tên sân bay:</span>
+							<span class="pull-right">
+								{{item.departName}} - {{item.arrivalName}}
+							</span>
+						</li>
+						<li>
+							<span class="font-bold">Hãng hàng không:</span>
+							<span class="pull-right">
+								{{item.airline}}
+							</span>
+						</li>
+						<li>
+							<span class="font-bold">Thời gian khởi hành:</span>
+							<span class="pull-right">
+								{{returnTimeDepart(item.times)}}
+							</span>
+						</li>
+						<li>
+							<span class="font-bold">Thời gian đến (dự kiến):</span>
+							<span class="pull-right">
+								{{returnTimeArrival(item.times)}}
+							</span>
+						</li>
+					</div>
+					<div class="clearfix">
+						<ul *ngFor="let item of item.transits; let i = index" class="list-unstyled p-l-10 text-center">
+							<li>
+								<span class="font-bold">Nghỉ tại:</span>
+								<span>{{item.airportName}} - {{item.airportCode}} </span>
+							</li>
+							<li>
+								<span class="font-bold">Thời gian nghỉ: </span>
+								<span>{{this.utilityHelper.convertTime(item.timePending)}}</span>
+							</li>
+							<li>
+								<span class="font-bold">Thời gian khởi hành trở lại:</span>
+								<span>{{item.departTime | moment: 'HH:MM DD/MM/YYYY'}} - {{item.flightNumber}}</span>
+							</li>
+						</ul>
+					</div>
+				</ul>
+			</div>
+			<!--/ flight -->
+
+			<div class="pull-left info-title " *ngIf="isShowHotel">
+				<li class="font-bold ">Người nhận phòng</li>
+				<li class="font-bold ">Ngày nhận phòng:</li>
+				<li class="font-bold ">Số đêm:</li>
+				<li class="font-bold ">Số Phòng:</li>
+				<li class="font-bold ">Loại Phòng:</li>
+			</div>
+			<div class="pull-left info " *ngIf="isShowHotel">
+				<li>{{data.receiverName}}</li>
+				<li>{{data.checkIn | date: 'dd/MM/yyyy'}}</li>
+				<li>{{data.nights}}</li>
+				<li>{{data.rooms}}</li>
+				<li>{{data.roomType}}</li>
+			</div>
+			<!--/ hotel -->
+
+			<div class="pull-left info-title " *ngIf="isShowTour">
+				<li class="font-bold ">Nơi khởi hành</li>
+				<li class="font-bold ">Nơi đến</li>
+				<li class="font-bold ">Ngày khởi hành:</li>
+				<li class="font-bold ">Đại lý:</li>
+				<li class="font-bold ">Số người lớn:</li>
+				<li class="font-bold ">Số trẻ em:</li>
+				<li class="font-bold ">Số em bé:</li>
+			</div>
+			<div class="pull-left info " *ngIf="isShowTour && !!data.detail.tourDetailInfo">
+				<li>{{data.detail.tourDetailInfo.tourDepartName}}</li>
+				<li>{{data.detail.tourDetailInfo.tourArrivalName}}</li>
+				<li>{{data.detail.departDate | moment: 'DD/MM/YYYY'}}</li>
+				<li>{{data.detail.supplierName}}</li>
+				<li>{{data.detail.adults}}</li>
+				<li>{{data.detail.children}}</li>
+				<li>{{data.detail.infants}}</li>
+
+			</div>
+			<!--/ tour -->
+
+			<div class="pull-left info-title" *ngIf="isShowProduct">
+				<ul class="list-unstyled">
+					<li class="font-bold ">Tên vé</li>
+					<li class="font-bold ">Loại combo</li>
+					<li class="font-bold ">Khởi hành</li>
+					<li class="font-bold ">Thời gian tham quan</li>
+					<li class="font-bold " *ngIf="!!data.timeslots">Khung giờ</li>
+					<li class="font-bold ">Hành khách</li>
+					<li class="font-bold ">Hoàn tiền</li>
+
+				</ul>
+			</div>
+			<div class="pull-left info " *ngIf="isShowProduct">
+				<ul class="list-unstyled">
+					<li>{{data.productName}}</li>
+					<li>{{data.comboType}}</li>
+					<li>{{data.departDate | moment: 'DD/MM/YYYY'}}</li>
+					<li>{{data.duration}}</li>
+					<li *ngIf="!!data.timeslots">
+						{{data.timeslots.name}}
+					</li>
+					<li>
+						{{ (!!data.adults ? data.adults + ' người lớn ' : '') + (!!data.children ? ',' + data.children + ' trẻ
+							em ' : '') + (!!data.infants ? ',' + data.infants + ' em bé' : '') + (!!data.seniors ? ',' + data.seniors + ' người cao tuổi' : '')}}
+					</li>
+					<li>{{data.cancellationPolicies}}</li>
+				</ul>
+			</div>
+			<!-- /product -->
+		</ul>
+
+		<div *ngIf="isShowFlight">
+			<div class="heading detail-passenger-list">
+				<div class="pull-left ">Thông tin hành khách</div>
+				<div class="pull-right p-r-20 ">Hành lý</div>
+			</div>
+			<ol class="list-unstyled detail-customer-list ">
+				<div class="info-title " *ngFor="let p of data.passenger; let i = index ">
+					<li>
+						<div class="info-passenger pull-left ">
+							<span>{{i + 1 + '. '}}</span>
+							<span>{{p.title}}</span>
+							<span class="font-bold ">{{ p.fullName +' '}}</span>
+							<ul>
+								<li *ngIf="!!p.dateOfBirth">Ngày sinh:{{ p.dateOfBirth | moment: 'DD/MM/YYYY'}}</li>
+								<li *ngIf="!!p.passportNumber">Số hộ chiếu:{{p.passportNumber}}</li>
+								<li *ngIf="p.passportCountry !== null && p.passportCountry !== ''  ">Quốc
+									gia:{{p.passportCountry}} </li>
+								<li *ngIf="p.passportExpiry !== null && p.passportExpiry !== '' ">Ngày hết
+									hạn:{{p.passportExpiry | date: 'dd/MM/yyyy'}} </li>
+								<li *ngIf="p.national !== null && p.national !== '' ">Quốc tịch:{{p.national}}</li>
+
+							</ul>
+						</div>
+
+						<div class="pull-right ">
+							<ul class="list-unstyled ">
+								<li *ngFor="let item of p.baggages; let i = index ">
+									<span *ngIf="i == 0 &&  p.baggages.length > 1" class="font-bold">Chiều đi:</span>
+									<span *ngIf="i == 1 " class="font-bold">Chiều về:</span>
+									{{!!item.flightNumber ? item.flightNumber + ' - ': '' }} {{item.weight}} kg
+								</li>
+							</ul>
+
+						</div>
+						<div class="clearfix "></div>
+					</li>
+				</div>
+			</ol>
+		</div>
+		<div class></div>
+		<div *ngIf="isShowTour" class="pasenger-wp">
+			<div class="heading clearfix">Thông tin hành khách
+				<span class="pull-right">
+					<a class="text-primary font-15" (click)="gotoEditPassenger()">Cập nhật</a>
+				</span>
+			</div>
+			<ol class="list-unstyled detail-customer-list ">
+				<div class="info-title " *ngFor="let p of data.detail.passenger; let i = index">
+					<li class="font-bold ">
+						<span>{{i + 1 + '. '}}</span>{{p.title +' ' + p.fullName +' '+ (!!p.dateOfBirth ? (p.dateOfBirth | moment:
+						'DD/MM/YYYY') : '')}}</li>
+				</div>
+			</ol>
+		</div>
+		<div *ngIf="isShowTour && !!data.priceSummary" class="pricesummary-wp ">
+			<div class="heading clearfix">Chi tiết giá tour
+			</div>
+			<ul class="list-unstyled list-price">
+				<li *ngFor="let item of data.priceSummary.detailItems; let i = index"
+					class="d-flex justify-content-between align-items-center m-l-10">
+					<div>{{item.title}}</div>
+					<div>{{item.price | number :'.0-2'}}đ</div>
+				</li>
+				<div class="pull-right p-10" *ngIf="!!data.priceSummary && data.priceSummary.detailItems.length">
+					<span class="font-15 font-bold">Tổng tiền:</span> <span
+						class="price font-bold">{{data.priceSummary.totalItems[0].price | number:'.0-2'}}đ</span>
+				</div>
+			</ul>
+		</div>
+		<div *ngIf="isShowTour && !!data.depositDetail && data.depositDetail.length" class="deposit-wp">
+			<div class="heading clearfix">Thông tin đặt cọc
+			</div>
+			<ul class="list-deposit-item list-unstyled"
+				*ngIf="data.depositDetail.length >= 1 && data.depositDetail[0].status">
+				<li class="d-flex justify-content-between align-items-center m-l-10"
+					*ngFor="let item of data.depositDetail; let i = index" [class.unactive]="!item.status">
+					<div>
+						<span class="font-bold">- {{item.paymentDate | moment: 'DD/MM/YYYY'}}: </span>
+						<span>Thanh toán
+							<span class="font-bold price">{{item.amountPaid | number:'.0-2'}} ({{item.percent}}%)</span>
+						</span>
+						<div *ngIf="item.status">
+							(+ <span class="font-11 font-bold">{{item.paymentFee | number:'.0-2'}}</span><span class="font-11">
+								{{item.paymentMethod}}</span>)
+
+						</div>
+					</div>
+					<div>
+						<span>Còn lại: </span>
+						<span class="font-bold price-rest">{{item.amountUnPaid | number: '.0-2'}} đ</span>
+					</div>
+				</li>
+			</ul>
+			<div class="m-l-10 font-15 m-t-10" *ngIf="data.depositDetail.length === 1 && data.depositDetail[0].status === 0">
+				{{depositTitle}} <span class="price font-bold">{{data.depositDetail[0].amountPaid | number: '.0-2'}} </span>
+				<span>{{data.depositDetail[0].percent}}%</span> </div>
+		</div>
+		<!-- /đặt cọc -->
+
+		<div *ngIf="isShowHotel">
+			<div class="heading clearfix">Phí hoản/hủy phòng</div>
+			<div *ngIf="data.cancellationPolicies.length > 0">
+				<ul class>
+					<li *ngFor="let data of data.cancellationPolicies">
+						<span class="font-bold">Từ {{data.from | moment: 'HH:mm DD/MM/YYYY'}}</span>
+						<span class="font-bold"> đến {{data.to | moment: 'HH:mm DD/MM/YYYY'}}</span>
+						<span class="text-danger">{{data.chargedAmount | number:'.0-2'}} đ</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div *ngIf="isShowProduct && !!data.passenger && data.passenger.length > 0 ">
+			<div class="heading clearfix">Thông tin hành khách</div>
+			<ol class="list-unstyled detail-customer-list ">
+				<div class="info-title " *ngFor="let p of data.passenger; let i = index">
+					<li class="font-bold ">
+						<span>{{i + 1 + '. '}}</span>
+						<span>{{p.title}}</span>
+						<span class="font-bold ">{{ p.fullName +' '}}</span>
+						<ul>
+							<li *ngIf="!!p.dateOfBirth">Ngày sinh:{{ p.dateOfBirth | moment: 'DD/MM/YYYY'}}</li>
+							<li *ngIf="!!p.passportNumber">Số hộ chiếu:{{p.passportNumber}}</li>
+							<li *ngIf="p.passportCountry !== null && p.passportCountry !== ''  ">Quốc
+								gia:{{p.passportCountry}} </li>
+							<li *ngIf="p.passportExpiry !== null && p.passportExpiry !== '' ">Ngày hết
+								hạn:{{p.passportExpiry | date: 'dd/MM/yyyy'}} </li>
+							<li *ngIf="p.national !== null && p.national !== '' ">Quốc tịch:{{p.national}}</li>
+						</ul>
+					</li>
+				</div>
+			</ol>
+		</div>
+		<div *ngIf="isShowProduct" class="heading clearfix">Ghi chú</div>
+		<div [innerHTML]="data.notes | newline" class="p-10 clearfix" *ngIf="isShowProduct"></div>
+
+		<div *ngIf="isShowProduct && !!data.message" class="heading clearfix">Tin nhắn</div>
+		<div class="p-10 clearfix" *ngIf="isShowProduct">{{data.message}}</div>
+		<div class="heading clearfix" *ngIf="!isShowTour">Chi tiết giá</div>
+		<div class="p-10" *ngIf="!isShowTour">
+			<ul class="list-unstyled">
+				<li class="d-flex d-flex justify-content-between align-items-center m-l-10">
+					<div> <span class="font-bold">Giá</span> <span class="font-11">(chưa phí)</span></div>
+					<div class="">{{data.price | number:'.0-2'}}đ</div>
+				</li>
+				<li class="d-flex d-flex justify-content-between align-items-center m-l-10">
+					<div class="font-bold">Phí thanh toán</div>
+					<div class="">{{data.paymentFee | number:'.0-2'}}đ</div>
+				</li>
+				<li class="d-flex d-flex justify-content-between align-items-center m-l-10">
+					<div class="font-bold">Tổng tiền</div>
+					<div class="price-rest">{{data.totalPrice | number:'.0-2'}}đ</div>
+				</li>
+			</ul>
+		</div>
+		<div class="heading clearfix" *ngIf="!isShowTour && !!data.addonUsage && !!data.addonUsage.value">Ưu đãi sử dụng</div>
+		<div class="p-10" *ngIf="!isShowTour && !!data.addonUsage && !!data.addonUsage.value">
+			<ul class='list-unstyled'>
+				<li class="d-flex d-flex justify-content-between align-items-center m-l-10">
+					<div class="font-bold">Loại tiện ích</div>
+					<div>{{data.addonUsage.name}}</div>
+				</li>
+				<li class="d-flex d-flex justify-content-between align-items-center m-l-10">
+					<div class="font-bold">Ngày áp dụng</div>
+					<div>{{data.createdDate | moment: 'DD/MM/YYYY'}}</div>
+				</li>
+				<li class="d-flex d-flex justify-content-between align-items-center m-l-10">
+					<div class="font-bold">Giá trị</div>
+					<div>{{data.addonUsage.value}}</div>
+				</li>
+				<li class="d-flex d-flex justify-content-between align-items-center m-l-10">
+					<div class="font-bold">Số tiền được giảm</div>
+					<div>{{data.addonUsage.amount | number:'.0-2'}}đ</div>
+				</li>
+			</ul>
+		</div>
+
+		<div class="heading clearfix" *ngIf="!!data.vatInvoiceInfo">Thông tin xuất hóa đơn VAT</div>
+		<div class="pull-left info-title" *ngIf="!!data.vatInvoiceInfo">
+			<ul class="list-unstyled p-10">
+				<li class="font-bold ">Tên công ty</li>
+				<li class="font-bold ">Địa chỉ</li>
+				<li class="font-bold ">Mã số thuế</li>
+			</ul>
+		</div>
+		<div class="pull-left info p-10" *ngIf="!!data.vatInvoiceInfo">
+			<ul class="list-unstyled">
+				<li>{{data.vatInvoiceInfo.companyName}}</li>
+				<li>{{data.vatInvoiceInfo.companyAddress}}</li>
+				<li>{{data.vatInvoiceInfo.taxIdentificationNo}}</li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<tour-info-popup [data]="tourInfoDetail" [journey]="journey"></tour-info-popup>
